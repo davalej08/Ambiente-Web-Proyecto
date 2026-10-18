@@ -1,0 +1,9 @@
+# David Céspedes Camacho, Ronald Calderón, Susan Echavarría Céspedes, Sofía Loaiza Cabalceta
+# Ambiente Web Cliente/Servidor · SC-502
+# Universidad Fidélitas · Costa Rica
+
+# Envía todas las peticiones a index.php
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
