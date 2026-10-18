@@ -1,0 +1,388 @@
+/* ==========================================================
+   VENTICA · inicio.css
+   Landing / página de inicio pública.
+   ========================================================== */
+
+.titulo-grande {
+    font-size: clamp(1.75rem, 3vw, 2.25rem);
+    font-weight: 800;
+}
+
+/* ---------- Hero ---------- */
+.hero {
+    padding-block: 4rem 4.5rem;
+    background:
+        radial-gradient(circle at 75% 40%, rgba(163, 191, 63, 0.16), transparent 40%),
+        var(--fondo);
+}
+
+.hero__contenido {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    align-items: center;
+    gap: 3rem;
+}
+
+.hero__texto > * + * {
+    margin-top: 1.5rem;
+}
+
+.hero__titulo {
+    font-size: clamp(2.4rem, 5vw, 3.6rem);
+    font-weight: 800;
+    color: var(--azul-oscuro);
+    letter-spacing: -0.03em;
+}
+
+.subrayado {
+    color: var(--verde);
+    text-decoration: underline;
+    text-decoration-thickness: 0.09em;
+    text-underline-offset: 0.12em;
+}
+
+.hero__descripcion {
+    max-width: 52ch;
+    font-size: 1.05rem;
+    color: var(--azul);
+}
+
+.hero__acciones {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1.25rem;
+}
+
+.hero__datos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2.5rem;
+    margin-bottom: 0;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--borde);
+}
+
+.hero__datos dt {
+    font-family: var(--fuente-titulos);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--azul-oscuro);
+}
+
+.hero__datos dt.verde {
+    color: var(--verde-oscuro);
+}
+
+.hero__datos dd {
+    margin: 0;
+    max-width: 16ch;
+    font-size: 0.75rem;
+    line-height: 1.35;
+    color: var(--texto-suave);
+}
+
+.hero__visual {
+    position: relative;
+    width: min(100%, 420px);
+    margin: 0 auto;
+}
+
+.hero__visual img {
+    width: 100%;
+    height: auto;
+    transform: rotate(-3deg);
+    filter: drop-shadow(0 24px 40px rgba(0, 61, 84, 0.14));
+}
+
+.etiqueta-flotante {
+    position: absolute;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.4rem 0.9rem;
+    border: 2px solid var(--blanco);
+    border-radius: var(--radio-pill);
+    box-shadow: var(--sombra-md);
+    font-family: var(--fuente-titulos);
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--blanco);
+}
+
+.etiqueta-flotante .icono {
+    width: 0.85rem;
+    height: 0.85rem;
+}
+
+.etiqueta-flotante--terracota { top: 2%;     left: -2%;  background: var(--terracota); transform: rotate(-8deg); }
+.etiqueta-flotante--teal      { top: 12%;    right: -4%; background: var(--teal);      transform: rotate(6deg); }
+.etiqueta-flotante--azul      { bottom: 12%; left: -4%;  padding: 0.7rem 2.5rem; border-radius: var(--radio-md); background: var(--azul); transform: rotate(-3deg); letter-spacing: 0.12em; }
+.etiqueta-flotante--lima      { bottom: 2%;  right: 2%;  background: var(--lima);      color: var(--azul-oscuro); transform: rotate(8deg); }
+
+.etiqueta-flotante small {
+    opacity: 0.7;
+    font-size: 0.6rem;
+}
+
+/* ---------- Franja de orígenes ---------- */
+.origenes {
+    padding-block: 1.25rem;
+    border-block: 1px solid var(--borde);
+    background: var(--crema);
+}
+
+.origenes__contenido {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.origenes__titulo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--verde-oscuro);
+}
+
+.origenes__lista {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.origenes__lista li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.4rem 0.9rem;
+    border: 1px solid var(--borde);
+    border-radius: var(--radio-pill);
+    background: var(--papel);
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--azul-oscuro);
+}
+
+.origenes__lista small {
+    font-weight: 400;
+    color: var(--texto-suave);
+}
+
+/* ---------- Categorías ---------- */
+.cabecera-seccion {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+}
+
+.cabecera-seccion .texto-guia {
+    max-width: 44ch;
+    font-size: 0.875rem;
+}
+
+.categorias {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1.25rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.categoria {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.35rem;
+    height: 100%;
+    padding: 1.75rem 1rem;
+    border: 1px solid var(--borde);
+    border-radius: var(--radio-lg);
+    background: var(--crema);
+    text-align: center;
+    text-decoration: none;
+    transition: transform 0.15s, box-shadow 0.15s, background-color 0.15s;
+}
+
+.categoria:hover {
+    background: var(--blanco);
+    box-shadow: var(--sombra-md);
+    transform: translateY(-3px);
+}
+
+.categoria strong {
+    margin-top: 0.5rem;
+    font-family: var(--fuente-titulos);
+    font-size: 0.95rem;
+    color: var(--azul-oscuro);
+}
+
+.categoria small {
+    font-size: 0.75rem;
+    color: var(--texto-suave);
+}
+
+.categoria .insignia {
+    margin-top: 0.6rem;
+}
+
+.categoria__icono {
+    display: grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    border-radius: var(--radio-md);
+}
+
+.categoria__icono .icono {
+    width: 1.35rem;
+    height: 1.35rem;
+}
+
+.categoria--teal      .categoria__icono { background: rgba(81, 166, 166, 0.16);  color: var(--teal-oscuro); }
+.categoria--lima      .categoria__icono { background: rgba(163, 191, 63, 0.22);  color: #5E7317; }
+.categoria--terracota .categoria__icono { background: rgba(200, 109, 81, 0.15);  color: var(--terracota); }
+.categoria--verde     .categoria__icono { background: rgba(60, 166, 86, 0.15);   color: var(--verde-oscuro); }
+.categoria--azul      .categoria__icono { background: rgba(9, 85, 115, 0.12);    color: var(--azul); }
+
+/* ---------- Por qué Ventica ---------- */
+.porque {
+    background: linear-gradient(var(--fondo), var(--papel));
+}
+
+.porque__encabezado {
+    max-width: 640px;
+    margin: 0 auto 3rem;
+    text-align: center;
+}
+
+.porque__encabezado > * + * {
+    margin-top: 0.75rem;
+}
+
+.porque__encabezado .texto-guia {
+    margin-inline: auto;
+}
+
+.beneficios {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.5rem;
+}
+
+.beneficio {
+    padding: 2rem;
+    border: 1px solid var(--borde);
+    border-radius: var(--radio-xl);
+    background: var(--blanco);
+    box-shadow: var(--sombra-md);
+}
+
+.beneficio h3 {
+    margin-top: 1.5rem;
+    font-size: 1.15rem;
+    font-weight: 700;
+}
+
+.beneficio p {
+    margin-top: 0.75rem;
+    font-size: 0.875rem;
+    color: var(--texto-suave);
+}
+
+.beneficio__icono {
+    display: grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    border-radius: var(--radio-md);
+}
+
+.beneficio__icono--verde     { background: var(--exito-fondo); color: var(--verde-oscuro); }
+.beneficio__icono--azul      { background: var(--info-fondo);  color: var(--azul); }
+.beneficio__icono--terracota { background: #FBEBD9;            color: var(--terracota); }
+
+/* ---------- Banda CTA ---------- */
+.cta-banda {
+    padding-block: 3.5rem;
+    background: var(--azul-oscuro);
+    color: rgba(255, 255, 255, 0.78);
+}
+
+.cta-banda__contenido {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+}
+
+.cta-banda__contenido > div {
+    max-width: 640px;
+}
+
+.cta-banda h2 {
+    margin-top: 0.5rem;
+    font-size: clamp(1.5rem, 2.6vw, 2rem);
+    font-weight: 800;
+    color: var(--blanco);
+}
+
+.cta-banda p:not(.sobretitulo) {
+    margin-top: 0.75rem;
+    font-size: 0.9375rem;
+}
+
+/* ---------- Responsivo ---------- */
+@media (max-width: 960px) {
+    .hero__contenido {
+        grid-template-columns: 1fr;
+    }
+
+    .hero__visual {
+        width: min(80%, 360px);
+    }
+
+    .categorias {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .beneficios {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero {
+        padding-block: 2.5rem;
+    }
+
+    .hero__datos {
+        gap: 1.25rem;
+    }
+
+    .categorias {
+        gap: 0.75rem;
+    }
+
+    .categoria {
+        padding: 1.25rem 0.75rem;
+    }
+
+    .beneficio {
+        padding: 1.5rem;
+    }
+}

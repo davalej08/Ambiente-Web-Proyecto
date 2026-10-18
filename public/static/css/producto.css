@@ -1,7 +1,715 @@
-/*
- * David Céspedes Camacho, Ronald Calderón, Susan Echavarría Céspedes, Sofía Loaiza Cabalceta
- * Ambiente Web Cliente/Servidor · SC-502
- * Universidad Fidélitas · Costa Rica
- */
+/* ==========================================================
+   VENTICA · producto.css
+   Catálogo (home), tarjetas de producto, filtros y paginación.
+   Las pantallas de detalle y gestión de producto pueden
+   agregar sus estilos al final de este archivo.
+   ========================================================== */
 
-/* Estilos - producto */
+/* ---------- Hero con buscador ---------- */
+.catalogo-hero {
+    padding-block: 3rem 2.5rem;
+    border-bottom: 1px solid var(--borde);
+    background:
+        radial-gradient(circle at 50% 0%, rgba(163, 191, 63, 0.16), transparent 55%),
+        var(--fondo);
+}
+
+.catalogo-hero__contenido {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.1rem;
+    text-align: center;
+}
+
+.catalogo-hero .pill {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--azul-oscuro);
+}
+
+.catalogo-hero__titulo {
+    max-width: 18ch;
+    font-size: clamp(2rem, 4.2vw, 3rem);
+    font-weight: 800;
+    color: var(--azul-oscuro);
+}
+
+.catalogo-hero .texto-guia {
+    max-width: 62ch;
+}
+
+/* Buscador */
+.buscador {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+    max-width: 760px;
+    margin-top: 0.5rem;
+    padding: 0.4rem 0.4rem 0.4rem 1.1rem;
+    border: 1px solid var(--borde);
+    border-radius: var(--radio-pill);
+    background: var(--blanco);
+    box-shadow: var(--sombra-md);
+}
+
+.buscador:focus-within {
+    border-color: var(--teal);
+}
+
+.buscador__campo,
+.buscador__provincia {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--texto-tenue);
+}
+
+.buscador__campo {
+    flex: 1;
+}
+
+.buscador__provincia {
+    padding-left: 0.9rem;
+    border-left: 1px solid var(--borde);
+    color: var(--verde);
+}
+
+.buscador input,
+.buscador select {
+    width: 100%;
+    padding: 0.55rem 0;
+    border: 0;
+    background: transparent;
+    font-size: 0.875rem;
+    color: var(--texto);
+}
+
+.buscador select {
+    font-weight: 600;
+    color: var(--azul-oscuro);
+    cursor: pointer;
+}
+
+.buscador input:focus,
+.buscador select:focus {
+    outline: none;
+}
+
+/* Chips de provincia */
+.provincias {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.provincias__titulo {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--texto-suave);
+}
+
+/* ---------- Layout del catálogo ---------- */
+.catalogo {
+    display: grid;
+    grid-template-columns: 280px minmax(0, 1fr);
+    align-items: start;
+    gap: 1.75rem;
+    padding-block: 2.5rem;
+}
+
+.catalogo__lateral {
+    position: sticky;
+    top: calc(var(--alto-navbar) + 1rem);
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+/* ---------- Filtros ---------- */
+.filtros {
+    padding: 1.25rem;
+}
+
+.filtros__cabecera {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 0.9rem;
+    border-bottom: 1px solid var(--borde);
+}
+
+.filtros__cabecera h2 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.05rem;
+    font-weight: 700;
+}
+
+.filtros__cabecera a {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--verde-oscuro);
+    text-decoration: none;
+}
+
+.filtros__grupo {
+    margin: 0;
+    padding: 1rem 0;
+    border: 0;
+    border-bottom: 1px solid var(--borde);
+}
+
+.filtros__grupo legend {
+    float: left;
+    width: 100%;
+    margin-bottom: 0.6rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--azul-oscuro);
+}
+
+.filtros__opcion {
+    clear: both;
+    align-items: center;
+    padding: 0.35rem 0.4rem;
+    border-radius: var(--radio-sm);
+    font-size: 0.8125rem;
+}
+
+.filtros__opcion input {
+    margin-top: 0;
+}
+
+.filtros__opcion span {
+    flex: 1;
+}
+
+.filtros__opcion > small {
+    font-size: 0.6875rem;
+    color: var(--texto-tenue);
+}
+
+.filtros__opcion.es-marcada {
+    background: rgba(81, 166, 166, 0.14);
+    font-weight: 600;
+    color: var(--azul-oscuro);
+}
+
+.filtros__nota {
+    display: block;
+    font-size: 0.6875rem;
+    font-weight: 400;
+    color: var(--texto-suave);
+}
+
+.filtros > .btn {
+    margin-top: 1rem;
+}
+
+.rango {
+    clear: both;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.rango label {
+    flex: 1;
+    padding: 0.4rem 0.7rem;
+    border-radius: var(--radio-md);
+    background: var(--crema);
+}
+
+.rango label span {
+    display: block;
+    font-size: 0.625rem;
+    color: var(--texto-suave);
+}
+
+.rango input {
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    font-weight: 700;
+    color: var(--azul-oscuro);
+}
+
+.rango input:focus {
+    outline: none;
+}
+
+.rango label:focus-within {
+    box-shadow: 0 0 0 2px var(--teal);
+}
+
+.rango__guion {
+    color: var(--texto-tenue);
+}
+
+.filtros__abrir {
+    display: none;
+}
+
+/* CTA lateral */
+.cta-lateral {
+    padding: 1.5rem;
+    border-radius: var(--radio-lg);
+    background: var(--azul-oscuro);
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 0.75rem;
+}
+
+.cta-lateral > .icono {
+    width: 1.5rem;
+    height: 1.5rem;
+    color: var(--lima);
+}
+
+.cta-lateral h2 {
+    margin-top: 0.75rem;
+    font-size: 1.05rem;
+    color: var(--blanco);
+}
+
+.cta-lateral p {
+    margin-block: 0.5rem 1rem;
+}
+
+.btn--blanco {
+    background: var(--blanco);
+    color: var(--azul-oscuro);
+}
+
+.btn--blanco:hover {
+    background: var(--crema);
+}
+
+/* ---------- Barra de resultados ---------- */
+.resultados__barra {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.9rem 1.25rem;
+}
+
+.resultados__barra h2 {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 1.15rem;
+    font-weight: 700;
+}
+
+.ordenar {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--texto-suave);
+}
+
+.ordenar select {
+    padding: 0.45rem 2rem 0.45rem 0.9rem;
+    border: 0;
+    border-radius: var(--radio-pill);
+    background: var(--crema) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23003D54' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 0.7rem center / 0.85rem;
+    appearance: none;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--azul-oscuro);
+    cursor: pointer;
+}
+
+/* ---------- Tarjetas de producto ---------- */
+.productos {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1.1rem;
+    margin: 1.25rem 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.producto {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    border: 1px solid var(--borde);
+    border-radius: var(--radio-lg);
+    background: var(--blanco);
+    overflow: hidden;
+    transition: box-shadow 0.15s, transform 0.15s;
+}
+
+.producto:hover {
+    box-shadow: var(--sombra-lg);
+    transform: translateY(-3px);
+}
+
+.producto__media {
+    position: relative;
+    aspect-ratio: 1;
+    background: var(--crema);
+}
+
+.producto__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.producto__etiquetas {
+    position: absolute;
+    top: 0.6rem;
+    left: 0.6rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.3rem;
+}
+
+.producto__etiqueta,
+.producto__sinpe {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.2rem 0.55rem;
+    border-radius: var(--radio-sm);
+    font-size: 0.625rem;
+    font-weight: 700;
+}
+
+.producto__etiqueta {
+    background: var(--azul-oscuro);
+    color: var(--blanco);
+}
+
+.producto__sinpe {
+    border: 1px solid var(--teal);
+    background: var(--blanco);
+    color: var(--teal-oscuro);
+}
+
+.producto__sinpe .icono {
+    width: 0.7rem;
+    height: 0.7rem;
+}
+
+.producto__favorito {
+    position: absolute;
+    top: 0.6rem;
+    right: 0.6rem;
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border: 0;
+    border-radius: 50%;
+    background: var(--blanco);
+    box-shadow: var(--sombra-sm);
+    color: var(--azul-oscuro);
+    cursor: pointer;
+    transition: transform 0.15s, color 0.15s;
+}
+
+.producto__favorito:hover {
+    transform: scale(1.08);
+}
+
+.producto__favorito .icono {
+    width: 1rem;
+    height: 1rem;
+}
+
+.producto__favorito[aria-pressed="true"] {
+    color: var(--terracota);
+}
+
+.producto__favorito[aria-pressed="true"] .icono {
+    fill: currentColor;
+}
+
+.producto__cuerpo {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.9rem;
+}
+
+.producto__ubicacion {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: var(--texto-suave);
+}
+
+.producto__ubicacion .icono {
+    width: 0.8rem;
+    height: 0.8rem;
+    color: var(--verde);
+}
+
+.producto__nombre {
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.25;
+}
+
+.producto__nombre a {
+    color: var(--azul-oscuro);
+    text-decoration: none;
+}
+
+.producto__nombre a:hover {
+    color: var(--verde-oscuro);
+}
+
+.producto__emprendimiento {
+    font-size: 0.75rem;
+    color: var(--texto-suave);
+}
+
+.producto__pie {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-top: auto;
+    padding-top: 0.75rem;
+}
+
+.producto__precio {
+    font-family: var(--fuente-titulos);
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--azul-oscuro);
+    line-height: 1.1;
+}
+
+.producto__precio small {
+    display: block;
+    font-family: var(--fuente-texto);
+    font-size: 0.625rem;
+    font-weight: 500;
+    color: var(--texto-tenue);
+}
+
+.producto__pie .btn--sm {
+    padding: 0.45rem 0.8rem;
+    border-radius: var(--radio-sm);
+    font-size: 0.75rem;
+}
+
+/* Sin resultados */
+.sin-resultados {
+    margin-top: 1.25rem;
+    padding: 3rem 1.5rem;
+    text-align: center;
+}
+
+.sin-resultados > .icono {
+    width: 2rem;
+    height: 2rem;
+    margin: 0 auto;
+    color: var(--texto-tenue);
+}
+
+.sin-resultados > * + * {
+    margin: 0.75rem auto 0;
+}
+
+/* ---------- Paginación ---------- */
+.paginacion {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 2rem;
+}
+
+.paginacion a,
+.paginacion__puntos {
+    display: grid;
+    place-items: center;
+    min-width: 2.25rem;
+    height: 2.25rem;
+    padding-inline: 0.5rem;
+    border-radius: var(--radio-sm);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--azul-oscuro);
+    text-decoration: none;
+}
+
+.paginacion a {
+    border: 1px solid var(--borde);
+    background: var(--blanco);
+}
+
+.paginacion a:hover {
+    border-color: var(--azul);
+}
+
+.paginacion a.es-activo {
+    border-color: var(--azul-oscuro);
+    background: var(--azul-oscuro);
+    color: var(--blanco);
+}
+
+/* ---------- CTA comunidad ---------- */
+.cta-comunidad {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    margin-block: 1.5rem 4rem;
+    padding: 3rem;
+    border-radius: var(--radio-xl);
+    background: var(--azul-oscuro);
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.cta-comunidad > div:first-child {
+    max-width: 520px;
+}
+
+.cta-comunidad h2 {
+    margin-block: 0.5rem 0.75rem;
+    font-size: clamp(1.5rem, 2.8vw, 2rem);
+    font-weight: 800;
+    color: var(--blanco);
+}
+
+.cta-comunidad p:not(.sobretitulo) {
+    font-size: 0.875rem;
+}
+
+.cta-comunidad__acciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.cta-comunidad .btn--lima {
+    background: #8FE58A;
+}
+
+.btn--transparente {
+    border-color: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--blanco);
+}
+
+.btn--transparente:hover {
+    background: rgba(255, 255, 255, 0.16);
+}
+
+/* ---------- Responsivo ---------- */
+@media (max-width: 1100px) {
+    .productos {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 900px) {
+    .catalogo {
+        grid-template-columns: 1fr;
+    }
+
+    .catalogo__lateral {
+        position: static;
+    }
+
+    /* En móvil los filtros se esconden detrás de un botón */
+    .filtros__abrir {
+        display: inline-flex;
+    }
+
+    .filtros {
+        display: none;
+    }
+
+    .filtros.es-abierto {
+        display: block;
+    }
+
+    .cta-lateral {
+        display: none;
+    }
+
+    .productos {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 640px) {
+    .buscador {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 0.75rem;
+        border-radius: var(--radio-lg);
+    }
+
+    .buscador__provincia {
+        padding: 0.25rem 0 0;
+        border-left: 0;
+        border-top: 1px solid var(--borde);
+    }
+
+    .provincias {
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        width: 100%;
+        overflow-x: auto;
+        padding-bottom: 0.25rem;
+    }
+
+    .provincias .chip {
+        flex-shrink: 0;
+    }
+
+    .resultados__barra {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .cta-comunidad {
+        padding: 2rem 1.5rem;
+    }
+}
+
+@media (max-width: 420px) {
+    .productos {
+        gap: 0.6rem;
+    }
+
+    .producto__cuerpo {
+        padding: 0.7rem;
+    }
+
+    .producto__pie {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .producto__pie .btn {
+        width: 100%;
+    }
+}
