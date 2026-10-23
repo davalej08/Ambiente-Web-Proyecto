@@ -43,6 +43,32 @@ switch ($ruta) {
     case '/plantilla':
         require $vistas . 'general/plantilla.php';
         break;
+    // Cliente: detalle (vitrina del emprendimiento) y carrito
+    case '/producto/detalle':
+        require $vistas . 'producto/detalle.php';
+        break;
+    case '/carrito':
+        require $vistas . 'carrito/carrito.php';
+        break;
+    // Portal del vendedor
+    case '/vendedor/dashboard':
+        require $vistas . 'constante/dashboard_vendedor.php';
+        break;
+    case '/vendedor/productos':
+        require $vistas . 'producto/gestion.php';
+        break;
+    case '/vendedor/productos/nuevo':
+        require $vistas . 'producto/formulario.php';
+        break;
+    case '/vendedor/productos/editar':
+        // Producto de muestra para ver el formulario en modo edición
+        $producto = ['id' => 1, 'nombre' => 'Café Geisha Reserva Especial', 'id_categoria' => 1, 'precio' => 9500, 'stock' => 24,
+                     'descripcion' => 'Grano entero de altura cultivado en Dota, con notas florales a jazmín y miel de abeja.', 'imagen' => 'productos/cafe-geisha.jpg'];
+        require $vistas . 'producto/formulario.php';
+        break;
+    case '/vendedor/perfil':
+        require $vistas . 'vendedor/perfil.php';
+        break;
     default:
         http_response_code(404);
         echo '<h1>Esta pantalla todavía no existe</h1>';
