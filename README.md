@@ -159,5 +159,6 @@ Funciones disponibles en las vistas (`app/helpers/Vista.php`):
 | Cliente | Home / Catálogo | Listo |
 | Cliente | Detalle de producto, Carrito | Listo |
 | Vendedor | Dashboard, Mis Productos, Agregar producto, Perfil | Listo |
-| Vendedor | Pedidos, Reportes | Pendiente |
-| Administrador | Dashboard, Solicitudes, Emprendimientos, Categorías, Usuarios, Reportes | Pendiente |
+| Vendedor | Pedidos, Reportes | Listo |
+| Administrador | Emprendimientos Activos, Categorías, Usuarios, Reportes | Pendiente |
+| Administrador | Dashboard, Emprendimientos, Detalle de Solicitud | Pendiente |
