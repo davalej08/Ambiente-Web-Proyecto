@@ -75,10 +75,15 @@ git clone https://github.com/davalej08/Ambiente-Web-Proyecto.git
 cd Ambiente-Web-Proyecto
 ```
 
-### 3. Crear la base de datos
-1. Abrir XAMPP y encender **MySQL**.
-2. Entrar a `http://localhost/phpmyadmin` → pestaña **SQL**.
-3. Ejecutar en orden: `database/01_tablas.sql`, `02_procedimientos.sql` y `03_datos_prueba.sql`.
+### 3. Conectarse a la base de datos compartida (Aiven)
+El grupo usa una sola base MySQL en la nube (Aiven), así todos ven los mismos datos.
+
+1. Copiar `config/db.example.php` como `config/db.php` y llenar host, puerto y contraseña (se comparten por privado, **nunca en GitHub**).
+2. El certificado `config/ca.pem` ya viene en el repositorio (no es secreto).
+3. Probar la conexión en `http://localhost:8000/prueba_conexion.php`.
+4. Para crear o cambiar tablas: conectarse con MySQL Workbench a Aiven y ejecutar en orden `database/01_tablas.sql`, `02_procedimientos.sql` y `03_datos_prueba.sql` (solo una persona, una vez).
+
+La conexión está en `app/core/Database.php` (PDO con SSL). Los repositorios la usan así: `$db = Database::conectar();`
 
 ### 4. Ver las pantallas
 Mientras el Router está en desarrollo, las vistas se prueban con el servidor de PHP:
@@ -97,6 +102,13 @@ Y abrir en el navegador:
 | Iniciar sesión | http://localhost:8000/auth/login |
 | Crear cuenta | http://localhost:8000/auth/registro |
 | Plantilla / guía de componentes | http://localhost:8000/plantilla |
+| Detalle (vitrina del emprendimiento) | http://localhost:8000/producto/detalle |
+| Carrito | http://localhost:8000/carrito |
+| Vendedor · Dashboard | http://localhost:8000/vendedor/dashboard |
+| Vendedor · Mis Productos | http://localhost:8000/vendedor/productos |
+| Vendedor · Agregar producto | http://localhost:8000/vendedor/productos/nuevo |
+| Vendedor · Editar producto | http://localhost:8000/vendedor/productos/editar?id=1 |
+| Vendedor · Mi Perfil | http://localhost:8000/vendedor/perfil |
 
 Para agregar una pantalla nueva a la prueba, se agrega un `case` en `public/prueba.php`.
 
@@ -145,6 +157,7 @@ Funciones disponibles en las vistas (`app/helpers/Vista.php`):
 | Cliente | Iniciar sesión | Listo |
 | Cliente | Crear cuenta | Listo |
 | Cliente | Home / Catálogo | Listo |
-| Cliente | Detalle de producto, Carrito | Pendiente |
-| Vendedor | Dashboard, Productos, Pedidos, Reportes, Perfil | Pendiente |
+| Cliente | Detalle de producto, Carrito | Listo |
+| Vendedor | Dashboard, Mis Productos, Agregar producto, Perfil | Listo |
+| Vendedor | Pedidos, Reportes | Pendiente |
 | Administrador | Dashboard, Solicitudes, Emprendimientos, Categorías, Usuarios, Reportes | Pendiente |

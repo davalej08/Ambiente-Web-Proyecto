@@ -713,3 +713,541 @@
         width: 100%;
     }
 }
+
+/* ==========================================================
+   DETALLE · vitrina pública del emprendimiento (producto/detalle.php)
+   Reutiliza las tarjetas .producto del catálogo.
+   ========================================================== */
+.vitrina-publica {
+    padding-block: 1.5rem 4rem;
+}
+
+.vitrina-publica > * + * {
+    margin-top: 2rem;
+}
+
+.vitrina-publica .tarjeta + .tarjeta {
+    margin-top: 2rem;
+}
+
+.migas {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.75rem;
+    color: var(--texto-suave);
+}
+
+.migas a {
+    color: var(--texto-suave);
+    text-decoration: none;
+}
+
+.migas a:hover {
+    color: var(--azul);
+}
+
+.migas .icono {
+    width: 0.8rem;
+    height: 0.8rem;
+}
+
+.migas [aria-current] {
+    font-weight: 700;
+    color: var(--azul-oscuro);
+}
+
+/* Portada */
+.portada {
+    padding: 0;
+    overflow: hidden;
+}
+
+.portada__banner {
+    position: relative;
+    height: 170px;
+    background:
+        radial-gradient(circle at 85% 30%, rgba(81, 166, 166, 0.45), transparent 50%),
+        linear-gradient(120deg, var(--azul-oscuro), var(--teal-oscuro));
+    overflow: hidden;
+}
+
+.portada__altitud {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.3rem 0.75rem;
+    border-radius: var(--radio-pill);
+    background: rgba(255, 255, 255, 0.14);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: var(--blanco);
+}
+
+.portada__altitud .icono {
+    width: 0.85rem;
+    height: 0.85rem;
+}
+
+.portada__marca-agua {
+    position: absolute;
+    right: 3rem;
+    bottom: -1.5rem;
+    width: 9rem;
+    height: 9rem;
+    color: rgba(255, 255, 255, 0.12);
+    stroke-width: 1.5;
+}
+
+.portada__cuerpo {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: end;
+    gap: 1.5rem;
+    padding: 0 2rem 1.5rem;
+}
+
+.portada__logo {
+    position: relative;
+    justify-self: start;
+    margin-top: -3.5rem;
+}
+
+.portada__logo img {
+    width: 128px;
+    height: 128px;
+    border: 5px solid var(--blanco);
+    border-radius: var(--radio-lg);
+    object-fit: cover;
+    box-shadow: var(--sombra-md);
+}
+
+.portada__verificado {
+    position: absolute;
+    right: -6px;
+    bottom: -6px;
+    display: grid;
+    place-items: center;
+    width: 1.9rem;
+    height: 1.9rem;
+    border: 3px solid var(--blanco);
+    border-radius: 50%;
+    background: var(--verde);
+    color: var(--blanco);
+}
+
+.portada__verificado .icono {
+    width: 0.85rem;
+    height: 0.85rem;
+}
+
+.portada__info {
+    padding-top: 1.25rem;
+}
+
+.portada__info h1 {
+    font-size: clamp(1.6rem, 3vw, 2.1rem);
+    font-weight: 800;
+}
+
+.portada__info .pill {
+    margin-block: 0.5rem;
+    background: rgba(81, 166, 166, 0.12);
+    border-color: transparent;
+    font-weight: 600;
+    color: var(--teal-oscuro);
+}
+
+.portada__info p {
+    max-width: 52ch;
+    font-size: 0.875rem;
+    color: var(--texto-2);
+}
+
+.portada__acciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+}
+
+.datos-vitrina {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.75rem;
+    margin: 0;
+    padding: 0 2rem 2rem;
+    list-style: none;
+}
+
+.datos-vitrina li {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.85rem 1rem;
+    border-radius: var(--radio-md);
+    background: var(--papel);
+    border: 1px solid var(--borde-suave);
+}
+
+.datos-vitrina strong {
+    display: block;
+    font-size: 0.8125rem;
+    color: var(--azul-oscuro);
+}
+
+.datos-vitrina small {
+    font-size: 0.6875rem;
+    color: var(--texto-suave);
+}
+
+.datos-vitrina__icono {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: var(--radio-md);
+    background: rgba(81, 166, 166, 0.18);
+    color: var(--teal-oscuro);
+}
+
+/* Historia */
+.historia {
+    padding: 2rem;
+    background: var(--papel);
+}
+
+.historia .sobretitulo,
+.catalogo-vitrina .sobretitulo,
+.resenas .sobretitulo {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.historia .sobretitulo {
+    color: var(--teal-oscuro);
+}
+
+.historia h2 {
+    margin-block: 0.5rem 0.75rem;
+    font-size: clamp(1.3rem, 2.4vw, 1.6rem);
+    font-weight: 800;
+}
+
+.historia__texto {
+    max-width: 75ch;
+    font-size: 0.875rem;
+}
+
+.historia__sellos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1.25rem;
+    padding: 0;
+    list-style: none;
+}
+
+/* Catálogo del emprendimiento */
+.catalogo-vitrina__cabecera {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.catalogo-vitrina__cabecera .titulo-seccion {
+    font-size: 1.5rem;
+    font-weight: 800;
+}
+
+.filtros-vitrina {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    padding: 0.3rem;
+    border-radius: var(--radio-pill);
+    background: var(--crema);
+}
+
+.filtros-vitrina .chip {
+    background: transparent;
+}
+
+.filtros-vitrina .chip.es-activo {
+    background: var(--blanco);
+    color: var(--azul-oscuro);
+    box-shadow: var(--sombra-sm);
+}
+
+.producto__ubicacion--doble {
+    justify-content: space-between;
+}
+
+.producto__ubicacion--doble span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.producto__estado {
+    color: var(--verde-oscuro);
+}
+
+.productos--vitrina {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.productos--vitrina li[hidden] {
+    display: none;
+}
+
+.sin-coincidencias {
+    margin-top: 1.5rem;
+    color: var(--texto-suave);
+    text-align: center;
+}
+
+/* Condiciones */
+.condiciones {
+    padding: 2rem;
+}
+
+.condiciones__cabecera {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.condiciones__cabecera h2 {
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+.condiciones__cabecera p {
+    font-size: 0.8125rem;
+    color: var(--texto-suave);
+}
+
+.condiciones__icono {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: var(--radio-md);
+    background: var(--azul-oscuro);
+    color: var(--blanco);
+}
+
+.condiciones__columnas {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+}
+
+.condiciones__bloque {
+    padding: 1.25rem;
+    border-radius: var(--radio-lg);
+    background: var(--papel);
+    border: 1px solid var(--borde-suave);
+}
+
+.condiciones__bloque h3 {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-bottom: 0.9rem;
+    font-family: var(--fuente-texto);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--teal-oscuro);
+}
+
+.condiciones__bloque ul {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 0.75rem;
+    color: var(--texto-2);
+}
+
+.condiciones__bloque li {
+    display: flex;
+    gap: 0.6rem;
+}
+
+.condiciones__bloque li > .icono {
+    margin-top: 0.15rem;
+    color: var(--verde);
+}
+
+.condiciones__bloque strong {
+    display: block;
+    font-size: 0.8125rem;
+    color: var(--azul-oscuro);
+}
+
+/* Reseñas */
+.resenas__promedio {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--azul-oscuro);
+}
+
+.resenas__promedio small {
+    color: var(--texto-suave);
+}
+
+.estrellas {
+    display: inline-flex;
+    gap: 0.1rem;
+    color: #E0A82E;
+}
+
+.estrellas .icono {
+    width: 1rem;
+    height: 1rem;
+}
+
+.resenas__promedio .icono,
+.estrellas .es-llena {
+    fill: currentColor;
+}
+
+.resenas__lista {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    margin: 1.25rem 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.resenas__lista .tarjeta + .tarjeta {
+    margin-top: 0;
+}
+
+.resena {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+}
+
+.resena__cabecera {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.6875rem;
+    color: var(--texto-tenue);
+}
+
+.resena blockquote {
+    margin: 0;
+    font-size: 0.8125rem;
+    line-height: 1.6;
+    color: var(--texto-2);
+}
+
+.resena__autor {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: auto;
+}
+
+.resena__autor strong {
+    display: block;
+    font-size: 0.8125rem;
+    color: var(--azul-oscuro);
+}
+
+.resena__autor small {
+    font-size: 0.6875rem;
+    color: var(--texto-suave);
+}
+
+.resena__avatar {
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 50%;
+    background: var(--info-fondo);
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--azul);
+}
+
+@media (max-width: 1000px) {
+    .portada__cuerpo {
+        grid-template-columns: auto minmax(0, 1fr);
+    }
+
+    .portada__acciones {
+        grid-column: 1 / -1;
+    }
+
+    .datos-vitrina {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .resenas__lista {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 900px) {
+    .productos--vitrina {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 700px) {
+    .portada__cuerpo {
+        grid-template-columns: 1fr;
+        padding-inline: 1.25rem;
+    }
+
+    .portada__info {
+        padding-top: 0;
+    }
+
+    .datos-vitrina {
+        grid-template-columns: 1fr;
+        padding-inline: 1.25rem;
+    }
+
+    .condiciones__columnas {
+        grid-template-columns: 1fr;
+    }
+
+    .historia,
+    .condiciones {
+        padding: 1.25rem;
+    }
+
+    .filtros-vitrina {
+        flex-wrap: nowrap;
+        width: 100%;
+        overflow-x: auto;
+        border-radius: var(--radio-md);
+    }
+
+    .filtros-vitrina .chip {
+        flex-shrink: 0;
+    }
+}

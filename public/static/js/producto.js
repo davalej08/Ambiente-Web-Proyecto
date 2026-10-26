@@ -66,3 +66,51 @@ for (let i = 0; i < corazones.length; i++) {
         }
     });
 }
+
+/* ==========================================================
+   Vitrina del emprendimiento (producto/detalle.php)
+   5. Filtrar el catálogo por categoría con los chips.
+   6. Compartir la vitrina: copia el enlace de la página.
+   ========================================================== */
+
+// 5. Filtros del catálogo de la vitrina
+const chipsFiltro = document.getElementsByClassName("chip-filtro");
+const productosVitrina = document.getElementsByClassName("producto-vitrina");
+
+for (let i = 0; i < chipsFiltro.length; i++) {
+    chipsFiltro[i].addEventListener("click", function () {
+        const filtro = chipsFiltro[i].getAttribute("data-filtro");
+
+        // Se marca solo el chip escogido
+        for (let j = 0; j < chipsFiltro.length; j++) {
+            chipsFiltro[j].classList.remove("es-activo");
+        }
+        chipsFiltro[i].classList.add("es-activo");
+
+        // Se muestran solo los productos de esa categoría
+        let visibles = 0;
+        for (let j = 0; j < productosVitrina.length; j++) {
+            const categoria = productosVitrina[j].getAttribute("data-categoria");
+
+            if (filtro === "todos" || categoria === filtro) {
+                productosVitrina[j].hidden = false;
+                visibles++;
+            } else {
+                productosVitrina[j].hidden = true;
+            }
+        }
+
+        // Mensaje si la categoría no tiene productos
+        document.getElementById("sinCoincidencias").hidden = visibles > 0;
+    });
+}
+
+// 6. Compartir la vitrina
+const botonCompartir = document.getElementById("compartirVitrina");
+
+if (botonCompartir) {
+    botonCompartir.addEventListener("click", function () {
+        navigator.clipboard.writeText(window.location.href);
+        alert("Enlace de la vitrina copiado. ¡Ya lo podés compartir!");
+    });
+}

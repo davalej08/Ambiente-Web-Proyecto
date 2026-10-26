@@ -20,3 +20,6 @@ desktop.ini
 
 # Logs
 *.log
+
+# Credenciales de la base de datos (cada integrante tiene su copia local)
+config/db.php
