@@ -1,0 +1,348 @@
+/*
+ * David Céspedes Camacho, Ronald Calderón, Susan Echavarría Céspedes, Sofía Loaiza Cabalceta
+ * Ambiente Web Cliente/Servidor · SC-502
+ * Universidad Fidélitas · Costa Rica
+ */
+
+/* ==========================================================
+   VENTICA · reportes.css
+   Estilos de la pantalla Reportes de Ventas del vendedor.
+   Se carga junto a vendedor.css, que trae la estructura del
+   panel (.panel__*), .indicadores, .indicador__icono y .insignia.
+   1. Cabecera y selector de período.
+   2. Indicadores (KPI).
+   3. Gráfica de ingresos.
+   4. Responsivo.
+   ========================================================== */
+
+/* ---------- 1. Cabecera ---------- */
+.reportes-cabecera {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1.25rem;
+    margin-bottom: 1.75rem;
+}
+
+.reportes-cabecera .encabezado-pagina {
+    margin-bottom: 0;
+}
+
+.reportes-cabecera__sobretitulo {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--teal-oscuro);
+}
+
+.reportes-cabecera__sobretitulo .icono {
+    width: 0.95rem;
+    height: 0.95rem;
+}
+
+.reportes-cabecera__controles {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+/* Selector de período */
+.segmentado {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    padding: 0.3rem;
+    border-radius: var(--radio-pill);
+    background: var(--crema);
+}
+
+.segmentado__opcion {
+    padding: 0.45rem 1rem;
+    border-radius: var(--radio-pill);
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--azul-oscuro);
+    text-decoration: none;
+    transition: background-color 0.15s, color 0.15s;
+}
+
+.segmentado__opcion:hover {
+    background: var(--borde);
+}
+
+.segmentado__opcion.es-activo {
+    background: var(--azul);
+    color: var(--blanco);
+}
+
+.segmentado__opcion:focus-visible {
+    outline: 2px solid var(--teal);
+    outline-offset: 2px;
+}
+
+/* ---------- 2. Indicadores ---------- */
+.kpi {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    overflow: hidden;
+}
+
+/* Círculo de color decorativo en la esquina */
+.kpi::after {
+    content: "";
+    position: absolute;
+    right: -2rem;
+    bottom: -2.5rem;
+    width: 8rem;
+    height: 8rem;
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.kpi--azul::after {
+    background: rgba(81, 166, 166, 0.16);
+}
+
+.kpi--crema::after {
+    background: var(--crema);
+}
+
+.kpi--verde::after {
+    background: rgba(143, 229, 138, 0.35);
+}
+
+.kpi__cabecera {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.kpi__cabecera h2 {
+    font-family: var(--fuente-texto);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--texto-2);
+}
+
+.kpi__valor,
+.kpi__producto,
+.kpi__pie {
+    position: relative;
+    z-index: 1;
+}
+
+.kpi__valor {
+    font-family: var(--fuente-titulos);
+    font-size: clamp(2rem, 3.4vw, 2.75rem);
+    font-weight: 800;
+    color: var(--azul-oscuro);
+    line-height: 1.05;
+}
+
+.kpi__valor small {
+    font-size: 1.15rem;
+    font-weight: 500;
+    color: var(--texto-2);
+}
+
+.kpi__producto {
+    font-family: var(--fuente-titulos);
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--azul-oscuro);
+    line-height: 1.2;
+}
+
+.kpi__pie {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: auto;
+    font-size: 0.75rem;
+    color: var(--texto-suave);
+}
+
+.kpi__pie .insignia {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    background: rgba(143, 229, 138, 0.45);
+}
+
+.kpi__pie .icono {
+    width: 0.9rem;
+    height: 0.9rem;
+}
+
+/* ---------- 3. Gráfica de ingresos ---------- */
+.grafica {
+    padding: 1.75rem;
+}
+
+.grafica__cabecera {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+}
+
+.grafica__cabecera .titulo-seccion {
+    font-size: 1.35rem;
+}
+
+.grafica__cabecera .texto-guia {
+    font-size: 0.8125rem;
+}
+
+.grafica__leyenda {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.4rem 1rem;
+    border-radius: var(--radio-pill);
+    background: var(--crema);
+    font-size: 0.75rem;
+    color: var(--texto-2);
+}
+
+.grafica__leyenda .punto {
+    width: 10px;
+    height: 10px;
+    background: var(--azul);
+}
+
+.grafica__leyenda strong {
+    color: var(--azul-oscuro);
+}
+
+.grafica__svg {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+/* Colores de los degradados del SVG */
+.grafica__parada-area-1 {
+    stop-color: var(--azul);
+    stop-opacity: 0.28;
+}
+
+.grafica__parada-area-2 {
+    stop-color: var(--teal);
+    stop-opacity: 0;
+}
+
+.grafica__parada-linea-1 {
+    stop-color: var(--azul);
+}
+
+.grafica__parada-linea-2 {
+    stop-color: var(--teal);
+}
+
+.grafica__guia {
+    stroke: var(--borde);
+    stroke-width: 1;
+    stroke-dasharray: 4 4;
+}
+
+.grafica__eje {
+    fill: var(--texto-suave);
+    font-family: var(--fuente-texto);
+    font-size: 11px;
+}
+
+.grafica__eje--x {
+    fill: var(--texto);
+    font-size: 12px;
+}
+
+.grafica__area {
+    fill: url(#degradadoArea);
+}
+
+.grafica__linea {
+    fill: none;
+    stroke: url(#degradadoLinea);
+    stroke-width: 3;
+    stroke-linecap: round;
+}
+
+.grafica__punto {
+    fill: var(--blanco);
+    stroke: var(--azul);
+    stroke-width: 3;
+}
+
+.grafica__punto:hover {
+    stroke: var(--verde);
+}
+
+/* Monto de cada punto, debajo de la gráfica */
+.grafica__resumen {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr));
+    gap: 0.75rem;
+    margin: 1.25rem 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.grafica__resumen li {
+    padding: 0.7rem 0.5rem;
+    border-radius: var(--radio-md);
+    background: var(--fondo);
+    text-align: center;
+}
+
+.grafica__resumen small {
+    display: block;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: var(--texto-2);
+}
+
+.grafica__resumen strong {
+    font-family: var(--fuente-titulos);
+    font-size: 0.95rem;
+    color: var(--azul-oscuro);
+}
+
+.grafica__resumen .es-actual {
+    background: rgba(143, 229, 138, 0.35);
+}
+
+/* ---------- 4. Responsivo ---------- */
+@media (max-width: 700px) {
+    /* El SVG se encoge con la pantalla; el texto se agranda para seguir leyéndose */
+    .grafica__eje {
+        font-size: 17px;
+    }
+
+    .grafica__eje--x {
+        font-size: 19px;
+    }
+
+    .grafica {
+        padding: 1.25rem 1rem;
+    }
+
+    .segmentado {
+        width: 100%;
+    }
+
+    .segmentado__opcion {
+        flex: 1 0 auto;
+        text-align: center;
+    }
+}

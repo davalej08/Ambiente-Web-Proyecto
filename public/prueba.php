@@ -43,6 +43,7 @@ switch ($ruta) {
     case '/plantilla':
         require $vistas . 'general/plantilla.php';
         break;
+
     // Cliente: detalle (vitrina del emprendimiento) y carrito
     case '/producto/detalle':
         require $vistas . 'producto/detalle.php';
@@ -50,6 +51,7 @@ switch ($ruta) {
     case '/carrito':
         require $vistas . 'carrito/carrito.php';
         break;
+
     // Portal del vendedor
     case '/vendedor/dashboard':
         require $vistas . 'constante/dashboard_vendedor.php';
@@ -69,6 +71,14 @@ switch ($ruta) {
     case '/vendedor/perfil':
         require $vistas . 'vendedor/perfil.php';
         break;
+    case '/vendedor/pedidos':
+        require $vistas . 'vendedor/pedidos.php';
+        break;
+    case '/vendedor/reportes':
+        require $vistas . 'vendedor/reportes.php';
+        break;
+
+    // Ruta en caso de que la pantalla que se busca no esté
     default:
         http_response_code(404);
         echo '<h1>Esta pantalla todavía no existe</h1>';
