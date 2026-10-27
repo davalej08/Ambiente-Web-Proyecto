@@ -3,5 +3,372 @@
  * Ambiente Web Cliente/Servidor · SC-502
  * Universidad Fidélitas · Costa Rica
  */
+/* ==========================================================
+   VENTICA · admin.css
+   ========================================================== */
 
-/* Estilos - admin */
+/* ---------- Estructura del panel ---------- */
+.panel {
+    flex: 1;
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Menú lateral */
+.panel__lateral {
+    position: sticky;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    flex-shrink: 0;
+    width: var(--sidebar);
+    height: 100vh;
+    padding: 24px 16px 16px;
+    border-right: 1px solid var(--borde);
+    background-color: var(--crema);
+}
+
+.panel__marca {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 8px;
+    text-decoration: none;
+}
+
+.panel__marca-icono {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 42px;
+    height: 42px;
+    border-radius: var(--radio-md);
+    background-color: var(--azul);
+    color: var(--blanco);
+}
+
+.panel__marca strong {
+    display: block;
+    font-family: var(--fuente-titulos);
+    font-size: 1.2rem;
+    color: var(--azul-oscuro);
+    line-height: 1.1;
+}
+
+.panel__marca small {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--texto-2);
+}
+
+.panel__menu ul {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.panel__enlace {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 14px;
+    border-radius: var(--radio-md);
+    font-size: 0.9rem;
+    font-weight: 600;
+    line-height: 1.25;
+    color: var(--azul-oscuro);
+    text-decoration: none;
+}
+
+.panel__enlace:hover {
+    background-color: var(--borde);
+}
+
+.panel__enlace .icono {
+    flex-shrink: 0;
+}
+
+.panel__enlace.es-activo {
+    background-color: var(--azul);
+    color: var(--blanco);
+}
+
+/* Número de solicitudes pendientes */
+.panel__contador {
+    margin-left: auto;
+    padding: 1px 9px;
+    border-radius: var(--radio-pill);
+    background-color: #A8E6E6;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--azul-oscuro);
+}
+
+/* Tarjeta del administrador (abajo del menú) */
+.panel__admin {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: auto;
+    padding: 12px;
+    border-radius: var(--radio-lg);
+    background-color: var(--fondo);
+}
+
+.panel__admin-avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background-color: var(--azul-oscuro);
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--blanco);
+}
+
+.panel__admin-datos {
+    flex: 1;
+    min-width: 0;
+}
+
+.panel__admin-datos strong {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--azul-oscuro);
+}
+
+.panel__admin-datos small {
+    display: block;
+    overflow: hidden;
+    font-size: 0.75rem;
+    color: var(--texto-suave);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Lado derecho: barra + contenido */
+.panel__principal {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.panel__barra {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 12px 32px;
+    border-bottom: 1px solid var(--borde-suave);
+    background-color: var(--fondo);
+}
+
+.panel__consola {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--azul-oscuro);
+}
+
+.panel__consola .icono {
+    width: 1rem;
+    height: 1rem;
+    color: var(--verde-oscuro);
+}
+
+.panel__buscador {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    max-width: 420px;
+    padding: 9px 16px;
+    border-radius: var(--radio-md);
+    background-color: var(--crema);
+    color: var(--texto-suave);
+}
+
+.panel__buscador input {
+    flex: 1;
+    min-width: 0;
+    border: 0;
+    background: transparent;
+    font-size: 0.85rem;
+}
+
+.panel__buscador input:focus {
+    outline: none;
+}
+
+.panel__barra-acciones {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-left: auto;
+}
+
+.panel__boton-icono {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border: 0;
+    border-radius: var(--radio-md);
+    background-color: transparent;
+    color: var(--azul-oscuro);
+    cursor: pointer;
+}
+
+.panel__boton-icono:hover {
+    background-color: var(--crema);
+}
+
+.panel__aviso {
+    position: absolute;
+    top: 8px;
+    right: 9px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--error);
+}
+
+.panel__perfil {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.panel__perfil img {
+    border-radius: var(--radio-sm);
+}
+
+.panel__perfil strong {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--azul-oscuro);
+    line-height: 1.2;
+}
+
+.panel__perfil small {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--texto-suave);
+}
+
+.panel__contenido {
+    width: 100%;
+    max-width: 1180px;
+    padding: 28px 32px 48px;
+}
+
+/* Etiquetas de formulario del panel */
+.panel .campo__etiqueta {
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--azul-oscuro);
+}
+
+/* ---------- 2. Piezas comunes del panel ---------- */
+.panel [hidden] {
+    display: none !important;
+}
+
+/* ---------- 3. Responsivo ---------- */
+@media (max-width: 1100px) {
+    .panel__consola {
+        display: none;
+    }
+}
+
+@media (max-width: 900px) {
+    .panel {
+        flex-direction: column;
+    }
+
+    /* En tablet y celular el menú lateral pasa a ser una barra horizontal */
+    .panel__lateral {
+        position: static;
+        flex-direction: row;
+        align-items: center;
+        gap: 16px;
+        width: 100%;
+        height: auto;
+        padding: 12px 16px;
+        border-right: 0;
+        border-bottom: 1px solid var(--borde);
+    }
+
+    .panel__marca small,
+    .panel__admin {
+        display: none;
+    }
+
+    .panel__menu {
+        min-width: 0;
+        overflow-x: auto;
+    }
+
+    .panel__menu ul {
+        flex-direction: row;
+    }
+
+    .panel__enlace {
+        padding: 9px 12px;
+        white-space: nowrap;
+    }
+
+    .panel__barra {
+        padding: 10px 16px;
+    }
+
+    .panel__contenido {
+        padding: 20px 16px 40px;
+    }
+}
+
+@media (max-width: 700px) {
+    .panel__buscador,
+    .panel__perfil span {
+        display: none;
+    }
+}
+
+/* ---------- 4. Impresión ---------- */
+@media print {
+    .panel__lateral,
+    .panel__barra,
+    .solo-pantalla,
+    .saltar-contenido {
+        display: none !important;
+    }
+
+    .panel__contenido {
+        max-width: none;
+        padding: 0;
+    }
+
+    body {
+        background-color: var(--blanco);
+    }
+}

@@ -1,0 +1,492 @@
+/*
+ * David Céspedes Camacho, Ronald Calderón, Susan Echavarría Céspedes, Sofía Loaiza Cabalceta
+ * Ambiente Web Cliente/Servidor · SC-502
+ * Universidad Fidélitas · Costa Rica
+ */
+/* ==========================================================
+   VENTICA · admin_gestion.css
+   Pantallas del panel de administración: Emprendimientos Activos, Gestión de Categorías, Gestión de Usuarios y Reportes Generales.
+   1. Piezas comunes (encabezado, chips, botones, listas, pie)
+   2. Emprendimientos Activos
+   3. Gestión de Categorías
+   4. Gestión de Usuarios
+   5. Reportes Generales
+     ========================================================== */
+
+/* ---------- 1. Piezas comunes ---------- */
+.ad-oculto {
+    display: none;
+}
+
+.ad-cabecera {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 28px;
+}
+
+.ad-etiquetas {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.ad-pastilla {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    border-radius: var(--radio-pill);
+    background-color: var(--info-fondo);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--azul);
+}
+
+.ad-pastilla--verde {
+    background-color: var(--exito-fondo);
+    color: var(--verde-oscuro);
+    text-transform: none;
+    letter-spacing: 0;
+}
+
+.ad-pastilla .icono {
+    width: 0.9rem;
+    height: 0.9rem;
+}
+
+.ad-sobretitulo {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--teal-oscuro);
+}
+
+.ad-sobretitulo--verde {
+    color: var(--verde-oscuro);
+}
+
+.ad-sobretitulo--suave {
+    letter-spacing: 0;
+    text-transform: none;
+    font-weight: 500;
+    color: var(--texto-suave);
+}
+
+.ad-sobretitulo .icono {
+    width: 0.9rem;
+    height: 0.9rem;
+}
+
+.ad-titulo {
+    font-family: var(--fuente-titulos);
+    font-size: 2.1rem;
+    font-weight: 800;
+    line-height: 1.15;
+    color: var(--azul-oscuro);
+}
+
+.ad-descripcion {
+    max-width: 640px;
+    margin-top: 8px;
+    color: var(--texto-suave);
+}
+
+.ad-cabecera__acciones {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+/* El .punto de color viene de general.css */
+.ad-en-vivo .punto,
+.ad-pastilla .punto,
+.ad-usuario__estado .punto {
+    flex-shrink: 0;
+}
+
+.ad-en-vivo {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--verde-oscuro);
+}
+
+/* Chips */
+.ad-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border: 1px solid var(--borde);
+    border-radius: var(--radio-pill);
+    background-color: var(--blanco);
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--azul-oscuro);
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.ad-chip:hover {
+    background-color: var(--crema);
+}
+
+.ad-chip.es-activo {
+    border-color: var(--azul-oscuro);
+    background-color: var(--azul-oscuro);
+    color: var(--blanco);
+}
+
+.ad-chip--suave,
+.ad-chip--teal {
+    padding: 3px 10px;
+    border: 0;
+    font-size: 0.72rem;
+    cursor: default;
+}
+
+.ad-chip--suave,
+.ad-chip--suave:hover {
+    background-color: var(--crema);
+    color: var(--texto-2);
+}
+
+.ad-chip--teal,
+.ad-chip--teal:hover {
+    background-color: #DDF1F1;
+    color: var(--teal-oscuro);
+}
+
+.ad-chip .icono {
+    width: 0.95rem;
+    height: 0.95rem;
+}
+
+/* Botones pequeños de las filas y tarjetas */
+.ad-boton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border: 1px solid transparent;
+    border-radius: var(--radio-md);
+    font-family: var(--fuente-titulos);
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.ad-boton .icono {
+    width: 0.95rem;
+    height: 0.95rem;
+}
+
+.ad-boton--claro {
+    border-color: var(--borde);
+    background-color: var(--blanco);
+    color: var(--azul-oscuro);
+}
+
+.ad-boton--claro:hover {
+    background-color: var(--crema);
+}
+
+.ad-boton--azul {
+    background-color: var(--azul-oscuro);
+    color: var(--blanco);
+}
+
+.ad-boton--azul:hover {
+    background-color: var(--azul);
+}
+
+.ad-boton--peligro {
+    background-color: var(--error-fondo);
+    color: var(--error);
+}
+
+.ad-boton--peligro:hover {
+    border-color: var(--error);
+}
+
+.ad-boton--exito {
+    background-color: var(--verde);
+    color: var(--blanco);
+}
+
+.ad-boton--exito:hover {
+    background-color: var(--verde-oscuro);
+}
+
+.ad-boton-verde {
+    border-radius: var(--radio-md);
+    background-color: var(--verde-oscuro);
+    color: var(--blanco);
+}
+
+.ad-boton-verde:hover {
+    background-color: var(--verde);
+}
+
+/* Botón cuadrado solo con ícono */
+.ad-boton-icono {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 38px;
+    height: 38px;
+    border: 1px solid var(--borde);
+    border-radius: var(--radio-md);
+    background-color: var(--blanco);
+    color: var(--azul-oscuro);
+    cursor: pointer;
+}
+
+.ad-boton-icono:hover {
+    background-color: var(--crema);
+}
+
+/* Buscador grande de las pantallas */
+.ad-buscador {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 8px 8px 18px;
+    border: 1px solid var(--borde);
+    border-radius: var(--radio-lg);
+    background-color: var(--blanco);
+    color: var(--texto-suave);
+}
+
+.ad-buscador input {
+    flex: 1;
+    min-width: 0;
+    padding: 8px 0;
+    border: 0;
+    background: transparent;
+    font-size: 0.9rem;
+}
+
+.ad-buscador input:focus {
+    outline: none;
+}
+
+.ad-buscador:focus-within {
+    border-color: var(--teal);
+}
+
+/* Indicadores (tarjetas con número) */
+.ad-indicadores {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin: 0 0 24px;
+    padding: 0;
+    list-style: none;
+}
+
+.ad-indicador {
+    display: flex;
+    flex: 1 1 200px;
+    align-items: center;
+    gap: 14px;
+    padding: 18px;
+    border: 1px solid var(--borde-suave);
+    border-radius: var(--radio-lg);
+    background-color: var(--blanco);
+    box-shadow: var(--sombra-sm);
+}
+
+.ad-indicador small {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--texto-suave);
+}
+
+.ad-indicador strong {
+    display: block;
+    font-family: var(--fuente-titulos);
+    font-size: 1.15rem;
+    color: var(--azul-oscuro);
+}
+
+.ad-indicador__icono {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radio-md);
+    background-color: #FCE7DF;
+    color: var(--terracota);
+}
+
+.ad-indicador__icono--azul {
+    background-color: var(--info-fondo);
+    color: var(--azul);
+}
+
+.ad-indicador__icono--teal {
+    background-color: #DDF1F1;
+    color: var(--teal-oscuro);
+}
+
+.ad-indicador__icono--verde {
+    background-color: var(--exito-fondo);
+    color: var(--verde-oscuro);
+}
+
+/* Formulario que aparece arriba de la lista */
+.ad-formulario {
+    margin-bottom: 24px;
+    border: 1px solid var(--borde);
+}
+
+.ad-formulario .titulo-seccion {
+    margin-bottom: 16px;
+    color: var(--azul-oscuro);
+}
+
+.ad-formulario__campos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.ad-formulario__campos .campo {
+    flex: 1 1 240px;
+}
+
+.ad-formulario__botones {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.ad-fila-campo {
+    display: flex;
+    gap: 8px;
+}
+
+.ad-fila-campo .campo__entrada {
+    flex: 1;
+    min-width: 0;
+}
+
+/* Listas de filas */
+.ad-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.ad-vacio {
+    padding: 32px;
+    border: 1px dashed var(--borde);
+    border-radius: var(--radio-lg);
+    text-align: center;
+    color: var(--texto-suave);
+}
+
+.ad-sube {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.78rem;
+    font-style: normal;
+    font-weight: 700;
+    color: var(--verde-oscuro);
+}
+
+.ad-sube .icono {
+    width: 0.9rem;
+    height: 0.9rem;
+}
+
+/* Pie con la cantidad y la paginación */
+.ad-pie {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 24px;
+    font-size: 0.85rem;
+    color: var(--texto-suave);
+}
+
+.ad-paginacion {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.ad-paginacion a,
+.ad-paginacion span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 34px;
+    height: 34px;
+    border-radius: var(--radio-sm);
+    font-weight: 600;
+    color: var(--azul-oscuro);
+    text-decoration: none;
+}
+
+.ad-paginacion a:hover {
+    background-color: var(--crema);
+}
+
+.ad-paginacion a.es-actual {
+    background-color: var(--azul);
+    color: var(--blanco);
+}
+
+/* Celular y tablet: piezas comunes */
+@media (max-width: 900px) {
+    .ad-cabecera {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .ad-cabecera__acciones {
+        justify-content: flex-start;
+    }
+
+    .ad-titulo {
+        font-size: 1.7rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .ad-pie {
+        justify-content: center;
+    }
+}
