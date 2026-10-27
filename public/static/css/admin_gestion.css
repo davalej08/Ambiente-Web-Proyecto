@@ -876,3 +876,239 @@
         break-inside: avoid;
     }
 }
+
+/* ---------- 4. Gestión de Usuarios ---------- */
+.ad-herramientas {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.ad-herramientas .ad-buscador {
+    flex: 1;
+}
+
+.ad-orden {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+    padding: 0 14px;
+    border: 1px solid var(--borde);
+    border-radius: var(--radio-lg);
+    background-color: var(--blanco);
+    font-size: 0.85rem;
+    color: var(--texto-suave);
+}
+
+.ad-orden select {
+    padding: 14px 0;
+    border: 0;
+    background: transparent;
+    font-weight: 700;
+    color: var(--azul-oscuro);
+}
+
+.ad-pestanas {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid var(--borde);
+    overflow-x: auto;
+}
+
+.ad-pestana {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    border: 0;
+    border-bottom: 3px solid transparent;
+    background: transparent;
+    font-family: var(--fuente-titulos);
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--texto-suave);
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.ad-pestana span {
+    padding: 1px 8px;
+    border-radius: var(--radio-pill);
+    background-color: var(--crema);
+    font-size: 0.75rem;
+}
+
+.ad-pestana.es-activo {
+    border-bottom-color: var(--azul);
+    color: var(--azul-oscuro);
+}
+
+.ad-pestana.es-activo span {
+    background-color: var(--azul);
+    color: var(--blanco);
+}
+
+.ad-usuario {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 16px 20px;
+    border: 1px solid var(--borde-suave);
+    border-radius: var(--radio-lg);
+    background-color: var(--blanco);
+}
+
+.ad-usuario--suspendido {
+    background-color: var(--papel);
+}
+
+.ad-avatar {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background-color: var(--info-fondo);
+    font-family: var(--fuente-titulos);
+    font-weight: 800;
+    color: var(--azul);
+}
+
+.ad-avatar--emprendedor {
+    border-radius: var(--radio-md);
+    background-color: #DDF1F1;
+    color: var(--teal-oscuro);
+}
+
+.ad-avatar__punto {
+    position: absolute;
+    right: -2px;
+    bottom: -2px;
+    width: 12px;
+    height: 12px;
+    border: 2px solid var(--blanco);
+    border-radius: 50%;
+    background-color: var(--verde);
+}
+
+.ad-avatar__punto.es-suspendido {
+    background-color: var(--error);
+}
+
+.ad-usuario__info {
+    flex: 1;
+    min-width: 0;
+}
+
+.ad-usuario__info h2 {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--fuente-titulos);
+    font-size: 1rem;
+    color: var(--azul-oscuro);
+}
+
+.ad-usuario__info h2 small {
+    font-family: var(--fuente-texto);
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--texto-suave);
+}
+
+.ad-usuario__info p {
+    margin-top: 2px;
+    overflow: hidden;
+    font-size: 0.85rem;
+    color: var(--texto-suave);
+    text-overflow: ellipsis;
+}
+
+.ad-usuario__fecha {
+    flex-shrink: 0;
+    width: 110px;
+    font-size: 0.85rem;
+    color: var(--texto-2);
+}
+
+.ad-usuario__fecha small {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--texto-suave);
+}
+
+.ad-usuario__estado {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+    width: 110px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--verde-oscuro);
+}
+
+.ad-usuario__estado.es-suspendido {
+    color: var(--error);
+}
+
+.ad-usuario__estado.es-suspendido .punto {
+    background-color: var(--error);
+}
+
+.ad-usuario__acciones {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    gap: 8px;
+}
+
+.ad-usuario__acciones .ad-boton {
+    min-width: 100px;
+}
+
+/* Celular y tablet: Gestión de Usuarios */
+@media (max-width: 1100px) {
+    .ad-usuario__fecha {
+        display: none;
+    }
+}
+
+@media (max-width: 900px) {
+    .ad-usuario {
+        flex-wrap: wrap;
+    }
+
+    .ad-usuario__info {
+        flex-basis: calc(100% - 70px);
+    }
+
+    .ad-usuario__acciones {
+        margin-left: auto;
+    }
+}
+
+@media (max-width: 600px) {
+    .ad-herramientas {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .ad-usuario__acciones {
+        width: 100%;
+    }
+
+    .ad-usuario__acciones .ad-boton {
+        flex: 1;
+    }
+}
