@@ -1112,3 +1112,308 @@
         flex: 1;
     }
 }
+
+/* ---------- 5. Reportes Generales ---------- */
+.ad-pastilla--lima {
+    background-color: #9CF0A8;
+    color: #0B5A23;
+}
+
+/* Selector del período con ícono */
+.ad-periodo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 14px;
+    border-radius: var(--radio-md);
+    background-color: var(--crema);
+    color: var(--azul-oscuro);
+}
+
+.ad-periodo select {
+    padding: 12px 4px;
+    border: 0;
+    background: transparent;
+    font-family: var(--fuente-titulos);
+    font-weight: 700;
+    color: var(--azul-oscuro);
+}
+
+.ad-solo-impresion {
+    display: none;
+}
+
+.ad-kpi {
+    position: relative;
+    flex: 1 1 240px;
+    padding: 24px;
+    border-radius: var(--radio-xl);
+    background-color: var(--blanco);
+    box-shadow: var(--sombra-sm);
+    overflow: hidden;
+}
+
+/* Círculo decorativo de la esquina*/
+.ad-kpi::after {
+    content: "";
+    position: absolute;
+    right: -30px;
+    bottom: -40px;
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    background-color: var(--fondo);
+}
+
+.ad-kpi__cabecera {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.ad-kpi small {
+    display: block;
+    max-width: 200px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--texto-2);
+}
+
+.ad-kpi strong {
+    position: relative;
+    z-index: 1;
+    display: block;
+    margin-bottom: 10px;
+    font-family: var(--fuente-titulos);
+    font-size: 2.6rem;
+    font-weight: 800;
+    line-height: 1.1;
+    color: var(--azul-oscuro);
+}
+
+.ad-kpi p {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.82rem;
+    color: var(--texto-2);
+}
+
+.ad-kpi p .icono {
+    flex-shrink: 0;
+    width: 1rem;
+    height: 1rem;
+    color: var(--verde-oscuro);
+}
+
+.ad-sube--chip {
+    padding: 2px 8px;
+    border-radius: var(--radio-pill);
+    background-color: #9CF0A8;
+    color: #0B5A23;
+}
+
+.ad-indicador__icono--gris {
+    background-color: var(--crema);
+    color: var(--azul-oscuro);
+}
+
+.ad-indicador__icono--lima {
+    background-color: #9CF0A8;
+    color: #0B5A23;
+}
+
+.ad-indicador__icono--celeste {
+    background-color: #A8E6E6;
+    color: var(--teal-oscuro);
+}
+
+.ad-tarjeta {
+    margin-bottom: 24px;
+    border: 0;
+    border-radius: var(--radio-xl);
+    box-shadow: var(--sombra-sm);
+}
+
+.ad-tarjeta h2 {
+    font-family: var(--fuente-titulos);
+    font-size: 1.25rem;
+    color: var(--azul-oscuro);
+}
+
+.ad-tarjeta__cabecera {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.ad-tarjeta__cabecera p {
+    margin-top: 4px;
+    font-size: 0.85rem;
+    color: var(--texto-2);
+}
+
+.ad-leyenda {
+    display: flex;
+    gap: 16px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.ad-leyenda span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.ad-leyenda__color {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: var(--azul);
+}
+
+.ad-leyenda__color--claro {
+    background-color: var(--borde);
+}
+
+.ad-barras {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    max-width: 880px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.ad-barra__texto {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.ad-barra__texto > span:first-child {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.1rem;
+    color: var(--texto);
+}
+
+.ad-barra__monto {
+    flex-shrink: 0;
+    color: var(--texto-2);
+}
+
+.ad-barra__monto strong {
+    display: inline-block;
+    min-width: 52px;
+    text-align: right;
+    color: var(--azul-oscuro);
+}
+
+.ad-barra__punto {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+}
+
+.ad-barra__fondo {
+    height: 12px;
+    border-radius: var(--radio-pill);
+    background-color: var(--crema);
+    overflow: hidden;
+}
+
+.ad-barra__relleno {
+    display: block;
+    width: 0;
+    height: 100%;
+    border-radius: var(--radio-pill);
+    transition: width 0.6s;
+}
+
+/* Un color por barra (el número lo pone PHP) */
+.ad-barra--1 .ad-barra__punto, .ad-barra--1 .ad-barra__relleno { background-color: #0A5675; }
+.ad-barra--2 .ad-barra__punto, .ad-barra--2 .ad-barra__relleno { background-color: #0B6B2E; }
+.ad-barra--3 .ad-barra__punto, .ad-barra--3 .ad-barra__relleno { background-color: #087070; }
+.ad-barra--4 .ad-barra__punto, .ad-barra--4 .ad-barra__relleno { background-color: #6FD98A; }
+.ad-barra--5 .ad-barra__punto, .ad-barra--5 .ad-barra__relleno { background-color: #2A6487; }
+.ad-barra--6 .ad-barra__punto, .ad-barra--6 .ad-barra__relleno { background-color: #C3C8CE; }
+
+.ad-dos-columnas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+}
+
+.ad-dos-columnas .ad-tarjeta {
+    flex: 1 1 320px;
+    margin-bottom: 0;
+}
+
+.ad-dos-columnas .tarjeta + .tarjeta {
+    margin-top: 0;
+}
+
+/* Tarjeta con el ícono a la izquierda y el texto a la derecha */
+.ad-tarjeta--fila {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.ad-tarjeta--fila h2 {
+    font-size: 1rem;
+    color: var(--texto);
+}
+
+.ad-tarjeta--fila p {
+    margin-top: 4px;
+    font-size: 0.85rem;
+    color: var(--texto-2);
+}
+
+.ad-tarjeta--fila .ad-indicador__icono {
+    width: 48px;
+    height: 48px;
+}
+
+/* Celular y tablet: Reportes Generales */
+@media (max-width: 600px) {
+    .ad-barra__texto {
+        flex-direction: column;
+        gap: 2px;
+    }
+}
+
+/* Impresión: "Exportar resumen" */
+@media print {
+    .ad-solo-impresion {
+        display: block;
+        margin-bottom: 16px;
+    }
+
+    .ad-kpi,
+    .ad-tarjeta {
+        box-shadow: none;
+        break-inside: avoid;
+    }
+
+    .ad-barra__relleno {
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+    }
+}
