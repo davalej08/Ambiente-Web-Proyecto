@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ============================================================
  *  SERVIDOR DE PRUEBA DE VISTAS  (solo para desarrollo)
@@ -64,8 +65,15 @@ switch ($ruta) {
         break;
     case '/vendedor/productos/editar':
         // Producto de muestra para ver el formulario en modo edición
-        $producto = ['id' => 1, 'nombre' => 'Café Geisha Reserva Especial', 'id_categoria' => 1, 'precio' => 9500, 'stock' => 24,
-                     'descripcion' => 'Grano entero de altura cultivado en Dota, con notas florales a jazmín y miel de abeja.', 'imagen' => 'productos/cafe-geisha.jpg'];
+        $producto = [
+            'id' => 1,
+            'nombre' => 'Café Geisha Reserva Especial',
+            'id_categoria' => 1,
+            'precio' => 9500,
+            'stock' => 24,
+            'descripcion' => 'Grano entero de altura cultivado en Dota, con notas florales a jazmín y miel de abeja.',
+            'imagen' => 'productos/cafe-geisha.jpg'
+        ];
         require $vistas . 'producto/formulario.php';
         break;
     case '/vendedor/perfil':
@@ -76,6 +84,20 @@ switch ($ruta) {
         break;
     case '/vendedor/reportes':
         require $vistas . 'vendedor/reportes.php';
+        break;
+
+    // Portal del administrador
+    case '/admin/emprendimientos':
+        require $vistas . 'usuario_rol/vendedores.php';
+        break;
+    case '/admin/categorias':
+        require $vistas . 'categoria/listado.php';
+        break;
+    case '/admin/usuarios':
+        require $vistas . 'usuario_rol/clientes.php';
+        break;
+    case '/admin/reportes':
+        require $vistas . 'consultas/reportes_admin.php';
         break;
 
     // Ruta en caso de que la pantalla que se busca no esté
