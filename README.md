@@ -109,6 +109,10 @@ Y abrir en el navegador:
 | Vendedor · Agregar producto | http://localhost:8000/vendedor/productos/nuevo |
 | Vendedor · Editar producto | http://localhost:8000/vendedor/productos/editar?id=1 |
 | Vendedor · Mi Perfil | http://localhost:8000/vendedor/perfil |
+| Admin · Emprendimientos Activos | http://localhost:8000/admin/emprendimientos |
+| Admin · Gestión de Categorías | http://localhost:8000/admin/categorias |
+| Admin · Gestión de Usuarios | http://localhost:8000/admin/usuarios |
+| Admin · Reportes Generales | http://localhost:8000/admin/reportes |
 
 Para agregar una pantalla nueva a la prueba, se agrega un `case` en `public/prueba.php`.
 
@@ -160,5 +164,5 @@ Funciones disponibles en las vistas (`app/helpers/Vista.php`):
 | Cliente | Detalle de producto, Carrito | Listo |
 | Vendedor | Dashboard, Mis Productos, Agregar producto, Perfil | Listo |
 | Vendedor | Pedidos, Reportes | Listo |
-| Administrador | Emprendimientos Activos, Categorías, Usuarios, Reportes | Pendiente |
+| Administrador | Emprendimientos Activos, Categorías, Usuarios, Reportes | Listo |
 | Administrador | Dashboard, Emprendimientos, Detalle de Solicitud | Pendiente |
