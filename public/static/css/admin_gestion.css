@@ -727,3 +727,152 @@
     }
 }
 
+/* ---------- 3. Gestión de Categorías ---------- */
+.ad-barra-filtros {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding: 12px 16px;
+    border-radius: var(--radio-lg);
+    background-color: var(--crema);
+}
+
+.ad-barra-filtros__titulo {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-right: 4px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--azul-oscuro);
+}
+
+.ad-barra-filtros .ad-en-vivo {
+    margin-left: auto;
+}
+
+.ad-categorias {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.ad-categoria {
+    display: flex;
+    flex: 1 1 400px;
+    flex-direction: column;
+    gap: 16px;
+    padding: 22px;
+    border: 1px solid var(--borde-suave);
+    border-radius: var(--radio-xl);
+    background-color: var(--blanco);
+    box-shadow: var(--sombra-sm);
+}
+
+.ad-categoria__arriba {
+    display: flex;
+    gap: 16px;
+}
+
+.ad-categoria__icono {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 52px;
+    height: 52px;
+    border-radius: var(--radio-lg);
+    background-color: #DDF1F1;
+    color: var(--teal-oscuro);
+}
+
+.ad-categoria__icono .icono {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+.ad-categoria h3 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--fuente-titulos);
+    font-size: 1.15rem;
+    color: var(--azul-oscuro);
+}
+
+.ad-categoria__arriba p {
+    margin-top: 4px;
+    font-size: 0.88rem;
+    color: var(--texto-suave);
+}
+
+.ad-categoria__datos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    padding: 12px 16px;
+    border-radius: var(--radio-md);
+    background-color: var(--fondo);
+    font-size: 0.85rem;
+    color: var(--texto-2);
+}
+
+.ad-categoria__datos span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.ad-categoria__datos strong {
+    color: var(--azul-oscuro);
+}
+
+.ad-categoria__datos .icono {
+    width: 1rem;
+    height: 1rem;
+    color: var(--teal-oscuro);
+}
+
+.ad-categoria__pie {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: auto;
+}
+
+.ad-categoria__pie div {
+    display: flex;
+    gap: 8px;
+}
+
+/* Celular y tablet: Gestión de Categorías */
+@media (max-width: 900px) {
+    .ad-categoria {
+        flex-basis: 100%;
+    }
+
+    .ad-barra-filtros .ad-en-vivo {
+        margin-left: 0;
+    }
+}
+
+@media (max-width: 600px) {
+    .ad-categoria__pie div {
+        width: 100%;
+    }
+
+    .ad-categoria__pie .ad-boton {
+        flex: 1;
+    }
+}
+
+@media print {
+    .ad-categoria {
+        box-shadow: none;
+        break-inside: avoid;
+    }
+}
