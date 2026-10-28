@@ -99,6 +99,15 @@ switch ($ruta) {
     case '/admin/reportes':
         require $vistas . 'consultas/reportes_admin.php';
         break;
+    case '/admin/dashboard':
+        require $vistas . 'constante/dashboard_admin.php';
+        break;
+    case '/admin/solicitudes':
+        require $vistas . 'usuario_rol/solicitudes.php';
+        break;
+    case '/admin/solicitudes/detalle':
+        require $vistas . 'usuario_rol/solicitud_detalle.php';
+        break;
 
     // Ruta en caso de que la pantalla que se busca no esté
     default:

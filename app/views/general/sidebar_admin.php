@@ -12,8 +12,10 @@
 if (!isset($seccionPanel)) {
     $seccionPanel = '';
 }
+
+// Ajustar cuando haya backend
 if (!isset($solicitudesPendientes)) {
-    $solicitudesPendientes = 12;
+    $solicitudesPendientes = 6;
 }
 if (!isset($admin)) {
     $admin = ['nombre' => 'Admin Ventica CR', 'correo' => 'admin@ventica.cr', 'iniciales' => 'AD'];
