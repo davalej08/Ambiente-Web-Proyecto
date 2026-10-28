@@ -113,6 +113,9 @@ Y abrir en el navegador:
 | Admin · Gestión de Categorías | http://localhost:8000/admin/categorias |
 | Admin · Gestión de Usuarios | http://localhost:8000/admin/usuarios |
 | Admin · Reportes Generales | http://localhost:8000/admin/reportes |
+| Admin · Dashboard | http://localhost:8000/admin/dashboard |
+| Admin · Solicitudes | http://localhost:8000/admin/solicitudes |
+| Admin · Detalle de solicitud | http://localhost:8000/admin/solicitudes/detalle |
 
 Para agregar una pantalla nueva a la prueba, se agrega un `case` en `public/prueba.php`.
 
@@ -165,4 +168,4 @@ Funciones disponibles en las vistas (`app/helpers/Vista.php`):
 | Vendedor | Dashboard, Mis Productos, Agregar producto, Perfil | Listo |
 | Vendedor | Pedidos, Reportes | Listo |
 | Administrador | Emprendimientos Activos, Categorías, Usuarios, Reportes | Listo |
-| Administrador | Dashboard, Emprendimientos, Detalle de Solicitud | Pendiente |
+| Administrador | Dashboard, Emprendimientos, Detalle de Solicitud | Listo |
