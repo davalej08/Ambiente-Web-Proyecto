@@ -1,0 +1,389 @@
+/*
+ * David Céspedes Camacho, Ronald Calderón, Susan Echavarría Céspedes, Sofía Loaiza Cabalceta
+ * Ambiente Web Cliente/Servidor · SC-502
+ * Universidad Fidélitas · Costa Rica
+ */
+/* ==========================================================
+   VENTICA · admin_inicio.css
+   Pantalla Admin | Dashboard (panel general de administración)
+   Usa las piezas comunes de admin.css y admin_gestion.css (.ad-*).
+   1. Encabezado
+   2. Tarjetas de resumen
+   3. Acciones rápidas
+   4. Banner del ecosistema
+   5. Responsivo e impresión
+   ========================================================== */
+
+/* ---------- 1. Encabezado ---------- */
+.in-corte {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+    padding: 12px 18px;
+    border-radius: var(--radio-lg);
+    background-color: var(--crema);
+    color: var(--azul-oscuro);
+}
+
+.in-corte small {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--texto-2);
+}
+
+.in-corte strong {
+    display: block;
+    font-size: 0.85rem;
+}
+
+/* ---------- 2. Tarjetas de resumen ---------- */
+.in-resumen {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.in-dato {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    overflow: hidden;
+    padding: 22px 24px 24px;
+    border: 1px solid var(--borde-suave);
+    border-radius: var(--radio-xl);
+    background-color: var(--blanco);
+    box-shadow: var(--sombra-sm);
+}
+
+/* Círculo decorativo de la esquina inferior derecha */
+.in-dato::after {
+    content: "";
+    position: absolute;
+    right: -48px;
+    bottom: -64px;
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    background-color: #E9F7F4;
+    pointer-events: none;
+}
+
+.in-dato > * {
+    position: relative;
+    z-index: 1;
+}
+
+.in-dato__arriba {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.in-dato__icono {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 46px;
+    height: 46px;
+    border-radius: var(--radio-md);
+}
+
+.in-dato__icono--teal {
+    background-color: #A8E6E6;
+    color: var(--azul-oscuro);
+}
+
+.in-dato__icono--crema {
+    background-color: var(--crema);
+    color: var(--azul-oscuro);
+}
+
+.in-dato__icono--rojo {
+    background-color: var(--error-fondo);
+    color: var(--error);
+}
+
+.in-dato__etiqueta {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: var(--radio-pill);
+    background-color: var(--crema);
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--texto-2);
+}
+
+.in-dato__etiqueta .icono {
+    width: 0.9rem;
+    height: 0.9rem;
+}
+
+.in-dato__etiqueta--alerta {
+    background-color: var(--error-fondo);
+    color: var(--error);
+}
+
+.in-dato__etiqueta--alerta .punto {
+    background-color: var(--error);
+}
+
+.in-dato__etiqueta--exito {
+    background-color: var(--exito-fondo);
+    color: var(--verde-oscuro);
+}
+
+.in-dato h2 {
+    margin-top: 6px;
+    font-family: var(--fuente-titulos);
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--azul-oscuro);
+}
+
+.in-dato__valor {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px 10px;
+    margin-top: auto;
+    color: var(--texto-2);
+}
+
+.in-dato__valor strong {
+    font-family: var(--fuente-titulos);
+    font-size: 3rem;
+    font-weight: 800;
+    line-height: 1;
+    color: var(--azul-oscuro);
+}
+
+.in-dato__valor span {
+    font-size: 0.95rem;
+}
+
+.in-dato__valor em {
+    margin-left: auto;
+    max-width: 8rem;
+    font-size: 0.75rem;
+    font-style: normal;
+    font-weight: 600;
+    text-align: right;
+    color: var(--texto-2);
+}
+
+.in-dato__enlace {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: auto;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--azul);
+    text-decoration: none;
+}
+
+.in-dato__enlace:hover {
+    text-decoration: underline;
+}
+
+.in-dato__enlace .icono {
+    width: 1rem;
+    height: 1rem;
+}
+
+/* ---------- 3. Acciones rápidas ---------- */
+.in-subtitulo {
+    font-family: var(--fuente-titulos);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--azul-oscuro);
+}
+
+.in-subtitulo__texto {
+    margin-top: 4px;
+    font-size: 0.9rem;
+    color: var(--texto-suave);
+}
+
+.in-acciones__lista {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+    margin: 20px 0 36px;
+}
+
+.in-accion {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 22px 24px;
+    border: 1px solid var(--borde-suave);
+    border-radius: var(--radio-xl);
+    background-color: var(--blanco);
+    box-shadow: var(--sombra-sm);
+    color: inherit;
+    text-decoration: none;
+}
+
+.in-accion:hover {
+    border-color: var(--teal);
+    box-shadow: var(--sombra-md);
+}
+
+.in-accion h3 {
+    font-family: var(--fuente-titulos);
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--azul-oscuro);
+}
+
+.in-accion p {
+    font-size: 0.85rem;
+    line-height: 1.5;
+    color: var(--texto-suave);
+}
+
+.in-accion__flecha {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background-color: var(--crema);
+    color: var(--azul-oscuro);
+}
+
+.in-accion__flecha .icono {
+    width: 1rem;
+    height: 1rem;
+}
+
+.in-accion__nota {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: auto;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--texto-2);
+}
+
+.in-accion__nota .icono {
+    width: 0.9rem;
+    height: 0.9rem;
+}
+
+.in-accion__nota--alerta {
+    color: var(--error);
+}
+
+/* ---------- 4. Banner del ecosistema ---------- */
+.in-ecosistema {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 22px 28px;
+    border-radius: var(--radio-xl);
+    background-color: var(--crema);
+}
+
+.in-ecosistema__icono {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 52px;
+    height: 52px;
+    border-radius: var(--radio-md);
+    background-color: var(--verde-oscuro);
+    color: var(--blanco);
+}
+
+.in-ecosistema__texto {
+    flex: 1;
+    min-width: 0;
+}
+
+.in-ecosistema h2 {
+    font-family: var(--fuente-titulos);
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--azul-oscuro);
+}
+
+.in-ecosistema p {
+    margin-top: 2px;
+    font-size: 0.85rem;
+    color: var(--texto-suave);
+}
+
+.in-ecosistema__provincias {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.in-ecosistema__provincias li {
+    padding: 8px 16px;
+    border-radius: var(--radio-pill);
+    background-color: var(--blanco);
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--azul-oscuro);
+}
+
+/* ---------- 5. Responsivo e impresión ---------- */
+@media (max-width: 1100px) {
+    .in-resumen,
+    .in-acciones__lista {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 900px) {
+    .in-ecosistema {
+        flex-wrap: wrap;
+    }
+
+    .in-ecosistema__provincias {
+        width: 100%;
+    }
+}
+
+@media (max-width: 700px) {
+    .in-resumen,
+    .in-acciones__lista {
+        grid-template-columns: 1fr;
+    }
+
+    .in-corte {
+        width: 100%;
+    }
+
+    .in-dato__valor strong {
+        font-size: 2.5rem;
+    }
+}
+
+@media print {
+    .in-accion__flecha {
+        display: none;
+    }
+}
