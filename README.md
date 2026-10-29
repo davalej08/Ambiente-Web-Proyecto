@@ -25,7 +25,8 @@ Proyecto Integrador del curso **SC-502 Ambiente Web Cliente/Servidor** — Unive
 - **HTML5** y **CSS3** (estilos propios basados en el diseño de Figma, sin frameworks)
 - **JavaScript** (validaciones e interacciones en el navegador)
 - **PHP 8** con patrón **MVC** (Modelo – Vista – Controlador)
-- **MySQL / MariaDB** (XAMPP)
+- **MySQL 8** en la nube (Aiven) con procedimientos almacenados
+- **Render** para publicar la aplicación (Docker)
 
 Diseño: [Figma de Ventica](https://www.figma.com/design/i4LxkTnhAUjr3EwJdmd8TK/Ventica)
 
@@ -36,37 +37,36 @@ Diseño: [Figma de Ventica](https://www.figma.com/design/i4LxkTnhAUjr3EwJdmd8TK/
 ```
 VenticaProyecto/
 ├── app/
-│   ├── core/           → Router, Controller y conexión a la base de datos
+│   ├── core/           → Router, Controller y Repository base, conexión (Database.php)
 │   ├── controllers/    → Reciben la petición y deciden qué vista mostrar
-│   ├── services/       → Reglas del negocio (registro, carrito, pagos…)
-│   ├── repositories/   → Consultas a la base de datos
+│   ├── services/       → Reglas del negocio (registro, carrito, pagos, reportes…)
+│   ├── repositories/   → Solo ejecutan procedimientos almacenados (CALL sp_…)
 │   ├── models/         → Clases de cada tabla (Usuario, Producto, Pedido…)
-│   ├── helpers/        → Funciones de apoyo (Vista.php, Sesion.php, Validador.php)
+│   ├── helpers/        → Vista.php, Sesion.php, Validador.php
 │   └── views/          → Pantallas en PHP, una carpeta por módulo
-│       └── general/    → header, navbar, footer, mensajes y plantilla.php
-├── config/             → Configuración (base de datos, correo, seguridad)
+│       ├── general/    → header, navbar, footer, mensajes, plantilla, historias, ayuda…
+│       └── correo/     → Plantillas de los correos
+├── config/             → config.php, rutas.php, database.php, seguridad.php, correo.php
 ├── database/
 │   ├── 01_tablas.sql           → Crea la base "ventica" y sus 11 tablas
-│   ├── 02_procedimientos.sql
-│   └── 03_datos_prueba.sql
-├── docs/               → Estándares y documentación del equipo
-├── lang/               → Textos en español e inglés
-└── public/             → Lo único visible desde el navegador
-    ├── index.php       → Punto de entrada de la aplicación
-    ├── prueba.php      → Servidor de prueba para ver las vistas (desarrollo)
-    └── static/
-        ├── css/        → general.css (compartido) + un CSS por módulo
-        ├── js/         → general.js (compartido) + un JS por módulo
-        ├── img/        → logo, íconos (iconos.svg) e imágenes subidas
-        └── fav/        → favicon
+│   ├── 02_procedimientos.sql   → Procedimientos almacenados (sp_tabla_accion)
+│   ├── 03_datos_prueba.sql     → Datos para probar con los 3 roles
+│   └── instalar.php            → Corre los 3 scripts en orden
+├── docs/               → Estándares del equipo
+├── public/             → Lo único visible desde el navegador
+│   ├── index.php       → Punto de entrada: carga la configuración y el Router
+│   └── static/         → css, js, img (iconos.svg y fotos) y favicon
+└── Dockerfile          → Para publicar en Render
 ```
+
+Cómo viaja una petición: `public/index.php` → `Router` (busca la URL en `config/rutas.php`) → **Controller** → **Service** (valida y calcula) → **Repository** (`CALL sp_…`) → base de datos. El controlador termina cargando la **vista** con los datos.
 
 ---
 
 ## Cómo correr el proyecto
 
 ### 1. Requisitos
-- [XAMPP](https://www.apachefriends.org/) con PHP 8 y MySQL.
+- [XAMPP](https://www.apachefriends.org/) con PHP 8 (solo se usa su PHP; la base está en Aiven).
 - Git y Visual Studio Code.
 
 ### 2. Clonar el repositorio
@@ -80,44 +80,59 @@ El grupo usa una sola base MySQL en la nube (Aiven), así todos ven los mismos d
 
 1. Copiar `config/db.example.php` como `config/db.php` y llenar host, puerto y contraseña (se comparten por privado, **nunca en GitHub**).
 2. El certificado `config/ca.pem` ya viene en el repositorio (no es secreto).
-3. Probar la conexión en `http://localhost:8000/prueba_conexion.php`.
-4. Para crear o cambiar tablas: conectarse con MySQL Workbench a Aiven y ejecutar en orden `database/01_tablas.sql`, `02_procedimientos.sql` y `03_datos_prueba.sql` (solo una persona, una vez).
+3. Para crear o reiniciar las tablas (solo una persona, avisando al grupo): `php database/instalar.php`. Ejecuta en orden `01_tablas.sql`, `02_procedimientos.sql` y `03_datos_prueba.sql`. **Borra los datos que hubiera.**
+4. Probar la conexión en `http://localhost:8000/prueba_conexion.php`.
 
-La conexión está en `app/core/Database.php` (PDO con SSL). Los repositorios la usan así: `$db = Database::conectar();`
-
-### 4. Ver las pantallas
-Mientras el Router está en desarrollo, las vistas se prueban con el servidor de PHP:
-
+### 4. Levantar la aplicación
 ```powershell
-# Windows (PowerShell) con XAMPP
-& "C:\xampp\php\php.exe" -S localhost:8000 -t public public/prueba.php
+# Windows (PowerShell) con XAMPP, parados en la carpeta del proyecto
+& "C:\xampp\php\php.exe" -S localhost:8000 -t public public/index.php
 ```
+Y abrir http://localhost:8000
 
-Y abrir en el navegador:
+### 5. Cuentas de prueba
+Todas usan la contraseña **Ventica2026**:
 
-| Pantalla | URL |
-|---|---|
-| Landing | http://localhost:8000/ |
-| Catálogo | http://localhost:8000/catalogo |
-| Iniciar sesión | http://localhost:8000/auth/login |
-| Crear cuenta | http://localhost:8000/auth/registro |
-| Plantilla / guía de componentes | http://localhost:8000/plantilla |
-| Detalle (vitrina del emprendimiento) | http://localhost:8000/producto/detalle |
-| Carrito | http://localhost:8000/carrito |
-| Vendedor · Dashboard | http://localhost:8000/vendedor/dashboard |
-| Vendedor · Mis Productos | http://localhost:8000/vendedor/productos |
-| Vendedor · Agregar producto | http://localhost:8000/vendedor/productos/nuevo |
-| Vendedor · Editar producto | http://localhost:8000/vendedor/productos/editar?id=1 |
-| Vendedor · Mi Perfil | http://localhost:8000/vendedor/perfil |
-| Admin · Emprendimientos Activos | http://localhost:8000/admin/emprendimientos |
-| Admin · Gestión de Categorías | http://localhost:8000/admin/categorias |
-| Admin · Gestión de Usuarios | http://localhost:8000/admin/usuarios |
-| Admin · Reportes Generales | http://localhost:8000/admin/reportes |
-| Admin · Dashboard | http://localhost:8000/admin/dashboard |
-| Admin · Solicitudes | http://localhost:8000/admin/solicitudes |
-| Admin · Detalle de solicitud | http://localhost:8000/admin/solicitudes/detalle |
+| Rol | Correo | Qué se puede probar |
+|---|---|---|
+| Cliente | cliente@ventica.cr | Comprar, pagar por SINPE, Mi perfil, pedidos y favoritos |
+| Emprendedor | emprendedor@ventica.cr | Portal: productos, pedidos, reportes y perfil de la vitrina |
+| Administrador | admin@ventica.cr | Aprobar solicitudes, suspender, usuarios, categorías y reportes |
 
-Para agregar una pantalla nueva a la prueba, se agrega un `case` en `public/prueba.php`.
+Los correos (bienvenida, recuperar contraseña, respuesta a solicitudes) están en **modo de prueba**: no se envían, se guardan en `storage/correos/` y el enlace de "Recuperar contraseña" se muestra en pantalla. Para enviarlos de verdad hay que configurar `config/correo.php`.
+
+### 6. Pantallas
+
+| Pantalla | URL | Acceso |
+|---|---|---|
+| Landing | / | Público |
+| Catálogo con filtros | /catalogo | Público |
+| Vitrina del emprendimiento | /producto/detalle?id=1 | Público |
+| Historias de Artesanos | /historias | Público |
+| Preguntas frecuentes, Términos, Contacto | /ayuda, /terminos, /contacto | Público |
+| Iniciar sesión, Crear cuenta | /auth/login, /auth/registro | Público |
+| Registro de emprendedor | /auth/registro-vendedor | Público |
+| Recuperar y cambiar contraseña | /auth/recuperar | Público |
+| Carrito | /carrito | Público (para pagar hay que iniciar sesión) |
+| Confirmación del pedido | /carrito/confirmacion?id= | Cliente |
+| Mi perfil (datos, pedidos, favoritos) | /usuario/perfil | Cliente |
+| Portal del emprendedor | /vendedor/dashboard, /vendedor/productos, /vendedor/pedidos, /vendedor/reportes, /vendedor/perfil | Emprendedor |
+| Panel del administrador | /admin/dashboard, /admin/solicitudes, /admin/emprendimientos, /admin/usuarios, /admin/categorias, /admin/reportes | Administrador |
+| Guía de componentes | /plantilla | Equipo |
+
+Para agregar una pantalla: una línea en `config/rutas.php` y el método en el controlador.
+
+---
+
+## Publicar en Render
+
+1. En [render.com](https://render.com) > **New** > **Web Service** > conectar el repositorio de GitHub (rama `main`).
+2. **Language / Runtime:** Docker (usa el `Dockerfile` del proyecto). **Instance type:** Free.
+3. En **Environment** agregar las variables (los mismos datos de `config/db.php`):
+   `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASS`, `DB_NAME` (= ventica).
+4. **Create Web Service**. Cuando termine, Render da un enlace tipo `https://ventica.onrender.com`.
+
+Notas del plan gratuito: el servicio se duerme tras 15 minutos sin visitas (la primera carga tarda cerca de un minuto) y las fotos que se suban se borran cuando se reinicia; las fotos de los datos de prueba sí vienen en el repositorio.
 
 ---
 
@@ -154,18 +169,16 @@ Funciones disponibles en las vistas (`app/helpers/Vista.php`):
 
 ---
 
-## Estado del Avance 2
+## Estado del proyecto
 
-| Módulo | Pantalla | Estado |
+| Módulo | Contenido | Estado |
 |---|---|---|
 | Base | Estructura MVC, estilos generales, header, navbar, footer, plantilla | Listo |
-| Base de datos | 11 tablas del modelo entidad-relación (`01_tablas.sql`) | Listo |
-| Cliente | Landing | Listo |
-| Cliente | Iniciar sesión | Listo |
-| Cliente | Crear cuenta | Listo |
-| Cliente | Home / Catálogo | Listo |
-| Cliente | Detalle de producto, Carrito | Listo |
-| Vendedor | Dashboard, Mis Productos, Agregar producto, Perfil | Listo |
-| Vendedor | Pedidos, Reportes | Listo |
-| Administrador | Emprendimientos Activos, Categorías, Usuarios, Reportes | Listo |
-| Administrador | Dashboard, Emprendimientos, Detalle de Solicitud | Listo |
+| Base de datos | 11 tablas, procedimientos almacenados y datos de prueba | Listo |
+| Backend | Router, controladores, servicios, repositorios, modelos, sesiones y roles | Listo |
+| Cliente | Landing, catálogo, vitrina, carrito, confirmación, Mi perfil, favoritos | Listo |
+| Acceso | Iniciar sesión, crear cuenta, registro de emprendedor, recuperar contraseña | Listo |
+| Páginas | Historias de Artesanos, Preguntas frecuentes, Términos, Contacto, 404 | Listo |
+| Vendedor | Dashboard, productos, pedidos, comprobante, reportes, perfil | Listo |
+| Administrador | Dashboard, solicitudes, emprendimientos, usuarios, categorías, reportes | Listo |
+| Publicación | Dockerfile para Render | Listo |
