@@ -16,9 +16,9 @@
 
 // ---------- 1. Variables y funciones de apoyo ----------
 
-// Mientras no exista CategoriaController, los cambios solo se hacen en la pantalla.
-// Una vez que el backend está listo, se cambia a false y el formulario se envía al servidor.
-const MODO_DEMO = true;
+// MODO_DEMO en true: los cambios solo se ven en la pantalla (sin guardar).
+// En false: los formularios se envían a CategoriaController y se guardan en la base de datos.
+const MODO_DEMO = false;
 
 // Cuántas tarjetas generó PHP. Cada una tiene id "categoria-0", "categoria-1", ...
 let totalCategorias = Number(document.getElementById("totalCategorias").value);
@@ -73,6 +73,13 @@ function abrirFormulario(indice) {
     const panel = document.getElementById("panelFormulario");
     marcarError("nombreCategoria", false);
     document.getElementById("indiceEdicion").value = indice;
+
+    // Id real de la categoría para el servidor (0 = nueva)
+    if (indice === -1) {
+        document.getElementById("idCategoriaEdicion").value = "0";
+    } else {
+        document.getElementById("idCategoriaEdicion").value = document.getElementById("id-" + indice).value;
+    }
 
     if (indice === -1) {
         // Categoría nueva: el formulario va vacío
@@ -205,6 +212,11 @@ function eliminarCategoria(indice) {
     }
 
     if (confirm("¿Eliminar la categoría " + nombre + "?")) {
+        if (!MODO_DEMO) {
+            document.getElementById("idCategoriaEliminar").value = document.getElementById("id-" + indice).value;
+            document.getElementById("formEliminarCategoria").submit();
+            return;
+        }
         document.getElementById("categoria-" + indice).remove();
         actualizarContador();
         cerrarFormulario();

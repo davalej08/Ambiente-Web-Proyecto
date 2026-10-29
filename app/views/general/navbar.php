@@ -18,11 +18,19 @@ if (!isset($cantidadCarrito)) {
     $cantidadCarrito = (isset($_SESSION['carrito']) ? count($_SESSION['carrito']) : 0);
 }
 
+// "Mi cuenta" lleva a la pantalla de inicio de cada rol
+$rutaCuenta = 'usuario/perfil';
+if ($usuarioSesion && $usuarioSesion['rol'] === 'Emprendedor') {
+    $rutaCuenta = 'vendedor/dashboard';
+} elseif ($usuarioSesion && $usuarioSesion['rol'] === 'Administrador') {
+    $rutaCuenta = 'admin/dashboard';
+}
+
 $enlaces = [
     'inicio'     => ['texto' => 'Inicio',                 'url' => ruta('')],
     'catalogo'   => ['texto' => 'Explorar Directorio',    'url' => ruta('catalogo')],
     'categorias' => ['texto' => 'Categorías',             'url' => ruta('') . '#categorias'],
-    'historias'  => ['texto' => 'Historias de Artesanos', 'url' => ruta('') . '#comunidad'],
+    'historias'  => ['texto' => 'Historias de Artesanos', 'url' => ruta('historias')],
 ];
 ?>
 <header class="navbar">
@@ -57,7 +65,7 @@ $enlaces = [
                 </a>
 
                 <?php if ($usuarioSesion): ?>
-                    <a class="navbar__enlace" href="<?php echo e(ruta('usuario/perfil')); ?>">
+                    <a class="navbar__enlace" href="<?php echo e(ruta($rutaCuenta)); ?>">
                         <?php echo icono('usuario'); ?> <?php echo e(valor($usuarioSesion, 'nombre', 'Mi cuenta')); ?>
                     </a>
                     <a class="btn btn--borde btn--sm" href="<?php echo e(ruta('auth/logout')); ?>">

@@ -280,7 +280,11 @@ require __DIR__ . '/../general/header.php';
 
                         <?php if ($clave === 'sinpe'): ?>
                             <div class="pago__detalle" id="detalleSinpe" <?php echo $pagoActual === 'sinpe' ? '' : 'hidden'; ?>>
-                                <p>Transferí sin comisiones al número del emprendimiento:</p>
+                                <?php if (count($grupos) > 1): ?>
+                                    <p>Tu pedido es de <?php echo count($grupos); ?> emprendimientos. Al confirmar te mostramos el número SINPE y el monto de cada uno. Este es el primero:</p>
+                                <?php else: ?>
+                                    <p>Transferí sin comisiones al número del emprendimiento:</p>
+                                <?php endif; ?>
                                 <div class="sinpe-numero">
                                     <span>
                                         <strong id="numeroSinpe">+506 <?php echo e($numeroSinpe); ?></strong>
@@ -289,9 +293,9 @@ require __DIR__ . '/../general/header.php';
                                     <button class="btn btn--sm btn--oscuro" type="button" id="copiarSinpe" data-numero="<?php echo e($numeroSinpe); ?>"><?php echo icono('copiar'); ?> Copiar</button>
                                 </div>
                                 <div class="campo" id="campo-comprobante">
-                                    <label class="oculto-visual" for="comprobante">Número de comprobante SINPE</label>
-                                    <input class="campo__entrada" type="text" id="comprobante" name="comprobante" maxlength="30" placeholder="Número de comprobante o teléfono">
-                                    <p class="campo__error">Escribí el número de comprobante de tu SINPE.</p>
+                                    <label class="oculto-visual" for="comprobante">Número de comprobante SINPE (opcional)</label>
+                                    <input class="campo__entrada" type="text" id="comprobante" name="comprobante" maxlength="30" placeholder="Comprobante (opcional: también podés pagar después)">
+                                    <p class="campo__error">El comprobante debe tener al menos 4 caracteres.</p>
                                 </div>
                             </div>
                         <?php endif; ?>
@@ -308,6 +312,12 @@ require __DIR__ . '/../general/header.php';
                     <li><?php echo icono('mensaje'); ?> Soporte tico inmediato por WhatsApp</li>
                 </ul>
             </aside>
+        </form>
+
+        <!-- Formulario escondido para quitar un producto: carrito.js le pone el id y lo envía -->
+        <form id="formQuitar" method="post" action="<?php echo e(ruta('carrito/quitar')); ?>" hidden>
+            <input type="hidden" name="csrf_token" value="<?php echo e(valor($_SESSION, 'csrf_token', '')); ?>">
+            <input type="hidden" name="id_producto" id="idQuitar" value="">
         </form>
 
         <!-- Se muestra con JavaScript si la persona quita todos los productos -->

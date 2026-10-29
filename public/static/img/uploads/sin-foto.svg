@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400">
+  <!-- Ventica · imagen genérica cuando un producto o emprendimiento no tiene foto -->
+  <rect width="400" height="400" fill="#F2EFDF"/>
+  <circle cx="200" cy="170" r="56" fill="none" stroke="#51A6A6" stroke-width="10"/>
+  <path d="M120 300 L170 240 L205 275 L240 230 L290 300 Z" fill="#A3BF3F" opacity="0.8"/>
+  <text x="200" y="350" font-family="Arial, sans-serif" font-size="22" fill="#095573" text-anchor="middle">Ventica</text>
+</svg>

@@ -14,8 +14,9 @@
 
 // ---------- 1. Variables y mensaje ----------
 
-// Mientras no exista AdminController, los cambios solo se hacen en la pantalla.
-const MODO_DEMO = true;
+// MODO_DEMO en true: los cambios solo se ven en la pantalla (sin guardar).
+// En false: se envía el formulario a AdminController y se guarda en la base de datos.
+const MODO_DEMO = false;
 
 // Cada fila tiene id "emprendimiento-0", "emprendimiento-1"
 const totalEmprendimientos = Number(document.getElementById("totalEmprendimientos").value);
@@ -62,6 +63,11 @@ function filtrarEmprendimientos() {
 document.getElementById("buscarEmprendimiento").addEventListener("keyup", filtrarEmprendimientos);
 document.getElementById("filtroProvincia").addEventListener("change", filtrarEmprendimientos);
 
+// Si se llegó desde el buscador de la barra superior, se filtra de una vez
+if (document.getElementById("buscarEmprendimiento").value !== "") {
+    filtrarEmprendimientos();
+}
+
 // El botón "Filtros" muestra u oculta el filtro por provincia
 document.getElementById("botonFiltros").addEventListener("click", function () {
     const panel = document.getElementById("panelFiltros");
@@ -106,6 +112,19 @@ for (let i = 0; i < totalEmprendimientos; i++) {
     document.getElementById("estado-" + i).addEventListener("click", function () {
         if (MODO_DEMO) {
             cambiarEstado(i);
+            return;
+        }
+
+        const nombre = document.getElementById("tienda-" + i).textContent;
+        const activo = document.getElementById("activo-" + i).value === "1";
+        let pregunta = "¿Reactivar " + nombre + "?";
+        if (activo) {
+            pregunta = "¿Suspender " + nombre + "? Su vitrina dejará de verse en el catálogo.";
+        }
+
+        if (confirm(pregunta)) {
+            document.getElementById("idEmprendimientoEstado").value = document.getElementById("id-" + i).value;
+            document.getElementById("formEstadoEmprendimiento").submit();
         }
     });
 }

@@ -8,7 +8,8 @@
 
 /* ==========================================================
    VENTICA · validaciones.js
-   Revisa los formularios de Iniciar sesión y Crear cuenta
+   Revisa los formularios de Iniciar sesión, Crear cuenta, Registro de
+   emprendedor, Recuperar y Cambiar contraseña
    ANTES de enviarlos. Si algo está mal, pinta el campo en rojo
    y no deja enviar. (El servidor en PHP igual vuelve a validar.)
    ========================================================== */
@@ -123,10 +124,13 @@ if (formRegistro) {
             evento.preventDefault();
         }
     });
+}
 
-    // Pone el guion al teléfono mientras se escribe: 88880000 -> 8888-0000
-    const campoTelefono = document.getElementById("telefono");
+// ---------- Teléfono: pone el guion mientras se escribe (88880000 -> 8888-0000) ----------
+// Sirve para Crear cuenta y para el Registro de emprendedor
+const campoTelefono = document.getElementById("telefono");
 
+if (campoTelefono) {
     campoTelefono.addEventListener("input", function () {
         const numeros = campoTelefono.value.replace("-", "");
 
@@ -134,6 +138,178 @@ if (formRegistro) {
             campoTelefono.value = numeros.substring(0, 4) + "-" + numeros.substring(4, 8);
         } else {
             campoTelefono.value = numeros;
+        }
+    });
+}
+
+// ---------- Formulario: Registro de emprendedor ----------
+const formRegistroVendedor = document.getElementById("formRegistroVendedor");
+
+if (formRegistroVendedor) {
+    // Contador de caracteres de la descripción
+    const campoDescripcion = document.getElementById("descripcion");
+    const contador = document.getElementById("contadorDescripcion");
+
+    contador.textContent = campoDescripcion.value.length;
+    campoDescripcion.addEventListener("input", function () {
+        contador.textContent = campoDescripcion.value.length;
+    });
+
+    formRegistroVendedor.addEventListener("submit", function (evento) {
+        let hayErrores = false;
+
+        const nombre = document.getElementById("nombre").value.trim();
+        const correo = document.getElementById("correo").value.trim();
+        const telefono = document.getElementById("telefono").value.trim();
+        const contrasena = document.getElementById("contrasena").value;
+        const negocio = document.getElementById("negocio").value.trim();
+        const provincia = document.getElementById("provincia").value;
+        const canton = document.getElementById("canton").value.trim();
+        const descripcion = campoDescripcion.value.trim();
+        const logo = document.getElementById("logo").files[0];
+        const aceptaTerminos = document.getElementById("terminos").checked;
+
+        // Cada condición: si es válida se despinta, si no se pinta en rojo
+        const revisiones = [
+            ["nombre", nombre.length >= 3],
+            ["correo", correoValido(correo)],
+            ["telefono", telefonoValido(telefono)],
+            ["contrasena", contrasena.length >= 8],
+            ["negocio", negocio.length >= 3],
+            ["provincia", provincia !== ""],
+            ["canton", canton.length >= 3],
+            ["descripcion", descripcion.length >= 20],
+            ["terminos", aceptaTerminos]
+        ];
+
+        for (let i = 0; i < revisiones.length; i++) {
+            const esValido = revisiones[i][1];
+            marcarError(revisiones[i][0], !esValido);
+            if (!esValido) {
+                hayErrores = true;
+            }
+        }
+
+        // El logo es opcional; si viene, debe ser JPG o PNG de máximo 2 MB
+        if (logo) {
+            const tipoValido = logo.type === "image/png" || logo.type === "image/jpeg";
+            const pesoValido = logo.size <= 2 * 1024 * 1024;
+
+            if (tipoValido && pesoValido) {
+                marcarError("logo", false);
+            } else {
+                marcarError("logo", true);
+                hayErrores = true;
+            }
+        } else {
+            marcarError("logo", false);
+        }
+
+        if (hayErrores) {
+            evento.preventDefault();
+        }
+    });
+}
+
+// ---------- Formulario: Recuperar contraseña ----------
+const formRecuperar = document.getElementById("formRecuperar");
+
+if (formRecuperar) {
+    formRecuperar.addEventListener("submit", function (evento) {
+        const correo = document.getElementById("correo").value.trim();
+
+        if (correoValido(correo)) {
+            marcarError("correo", false);
+        } else {
+            marcarError("correo", true);
+            evento.preventDefault();
+        }
+    });
+}
+
+// ---------- Formulario: Cambiar contraseña ----------
+const formCambiar = document.getElementById("formCambiar");
+
+// Revisa cada requisito y lo pinta en verde si se cumple. Devuelve true si cumple todos.
+function revisarRequisitos(contrasena) {
+    const tieneLargo = contrasena.length >= 8;
+    let tieneNumero = false;
+    let tieneMayuscula = false;
+
+    // Se revisa letra por letra
+    for (let i = 0; i < contrasena.length; i++) {
+        const letra = contrasena[i];
+
+        if (letra >= "0" && letra <= "9") {
+            tieneNumero = true;
+        } else if (letra !== letra.toLowerCase()) {
+            tieneMayuscula = true;
+        }
+    }
+
+    document.getElementById("reqLargo").classList.toggle("es-cumplido", tieneLargo);
+    document.getElementById("reqNumero").classList.toggle("es-cumplido", tieneNumero);
+    document.getElementById("reqMayuscula").classList.toggle("es-cumplido", tieneMayuscula);
+
+    return tieneLargo && tieneNumero && tieneMayuscula;
+}
+
+if (formCambiar) {
+    const campoContrasena = document.getElementById("contrasena");
+
+    campoContrasena.addEventListener("input", function () {
+        revisarRequisitos(campoContrasena.value);
+    });
+
+    formCambiar.addEventListener("submit", function (evento) {
+        let hayErrores = false;
+        const contrasena = campoContrasena.value;
+        const confirmacion = document.getElementById("confirmacion").value;
+
+        if (revisarRequisitos(contrasena)) {
+            marcarError("contrasena", false);
+        } else {
+            marcarError("contrasena", true);
+            hayErrores = true;
+        }
+
+        if (confirmacion !== "" && confirmacion === contrasena) {
+            marcarError("confirmacion", false);
+        } else {
+            marcarError("confirmacion", true);
+            hayErrores = true;
+        }
+
+        if (hayErrores) {
+            evento.preventDefault();
+        }
+    });
+}
+
+// ---------- Contacto ----------
+const formContacto = document.getElementById("formContacto");
+
+if (formContacto) {
+    formContacto.addEventListener("submit", function (evento) {
+        let hayErrores = false;
+
+        // Cada revisión: [id del campo, ¿está bien?]
+        const revisiones = [
+            ["nombre", document.getElementById("nombre").value.trim().length >= 3],
+            ["correo", correoValido(document.getElementById("correo").value.trim())],
+            ["motivo", document.getElementById("motivo").value !== ""],
+            ["mensaje", document.getElementById("mensaje").value.trim().length >= 15]
+        ];
+
+        for (let i = 0; i < revisiones.length; i++) {
+            marcarError(revisiones[i][0], !revisiones[i][1]);
+            if (!revisiones[i][1]) {
+                hayErrores = true;
+            }
+        }
+
+        if (hayErrores) {
+            evento.preventDefault();
         }
     });
 }

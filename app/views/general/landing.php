@@ -59,7 +59,7 @@ require __DIR__ . '/header.php';
                     <a class="btn btn--primario btn--lg" href="<?php echo e(ruta('catalogo')); ?>">
                         Explorar Emprendimientos <?php echo icono('flecha'); ?>
                     </a>
-                    <a class="btn btn--texto" href="#comunidad">
+                    <a class="btn btn--texto" href="<?php echo e(ruta('historias')); ?>">
                         Conocer a los productores <?php echo icono('flecha-diagonal'); ?>
                     </a>
                 </div>

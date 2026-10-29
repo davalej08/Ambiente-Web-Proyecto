@@ -15,8 +15,9 @@
 
 // ---------- 1. Variables y funciones de apoyo ----------
 
-// Mientras no exista AdminController, los cambios solo se hacen en la pantalla.
-const MODO_DEMO = true;
+// MODO_DEMO en true: los cambios solo se ven en la pantalla (sin guardar).
+// En false: los formularios se envían a AdminController y se guardan en la base de datos.
+const MODO_DEMO = false;
 
 // Cada fila tiene id "usuario-0", "usuario-1", ... (las genera PHP)
 let totalUsuarios = Number(document.getElementById("totalUsuarios").value);
@@ -207,6 +208,7 @@ document.getElementById("cancelarUsuario").addEventListener("click", cerrarFormu
 document.getElementById("botonInvitar").addEventListener("click", function () {
     document.getElementById("formUsuario").reset();
     document.getElementById("indiceEdicion").value = "-1";
+    document.getElementById("idUsuarioEdicion").value = "0";
     document.getElementById("tituloFormulario").textContent = "Invitar usuario";
     document.getElementById("textoGuardar").textContent = "Enviar invitación";
     document.getElementById("notaContrasena").textContent = "El usuario la cambia al iniciar sesión.";
@@ -217,6 +219,7 @@ document.getElementById("botonInvitar").addEventListener("click", function () {
 function abrirDetalle(indice) {
     document.getElementById("formUsuario").reset();
     document.getElementById("indiceEdicion").value = indice;
+    document.getElementById("idUsuarioEdicion").value = document.getElementById("id-" + indice).value;
     document.getElementById("nombre").value = document.getElementById("nombre-" + indice).textContent;
     document.getElementById("correo").value = document.getElementById("correo-" + indice).value;
     document.getElementById("rol").value = document.getElementById("rol-" + indice).value;
@@ -234,6 +237,18 @@ for (let i = 0; i < totalUsuarios; i++) {
     document.getElementById("cambiarEstado-" + i).addEventListener("click", function () {
         if (MODO_DEMO) {
             cambiarEstado(i);
+            return;
+        }
+
+        const nombre = document.getElementById("nombre-" + i).textContent;
+        let pregunta = "¿Activar de nuevo la cuenta de " + nombre + "?";
+        if (document.getElementById("estado-" + i).value === "activo") {
+            pregunta = "¿Suspender la cuenta de " + nombre + "? No podrá iniciar sesión.";
+        }
+
+        if (confirm(pregunta)) {
+            document.getElementById("idUsuarioEstado").value = document.getElementById("id-" + i).value;
+            document.getElementById("formEstadoUsuario").submit();
         }
     });
 }

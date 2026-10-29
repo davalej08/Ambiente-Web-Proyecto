@@ -141,6 +141,11 @@ $totalDocumentos = count($solicitud['documentos']);
 $totalChecklist  = count($solicitud['checklist']);
 $totalProductos  = count($solicitud['productos']);
 
+// Estado de la solicitud (los datos de muestra no lo traen: se toma como pendiente)
+$estadoSolicitud = valor($solicitud, 'estado', 'pendiente');
+$yaResuelta      = $estadoSolicitud !== 'pendiente';
+$textosEstado    = ['pendiente' => 'En revisión', 'aprobado' => 'Aprobada', 'rechazado' => 'Rechazada'];
+
 require __DIR__ . '/../general/header.php';
 
 // header.php ya cargó Vista.php e inició la sesión
@@ -171,7 +176,7 @@ $tokenCsrf = valor($_SESSION, 'csrf_token', '');
                     <p class="de-cabecera__etiquetas">
                         <span class="so-insignia so-insignia--nueva">SOLICITUD DE INGRESO</span>
                         <span class="de-cabecera__rubro"><?php echo icono('hoja'); ?> <?php echo e($solicitud['rubro']); ?></span>
-                        <span class="so-insignia so-insignia--obs" id="estadoSolicitud">En revisión</span>
+                        <span class="so-insignia so-insignia--obs" id="estadoSolicitud"><?php echo e($textosEstado[$estadoSolicitud]); ?></span>
                     </p>
                     <h1 class="ad-titulo"><?php echo e($solicitud['tienda']); ?></h1>
                     <p class="de-cabecera__zona"><?php echo icono('ubicacion'); ?> <?php echo e($solicitud['zona']); ?> • Costa Rica</p>
@@ -210,6 +215,9 @@ $tokenCsrf = valor($_SESSION, 'csrf_token', '');
                         <p class="de-memoria"><?php echo e($solicitud['memoria']); ?></p>
 
                         <h3 class="de-subtitulo">Comprobantes adjuntos por el emprendedor</h3>
+                        <?php if ($totalDocumentos === 0): ?>
+                            <p class="de-memoria">El emprendedor todavía no adjuntó archivos.</p>
+                        <?php endif; ?>
                         <ul class="de-documentos">
                             <?php for ($i = 0; $i < $totalDocumentos; $i++): ?>
                                 <li>
@@ -349,6 +357,12 @@ $tokenCsrf = valor($_SESSION, 'csrf_token', '');
                     <span class="de-registro"><?php echo icono('candado'); ?> Acción registrada por Superadmin</span>
                 </div>
 
+                <?php if ($yaResuelta): ?>
+                    <div class="mensaje <?php echo $estadoSolicitud === 'aprobado' ? 'mensaje--exito' : 'mensaje--error'; ?>" role="status">
+                        <p>Esta solicitud ya fue <?php echo $estadoSolicitud === 'aprobado' ? 'aprobada' : 'rechazada'; ?>.<?php echo valor($solicitud, 'observacion', '') !== '' ? ' Observación: ' . e($solicitud['observacion']) : ''; ?></p>
+                    </div>
+                <?php endif; ?>
+
                 <div id="mensajeDictamen" class="mensaje mensaje--exito ad-oculto" role="status">
                     <p id="textoMensajeDictamen"></p>
                 </div>
@@ -366,8 +380,8 @@ $tokenCsrf = valor($_SESSION, 'csrf_token', '');
                     </div>
 
                     <div class="de-dictamen__botones">
-                        <button class="ad-boton ad-boton--claro de-boton" type="button" id="botonRechazar"><?php echo icono('cerrar'); ?> Rechazar Solicitud</button>
-                        <button class="ad-boton ad-boton-verde de-boton" type="button" id="botonAprobar"><?php echo icono('check'); ?> Aprobar Emprendimiento</button>
+                        <button class="ad-boton ad-boton--claro de-boton" type="button" id="botonRechazar" <?php echo $yaResuelta ? 'disabled' : ''; ?>><?php echo icono('cerrar'); ?> Rechazar Solicitud</button>
+                        <button class="ad-boton ad-boton-verde de-boton" type="button" id="botonAprobar" <?php echo $yaResuelta ? 'disabled' : ''; ?>><?php echo icono('check'); ?> Aprobar Emprendimiento</button>
                     </div>
                 </form>
             </section>

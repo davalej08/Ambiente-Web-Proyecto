@@ -39,6 +39,9 @@ if (!isset($totalActivos)) {
     $totalActivos = 320;
 }
 
+if (!isset($busquedaInicial)) {
+    $busquedaInicial = '';
+}
 $provincias = ['San José', 'Alajuela', 'Cartago', 'Heredia', 'Guanacaste', 'Puntarenas', 'Limón'];
 $totalFilas = count($emprendimientos);
 
@@ -84,7 +87,7 @@ require __DIR__ . '/../general/header.php';
             <div class="ad-buscador solo-pantalla">
                 <?php echo icono('buscar'); ?>
                 <label class="oculto-visual" for="buscarEmprendimiento">Buscar emprendimiento</label>
-                <input id="buscarEmprendimiento" type="search" placeholder="Buscar por nombre comercial, artesano o provincia...">
+                <input id="buscarEmprendimiento" type="search" value="<?php echo e($busquedaInicial); ?>" placeholder="Buscar por nombre comercial, artesano o provincia...">
                 <button class="ad-chip" type="button" id="botonFiltros"><?php echo icono('filtros'); ?> Filtros</button>
             </div>
 
@@ -103,18 +106,22 @@ require __DIR__ . '/../general/header.php';
 
             <ul class="ad-lista">
                 <?php for ($i = 0; $i < $totalFilas; $i++): ?>
-                    <?php $emprendimiento = $emprendimientos[$i]; ?>
-                    <li class="ad-fila" id="emprendimiento-<?php echo $i; ?>">
+                    <?php
+                    $emprendimiento = $emprendimientos[$i];
+                    // Los datos de muestra no traen 'activo': se toman como activos
+                    $estaActivo = valor($emprendimiento, 'activo', true);
+                    ?>
+                    <li class="ad-fila <?php echo $estaActivo ? '' : 'ad-fila--suspendida'; ?>" id="emprendimiento-<?php echo $i; ?>">
                         <div class="ad-fila__foto">
                             <img src="<?php echo e(recurso('img/uploads/' . $emprendimiento['imagen'])); ?>" alt="" width="64" height="64">
-                            <span class="ad-fila__sello" id="sello-<?php echo $i; ?>"><?php echo icono('check'); ?></span>
+                            <span class="ad-fila__sello <?php echo $estaActivo ? '' : 'ad-oculto'; ?>" id="sello-<?php echo $i; ?>"><?php echo icono('check'); ?></span>
                         </div>
 
                         <div class="ad-fila__info">
                             <h2>
                                 <span id="tienda-<?php echo $i; ?>"><?php echo e($emprendimiento['tienda']); ?></span>
                                 <span class="ad-chip ad-chip--suave"><?php echo e($emprendimiento['ubicacion']); ?></span>
-                                <span class="estado estado--rechazado ad-oculto" id="suspendido-<?php echo $i; ?>">Suspendido</span>
+                                <span class="estado estado--rechazado <?php echo $estaActivo ? 'ad-oculto' : ''; ?>" id="suspendido-<?php echo $i; ?>">Suspendido</span>
                             </h2>
                             <p><?php echo e($emprendimiento['descripcion']); ?></p>
                             <p class="ad-fila__etiquetas">
@@ -134,19 +141,26 @@ require __DIR__ . '/../general/header.php';
                         </div>
 
                         <div class="ad-fila__acciones solo-pantalla">
-                            <a class="ad-boton ad-boton--claro" href="<?php echo e(ruta('producto/detalle') . '?id=' . $emprendimiento['id']); ?>"><?php echo icono('ojo'); ?> Vitrina</a>
-                            <button class="ad-boton ad-boton--peligro" type="button" id="estado-<?php echo $i; ?>">Suspender</button>
+                            <a class="ad-boton ad-boton--claro" href="<?php echo e(ruta('producto/detalle') . '?emprendimiento=' . (int) $emprendimiento['id']); ?>"><?php echo icono('ojo'); ?> Vitrina</a>
+                            <button class="ad-boton <?php echo $estaActivo ? 'ad-boton--peligro' : 'ad-boton--exito'; ?>" type="button" id="estado-<?php echo $i; ?>"><?php echo $estaActivo ? 'Suspender' : 'Reactivar'; ?></button>
                         </div>
 
                         <!-- Datos que usa el buscador -->
                         <input type="hidden" id="provincia-<?php echo $i; ?>" value="<?php echo e($emprendimiento['provincia']); ?>">
                         <input type="hidden" id="busqueda-<?php echo $i; ?>" value="<?php echo e($emprendimiento['tienda'] . ' ' . $emprendimiento['descripcion'] . ' ' . $emprendimiento['ubicacion']); ?>">
-                        <input type="hidden" id="activo-<?php echo $i; ?>" value="1">
+                        <input type="hidden" id="activo-<?php echo $i; ?>" value="<?php echo $estaActivo ? '1' : '0'; ?>">
+                        <input type="hidden" id="id-<?php echo $i; ?>" value="<?php echo (int) $emprendimiento['id']; ?>">
                     </li>
                 <?php endfor; ?>
             </ul>
 
             <p class="ad-vacio ad-oculto" id="sinResultados">No hay emprendimientos que coincidan con la búsqueda.</p>
+
+            <!-- Formulario escondido para suspender o reactivar: emprendimientos_admin.js le pone el id -->
+            <form id="formEstadoEmprendimiento" method="post" action="<?php echo e(ruta('admin/emprendimientos/estado')); ?>" hidden>
+                <input type="hidden" name="csrf_token" value="<?php echo e(valor($_SESSION, 'csrf_token', '')); ?>">
+                <input type="hidden" name="id_emprendimiento" id="idEmprendimientoEstado" value="">
+            </form>
 
             <!-- Pie: cantidad y paginación -->
             <div class="ad-pie">

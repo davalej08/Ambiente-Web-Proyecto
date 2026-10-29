@@ -13,9 +13,9 @@
 
 // ---------- 1. Variables ----------
 
-// Mientras no exista AdminController, la resolución solo se refleja en la pantalla.
-// Cuando exista, se cambia a false y el formulario se envía al servidor.
-const MODO_DEMO = true;
+// MODO_DEMO en true: la resolución solo se refleja en la pantalla (sin guardar).
+// En false: el formulario se envía a AdminController y se guarda en la base de datos.
+const MODO_DEMO = false;
 
 const formDictamen = document.getElementById("formDictamen");
 const campoObservaciones = document.getElementById("observaciones");

@@ -11,9 +11,14 @@
 $titulo       = 'Reportes · Portal del emprendedor';
 $estilos      = ['vendedor', 'reportes'];
 $scripts      = [];
+
+// vendedor/reportes/pdf abre la ventana de imprimir apenas carga (imprimir.js)
+if (isset($imprimir) && $imprimir) {
+    $scripts = ['imprimir'];
+}
 $navbar       = false;
 $footer       = false;
-$claseBody    = 'body-panel';
+$claseBody    = isset($imprimir) && $imprimir ? 'body-panel abrir-impresion' : 'body-panel';
 $seccionPanel = 'reportes';
 $pillPanel    = 'Emprendedor Local Verificado';
 
@@ -107,6 +112,10 @@ foreach ($puntos as $punto) {
     }
 }
 $paso = ceil($maximo / 3 / 10000) * 10000;
+// Sin ventas en el período: escala mínima para que la gráfica no divida entre cero
+if ($paso == 0) {
+    $paso = 10000;
+}
 $tope = $paso * 3;
 
 // Coordenadas de cada punto
@@ -200,7 +209,7 @@ require __DIR__ . '/../general/header.php';
                     </div>
                     <p class="kpi__valor"><?php echo colones($reporte['ventas']); ?></p>
                     <p class="kpi__pie">
-                        <span class="insignia"><?php echo icono('tendencia'); ?> +<?php echo (int) $reporte['variacion']; ?>%</span>
+                        <span class="insignia"><?php echo icono('tendencia'); ?> <?php echo $reporte['variacion'] >= 0 ? '+' : ''; ?><?php echo (int) $reporte['variacion']; ?>%</span>
                         vs período anterior
                     </p>
                 </article>

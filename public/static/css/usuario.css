@@ -4,4 +4,259 @@
  * Universidad Fidélitas · Costa Rica
  */
 
-/* Estilos - usuario */
+/* ==========================================================
+   VENTICA · usuario.css
+   Mi perfil del cliente: encabezado, pestañas, datos,
+   pedidos y favoritos. Las tarjetas de producto vienen de producto.css
+   ========================================================== */
+
+/* ---------- Encabezado ---------- */
+.perfil__encabezado {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.perfil__avatar {
+    display: grid;
+    place-items: center;
+    width: 4.5rem;
+    height: 4.5rem;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: var(--azul-oscuro);
+    color: var(--blanco);
+    font-family: var(--fuente-titulos);
+    font-size: 1.5rem;
+    font-weight: 800;
+}
+
+.perfil__datos {
+    flex: 1;
+    min-width: 220px;
+}
+
+.perfil__datos > * + * {
+    margin-top: 0.25rem;
+}
+
+.perfil__resumen {
+    display: flex;
+    gap: 1rem;
+    margin: 0;
+}
+
+.perfil__resumen div {
+    min-width: 6rem;
+    padding: 0.75rem 1rem;
+    border-radius: var(--radio-md);
+    background: var(--crema);
+    text-align: center;
+}
+
+.perfil__resumen dt {
+    font-family: var(--fuente-titulos);
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--azul-oscuro);
+}
+
+.perfil__resumen dd {
+    margin: 0;
+    font-size: 0.75rem;
+    color: var(--texto-suave);
+}
+
+/* ---------- Pestañas ---------- */
+.pestanas {
+    display: flex;
+    gap: 0.5rem;
+    margin: 1.75rem 0 1.25rem;
+    border-bottom: 1px solid var(--borde);
+    overflow-x: auto;
+}
+
+.pestana {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.75rem 1rem;
+    border: 0;
+    border-bottom: 3px solid transparent;
+    background: transparent;
+    font-family: var(--fuente-titulos);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--texto-suave);
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.pestana:hover {
+    color: var(--azul);
+}
+
+.pestana.es-activa {
+    border-bottom-color: var(--verde);
+    color: var(--azul-oscuro);
+}
+
+/* Los paneles se ocultan y solo se ve el de la pestaña activa */
+.panel-perfil {
+    display: none;
+}
+
+.panel-perfil.es-visible {
+    display: block;
+}
+
+/* ---------- Mis datos ---------- */
+.perfil__columnas {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 300px;
+    align-items: start;
+    gap: 1.5rem;
+}
+
+.perfil__columnas .tarjeta + .tarjeta {
+    margin-top: 0;
+}
+
+.perfil__seguridad > * + * {
+    margin-top: 0.75rem;
+}
+
+.perfil__seguridad .titulo-seccion {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.perfil__seguridad .divisor {
+    border: 0;
+    border-top: 1px solid var(--borde);
+}
+
+.perfil__mensaje {
+    min-height: 1.2em;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.perfil__mensaje.es-error {
+    color: var(--error);
+}
+
+/* ---------- Mis pedidos ---------- */
+.pedidos-cliente {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.pedido-cliente {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.pedido-cliente + .pedido-cliente {
+    margin-top: 0;
+}
+
+.pedido-cliente img {
+    width: 72px;
+    height: 72px;
+    flex-shrink: 0;
+    border-radius: var(--radio-md);
+    object-fit: cover;
+}
+
+.pedido-cliente__info {
+    flex: 1;
+    min-width: 0;
+}
+
+.pedido-cliente__info h3 {
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.pedido-cliente__numero {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--texto-tenue);
+}
+
+.pedido-cliente__lado {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.3rem;
+    text-align: right;
+}
+
+.pedido-cliente__total {
+    font-family: var(--fuente-titulos);
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--azul-oscuro);
+}
+
+/* Estado que no existe en general.css */
+.estado--enviado {
+    background: rgba(81, 166, 166, 0.16);
+    color: var(--teal-oscuro);
+}
+
+/* ---------- Favoritos y estados vacíos ---------- */
+.perfil__favoritos {
+    margin-top: 0;
+}
+
+.perfil__vacio {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 3rem 1.5rem;
+    text-align: center;
+}
+
+.perfil__vacio > .icono {
+    width: 2rem;
+    height: 2rem;
+    color: var(--texto-tenue);
+}
+
+/* ---------- Responsivo ---------- */
+@media (max-width: 900px) {
+    .perfil__columnas {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 560px) {
+    .perfil__resumen {
+        width: 100%;
+    }
+
+    .perfil__resumen div {
+        flex: 1;
+    }
+
+    .pedido-cliente {
+        flex-wrap: wrap;
+    }
+
+    .pedido-cliente__lado {
+        width: 100%;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
+}

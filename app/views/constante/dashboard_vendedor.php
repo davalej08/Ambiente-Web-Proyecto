@@ -80,7 +80,7 @@ require __DIR__ . '/../general/header.php';
                 </div>
 
                 <div class="fila">
-                    <a class="btn btn--borde" href="<?php echo e(ruta('producto/detalle')); ?>">
+                    <a class="btn btn--borde" href="<?php echo e(ruta('producto/detalle') . '?emprendimiento=' . (int) valor($tienda, 'id', 0)); ?>">
                         <?php echo icono('compartir'); ?> Ver mi tienda pública
                     </a>
                     <a class="btn btn--oscuro" href="<?php echo e(ruta('vendedor/productos/nuevo')); ?>">
@@ -101,7 +101,7 @@ require __DIR__ . '/../general/header.php';
                         <span id="barraMeta" data-avance="<?php echo (int) $avanceMeta; ?>"></span>
                     </div>
                     <div class="indicador__pie">
-                        <span class="insignia"><?php echo icono('tendencia'); ?> +<?php echo (int) $resumen['variacion']; ?>% vs mes anterior</span>
+                        <span class="insignia"><?php echo icono('tendencia'); ?> <?php echo $resumen['variacion'] >= 0 ? '+' : ''; ?><?php echo (int) $resumen['variacion']; ?>% vs mes anterior</span>
                         <span>Meta: <?php echo colones($resumen['meta']); ?></span>
                     </div>
                 </article>

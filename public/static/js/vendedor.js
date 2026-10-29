@@ -32,21 +32,20 @@ if (barraMeta) {
     barraMeta.style.width = barraMeta.getAttribute("data-avance") + "%";
 }
 
-// Botón Confirmar pedido.
-// Por ahora es visual: marca la fila como confirmada y baja el contador.
-// Cuando exista el controlador se quita el preventDefault() para que se envíe.
+// Botón Confirmar pedido: pregunta antes de enviar el formulario a
+// VendedorController::confirmarPedido. Si la persona cancela, no se envía.
 const formsConfirmar = document.getElementsByClassName("form-confirmar");
 let pedidosPendientes = formsConfirmar.length;
 
 for (let i = 0; i < formsConfirmar.length; i++) {
     formsConfirmar[i].addEventListener("submit", function (evento) {
-        evento.preventDefault();
-
         // form -> div de acciones -> fila del pedido
         const fila = formsConfirmar[i].parentElement.parentElement;
         const cliente = fila.getElementsByTagName("h3")[0].textContent;
 
-        if (confirm("¿Confirmar el pedido de " + cliente + "?")) {
+        if (!confirm("¿Confirmar el pedido de " + cliente + "?")) {
+            evento.preventDefault();
+        } else {
             fila.classList.add("es-confirmado");
             formsConfirmar[i].getElementsByTagName("button")[0].disabled = true;
 
@@ -71,6 +70,9 @@ for (let i = 0; i < interruptores.length; i++) {
         } else {
             texto.textContent = "Pausado";
         }
+
+        // Se guarda el cambio (VendedorController::disponibilidad)
+        interruptores[i].form.submit();
     });
 }
 

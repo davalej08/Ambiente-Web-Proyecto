@@ -109,6 +109,11 @@ if (formCarrito) {
         botonesQuitar[i].addEventListener("click", function () {
             // Se usa "this" (el botón tocado) y no botonesQuitar[i], porque al quitar
             // productos la lista de botones cambia de tamaño y los números se corren.
+
+            // Se avisa al servidor (CarritoController::quitar) con el formulario escondido
+            document.getElementById("idQuitar").value = this.getAttribute("data-id");
+            document.getElementById("formQuitar").submit();
+
             const item = this.parentElement;                      // el <li> del producto
             const vitrina = item.parentElement.parentElement;      // <li> -> <ul> -> <section> del emprendimiento
 
@@ -202,11 +207,11 @@ if (formCarrito) {
             hayErrores = true;
         }
 
-        // Con SINPE se pide el número de comprobante
+        // Con SINPE el comprobante es opcional, pero si se escribe debe tener 4 caracteres o más
         if (pagoEscogido() === "sinpe") {
             const comprobante = document.getElementById("comprobante").value.trim();
 
-            if (comprobante.length >= 4) {
+            if (comprobante === "" || comprobante.length >= 4) {
                 marcarError("comprobante", false);
             } else {
                 marcarError("comprobante", true);
