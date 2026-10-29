@@ -15,7 +15,8 @@ if (!isset($seccionPanel)) {
 
 // Ajustar cuando haya backend
 if (!isset($solicitudesPendientes)) {
-    $solicitudesPendientes = 6;
+    // El número real lo manda AdminController (datosAdmin); 6 es solo de muestra
+    $solicitudesPendientes = isset($admin['pendientes']) ? $admin['pendientes'] : 6;
 }
 if (!isset($admin)) {
     $admin = ['nombre' => 'Admin Ventica CR', 'correo' => 'admin@ventica.cr', 'iniciales' => 'AD'];

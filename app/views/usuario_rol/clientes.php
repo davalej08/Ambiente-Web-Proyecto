@@ -74,6 +74,8 @@ require __DIR__ . '/../general/header.php';
                     <input type="hidden" name="csrf_token" value="<?php echo e(valor($_SESSION, 'csrf_token', '')); ?>">
                     <!-- -1 = usuario nuevo; si es un número, es la posición del usuario que se edita -->
                     <input type="hidden" id="indiceEdicion" name="indice" value="-1">
+                    <!-- Id del usuario en la base de datos (0 = usuario nuevo) -->
+                    <input type="hidden" id="idUsuarioEdicion" name="id_usuario" value="0">
 
                     <div class="ad-formulario__campos">
                         <div id="campo-nombre" class="campo">
@@ -148,12 +150,8 @@ require __DIR__ . '/../general/header.php';
                     <?php
                     $usuario = $usuarios[$i];
 
-                    // Iniciales: primera letra de las dos primeras palabras
-                    $palabras  = explode(' ', $usuario['nombre']);
-                    $iniciales = substr($palabras[0], 0, 1);
-                    if (count($palabras) > 1) {
-                        $iniciales = $iniciales . substr($palabras[1], 0, 1);
-                    }
+                    // Iniciales: primera letra de las dos primeras palabras (función de Vista.php)
+                    $iniciales = iniciales($usuario['nombre']);
 
                     // Fecha de registro: 2026-10-14 → 14 oct 2026
                     $partes = explode('-', $usuario['registro']);
@@ -208,11 +206,18 @@ require __DIR__ . '/../general/header.php';
                         <input type="hidden" id="contacto-<?php echo $i; ?>" value="<?php echo e($usuario['contacto']); ?>">
                         <input type="hidden" id="correo-<?php echo $i; ?>" value="<?php echo e($usuario['correo']); ?>">
                         <input type="hidden" id="estado-<?php echo $i; ?>" value="<?php echo e($usuario['estado']); ?>">
+                        <input type="hidden" id="id-<?php echo $i; ?>" value="<?php echo (int) valor($usuario, 'id', 0); ?>">
                     </li>
                 <?php endfor; ?>
             </ul>
 
             <p class="ad-vacio ad-oculto" id="sinResultados">No hay usuarios que coincidan con la búsqueda.</p>
+
+            <!-- Formulario escondido para suspender o activar: usuarios_admin.js le pone el id -->
+            <form id="formEstadoUsuario" method="post" action="<?php echo e(ruta('admin/usuarios/estado')); ?>" hidden>
+                <input type="hidden" name="csrf_token" value="<?php echo e(valor($_SESSION, 'csrf_token', '')); ?>">
+                <input type="hidden" name="id_usuario" id="idUsuarioEstado" value="">
+            </form>
 
             <!-- Pie: cantidad y paginación -->
             <div class="ad-pie">

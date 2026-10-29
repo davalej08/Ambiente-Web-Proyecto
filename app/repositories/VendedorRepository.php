@@ -5,9 +5,94 @@
  * Universidad Fidélitas · Costa Rica
  *
  * VendedorRepository
- * Acceso a datos de vendedores mediante procedimientos almacenados.
+ * Acceso a la tabla emprendimiento mediante procedimientos almacenados.
  */
 
-class VendedorRepository
+class VendedorRepository extends Repository
 {
+    /**
+     * Registra la solicitud del emprendimiento (queda pendiente de aprobación).
+     *
+     * @param Vendedor $vendedor
+     * @return int Id del emprendimiento nuevo
+     */
+    public function crear($vendedor)
+    {
+        return $this->insertar('CALL sp_emprendimiento_insertar(?, ?, ?, ?, ?, ?)', [
+            $vendedor->getIdUsuario(),
+            $vendedor->getNombreNegocio(),
+            $vendedor->getDescripcion(),
+            $vendedor->getUbicacion(),
+            $vendedor->getLogo(),
+            $vendedor->getMetodosPago(),
+        ]);
+    }
+
+    /**
+     * Emprendimiento con dueño, calificación y totales.
+     *
+     * @param int $idEmprendimiento
+     * @return array|null
+     */
+    public function obtener($idEmprendimiento)
+    {
+        return $this->consultarUno('CALL sp_emprendimiento_obtener(?)', [$idEmprendimiento]);
+    }
+
+    /**
+     * @param int $idUsuario
+     * @return array|null
+     */
+    public function obtenerPorUsuario($idUsuario)
+    {
+        $fila = $this->consultarUno('CALL sp_emprendimiento_obtener_por_usuario(?)', [$idUsuario]);
+        if ($fila === null || $fila['id_emprendimiento'] === null) {
+            return null;
+        }
+        return $fila;
+    }
+
+    /**
+     * Guarda la vitrina. Si el logo viene vacío se conserva el anterior.
+     *
+     * @param Vendedor $vendedor
+     */
+    public function actualizar($vendedor)
+    {
+        $this->ejecutar('CALL sp_emprendimiento_actualizar(?, ?, ?, ?, ?, ?)', [
+            $vendedor->getIdEmprendimiento(),
+            $vendedor->getNombreNegocio(),
+            $vendedor->getDescripcion(),
+            $vendedor->getUbicacion(),
+            $vendedor->getLogo(),
+            $vendedor->getMetodosPago(),
+        ]);
+    }
+
+    /**
+     * @param string $estado pendiente | aprobado | rechazado
+     * @return array
+     */
+    public function listarPorEstado($estado)
+    {
+        return $this->consultar('CALL sp_emprendimiento_listar_por_estado(?)', [$estado]);
+    }
+
+    /**
+     * Aprueba o rechaza una solicitud.
+     *
+     * @param int $idEmprendimiento
+     * @param string $estado aprobado | rechazado
+     * @param string $observacion
+     */
+    public function resolver($idEmprendimiento, $estado, $observacion)
+    {
+        $this->ejecutar('CALL sp_emprendimiento_resolver(?, ?, ?)', [$idEmprendimiento, $estado, $observacion]);
+    }
+
+    /** @return array Emprendimientos aprobados para Historias de Artesanos */
+    public function listarHistorias()
+    {
+        return $this->consultar('CALL sp_emprendimiento_listar_historias()');
+    }
 }

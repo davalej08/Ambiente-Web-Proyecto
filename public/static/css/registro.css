@@ -526,3 +526,252 @@ a.rol:hover {
         align-items: flex-start;
     }
 }
+
+/* ==========================================================
+   Registro de emprendedor
+   ========================================================== */
+
+/* Pasos del panel izquierdo */
+.pasos-registro {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.pasos-registro li {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    padding: 0.85rem 1rem;
+    border: 1px solid var(--borde);
+    border-radius: var(--radio-md);
+    background: rgba(255, 255, 255, 0.7);
+    font-size: 0.8125rem;
+    line-height: 1.35;
+}
+
+.pasos-registro strong {
+    display: block;
+    font-family: var(--fuente-titulos);
+    color: var(--azul-oscuro);
+}
+
+.pasos-registro small {
+    color: var(--texto-suave);
+}
+
+.pasos-registro__numero {
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: var(--verde);
+    color: var(--blanco);
+    font-family: var(--fuente-titulos);
+    font-weight: 800;
+}
+
+/* Subtítulos dentro del formulario */
+.formulario__seccion {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--borde);
+    font-family: var(--fuente-titulos);
+    font-weight: 700;
+    color: var(--azul-oscuro);
+}
+
+.formulario__seccion:first-of-type {
+    border-top: 0;
+    padding-top: 0;
+}
+
+.formulario__seccion .icono {
+    color: var(--verde);
+}
+
+/* Área de texto y archivo */
+.campo__entrada--area {
+    min-height: 6.5rem;
+    resize: vertical;
+    line-height: 1.5;
+}
+
+.campo__entrada--archivo {
+    padding: 0.6rem;
+    background: var(--blanco);
+    cursor: pointer;
+}
+
+.campo__etiqueta .campo__nota {
+    text-transform: none;
+    letter-spacing: 0;
+    font-weight: 400;
+}
+
+/* Aviso de revisión */
+.aviso-revision {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    padding: 0.8rem 1rem;
+    border-radius: var(--radio-md);
+    background: var(--aviso-fondo);
+    color: var(--aviso);
+    font-size: 0.8125rem;
+    line-height: 1.45;
+}
+
+.aviso-revision .icono {
+    margin-top: 0.1rem;
+}
+
+/* ==========================================================
+   Recuperar y cambiar contraseña (tarjeta centrada)
+   ========================================================== */
+.acceso-centrado {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    min-height: 100vh;
+    padding: 2.5rem 1rem;
+    background:
+        radial-gradient(circle at 15% 10%, rgba(255, 255, 255, 0.6), transparent 40%),
+        radial-gradient(circle at 85% 90%, rgba(163, 191, 63, 0.18), transparent 45%),
+        var(--crema);
+}
+
+.acceso-centrado__tarjeta {
+    width: 100%;
+    max-width: 440px;
+    padding: 2.25rem 2rem;
+    text-align: center;
+    box-shadow: var(--sombra-lg);
+}
+
+.acceso-centrado__tarjeta > * + * {
+    margin-top: 0.75rem;
+}
+
+.acceso-centrado__tarjeta .formulario {
+    margin-top: 1.5rem;
+    text-align: left;
+}
+
+.acceso-centrado__tarjeta .mensaje {
+    margin: 1rem 0 0;
+    text-align: left;
+}
+
+.acceso-centrado__icono {
+    display: inline-grid;
+    place-items: center;
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 50%;
+    background: var(--info-fondo);
+    color: var(--azul);
+}
+
+.acceso-centrado__icono .icono {
+    width: 1.6rem;
+    height: 1.6rem;
+}
+
+.acceso-centrado__icono--exito {
+    background: var(--exito-fondo);
+    color: var(--verde-oscuro);
+}
+
+.acceso-centrado__acciones {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1.5rem !important;
+}
+
+.acceso-centrado__volver {
+    margin-top: 1.25rem !important;
+    font-size: 0.875rem;
+}
+
+.acceso-centrado__volver a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-weight: 600;
+    color: var(--azul);
+    text-decoration: none;
+}
+
+.acceso-centrado__pie {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.75rem;
+    color: var(--texto-suave);
+}
+
+.acceso-centrado__pie .icono {
+    color: var(--verde);
+}
+
+/* Requisitos de la contraseña (se ponen verdes con la clase es-cumplido) */
+.requisitos {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    margin: -0.25rem 0 0;
+    padding: 0;
+    list-style: none;
+    font-size: 0.8125rem;
+    color: var(--texto-tenue);
+}
+
+.requisitos li {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.requisitos .icono {
+    width: 0.9rem;
+    height: 0.9rem;
+    opacity: 0.35;
+}
+
+.requisitos li.es-cumplido {
+    color: var(--verde-oscuro);
+}
+
+.requisitos li.es-cumplido .icono {
+    opacity: 1;
+}
+
+@media (max-width: 560px) {
+    .acceso-centrado__tarjeta {
+        padding: 1.75rem 1.25rem;
+    }
+}
+
+/* Aviso del modo de prueba en "Revisá tu correo" (enlace para cambiar la contraseña) */
+.aviso-demo {
+    margin-top: 1rem;
+    text-align: left;
+}
+
+.aviso-demo a {
+    font-weight: 700;
+    color: var(--azul);
+    text-decoration: underline;
+}

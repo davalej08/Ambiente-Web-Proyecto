@@ -5,9 +5,107 @@
  * Universidad Fidélitas · Costa Rica
  *
  * PedidoRepository
- * Acceso a datos de pedidos y su detalle mediante procedimientos almacenados.
+ * Acceso a pedido, detalle_pedido y direccion_entrega mediante procedimientos almacenados.
  */
 
-class PedidoRepository
+class PedidoRepository extends Repository
 {
+    /**
+     * @param Pedido $pedido
+     * @return int Id del pedido nuevo
+     */
+    public function crear($pedido)
+    {
+        return $this->insertar('CALL sp_pedido_insertar(?, ?, ?)', [
+            $pedido->getIdUsuario(),
+            $pedido->getMetodoPago(),
+            $pedido->getTotal(),
+        ]);
+    }
+
+    /**
+     * Agrega una línea al pedido (el procedimiento rebaja el inventario).
+     *
+     * @param DetallePedido $detalle
+     */
+    public function agregarDetalle($detalle)
+    {
+        $this->ejecutar('CALL sp_detalle_pedido_insertar(?, ?, ?, ?)', [
+            $detalle->getIdPedido(),
+            $detalle->getIdProducto(),
+            $detalle->getCantidad(),
+            $detalle->getPrecioUnitario(),
+        ]);
+    }
+
+    /**
+     * @param int $idPedido
+     * @param Cliente $entrega Datos de entrega
+     */
+    public function agregarDireccion($idPedido, $entrega)
+    {
+        $this->ejecutar('CALL sp_direccion_entrega_insertar(?, ?, ?, ?, ?, ?, ?)', [
+            $idPedido,
+            $entrega->getNombreReceptor(),
+            $entrega->getTelefono(),
+            $entrega->getProvincia(),
+            $entrega->getCanton(),
+            $entrega->getDistrito(),
+            $entrega->getDireccionExacta(),
+        ]);
+    }
+
+    /**
+     * Encabezado y dirección. Con $idUsuario solo devuelve el pedido si es de esa persona.
+     *
+     * @param int $idPedido
+     * @param int $idUsuario 0 = cualquiera
+     * @return array|null
+     */
+    public function obtener($idPedido, $idUsuario)
+    {
+        return $this->consultarUno('CALL sp_pedido_obtener(?, ?)', [$idPedido, $idUsuario]);
+    }
+
+    /**
+     * @param int $idPedido
+     * @return array Líneas del pedido con su emprendimiento
+     */
+    public function listarDetalle($idPedido)
+    {
+        return $this->consultar('CALL sp_detalle_pedido_listar(?)', [$idPedido]);
+    }
+
+    /**
+     * @param int $idUsuario
+     * @return array Pedidos del cliente
+     */
+    public function listarPorCliente($idUsuario)
+    {
+        return $this->consultar('CALL sp_pedido_listar_por_cliente(?)', [$idUsuario]);
+    }
+
+    /**
+     * @param int $idEmprendimiento
+     * @param int $limite
+     * @return array Pedidos que recibió el emprendimiento
+     */
+    public function listarPorEmprendimiento($idEmprendimiento, $limite)
+    {
+        return $this->consultar('CALL sp_pedido_listar_por_emprendimiento(?, ?)', [$idEmprendimiento, $limite]);
+    }
+
+    /**
+     * Cambia el estado de las líneas de un emprendimiento dentro del pedido.
+     *
+     * @param int $idPedido
+     * @param int $idEmprendimiento
+     * @param string $estado confirmado | enviado | entregado | rechazado
+     * @return int Cantidad de líneas que cambiaron
+     */
+    public function cambiarEstado($idPedido, $idEmprendimiento, $estado)
+    {
+        $fila = $this->consultarUno('CALL sp_detalle_pedido_cambiar_estado(?, ?, ?)', [$idPedido, $idEmprendimiento, $estado]);
+        return (int) $fila['filas'];
+    }
 }

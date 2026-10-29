@@ -57,12 +57,18 @@ if (!isset($resenas)) {
     ];
 }
 
-$filtrosCatalogo = [
-    'todos'      => 'Todos los productos',
-    'grano'      => 'Grano & molido',
-    'regalo'     => 'Ediciones y regalos',
-    'accesorios' => 'Accesorios',
-];
+if (!isset($favoritosIds)) {
+    $favoritosIds = [];
+}
+
+if (!isset($filtrosCatalogo)) {
+    $filtrosCatalogo = [
+        'todos'      => 'Todos los productos',
+        'grano'      => 'Grano & molido',
+        'regalo'     => 'Ediciones y regalos',
+        'accesorios' => 'Accesorios',
+    ];
+}
 
 $telefonoWhatsapp = '506' . str_replace('-', '', $emprendimiento['telefono']);
 
@@ -177,9 +183,14 @@ require __DIR__ . '/../general/header.php';
                                     <span class="producto__sinpe"><?php echo icono('check'); ?> SINPE inmediato</span>
                                 <?php endif; ?>
                             </div>
-                            <button class="producto__favorito" type="button" aria-pressed="false" aria-label="Agregar a favoritos">
-                                <?php echo icono('corazon'); ?>
-                            </button>
+                            <form class="producto__favorito-form" method="post" action="<?php echo e(ruta('favoritos/alternar')); ?>">
+                                <input type="hidden" name="csrf_token" value="<?php echo e(valor($_SESSION, 'csrf_token', '')); ?>">
+                                <input type="hidden" name="id_producto" value="<?php echo (int) $producto['id']; ?>">
+                                <?php $esFavorito = in_array((int) $producto['id'], $favoritosIds, true); ?>
+                                <button class="producto__favorito <?php echo $esFavorito ? 'es-favorito' : ''; ?>" type="submit" aria-pressed="<?php echo $esFavorito ? 'true' : 'false'; ?>" aria-label="<?php echo $esFavorito ? 'Quitar de favoritos' : 'Agregar a favoritos'; ?>">
+                                    <?php echo icono('corazon'); ?>
+                                </button>
+                            </form>
                         </div>
 
                         <div class="producto__cuerpo">
@@ -252,6 +263,10 @@ require __DIR__ . '/../general/header.php';
                 <small>• <?php echo (int) $emprendimiento['total_resenas']; ?> valoraciones</small>
             </p>
         </div>
+
+        <?php if (count($resenas) === 0): ?>
+            <p class="sin-coincidencias">Todavía no hay reseñas. ¡Sé la primera persona en comprar y contar tu experiencia!</p>
+        <?php endif; ?>
 
         <ul class="resenas__lista">
             <?php foreach ($resenas as $resena): ?>

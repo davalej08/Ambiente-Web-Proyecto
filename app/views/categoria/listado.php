@@ -96,6 +96,8 @@ require __DIR__ . '/../general/header.php';
                     <input type="hidden" name="csrf_token" value="<?php echo e(valor($_SESSION, 'csrf_token', '')); ?>">
                     <!-- -1 = categoría nueva; si es un número, es la posición de la categoría que se edita -->
                     <input type="hidden" id="indiceEdicion" name="indice" value="-1">
+                    <!-- Id de la categoría en la base de datos (0 = nueva) -->
+                    <input type="hidden" id="idCategoriaEdicion" name="id_categoria" value="0">
 
                     <div class="ad-formulario__campos">
                         <div id="campo-nombreCategoria" class="campo">
@@ -135,6 +137,12 @@ require __DIR__ . '/../general/header.php';
             <!-- Tarjetas (las arma PHP con un for) -->
             <input type="hidden" id="totalCategorias" value="<?php echo $totalCategorias; ?>">
 
+            <!-- Formulario escondido para eliminar: categoria.js le pone el id -->
+            <form id="formEliminarCategoria" method="post" action="<?php echo e(ruta('admin/categorias/eliminar')); ?>" hidden>
+                <input type="hidden" name="csrf_token" value="<?php echo e(valor($_SESSION, 'csrf_token', '')); ?>">
+                <input type="hidden" name="id_categoria" id="idCategoriaEliminar" value="">
+            </form>
+
             <div class="ad-categorias" id="listaCategorias">
                 <?php for ($i = 0; $i < $totalCategorias; $i++): ?>
                     <?php
@@ -168,6 +176,11 @@ require __DIR__ . '/../general/header.php';
                             break;
                     }
 
+                    // Si la categoría trae su propio ícono (de la base de datos), se usa ese
+                    if (!empty($categoria['icono'])) {
+                        $icono = $categoria['icono'];
+                    }
+
                     // Número de la categoría con dos dígitos: #01, #02...
                     $numero = $i + 1;
                     if ($numero < 10) {
@@ -198,6 +211,7 @@ require __DIR__ . '/../general/header.php';
 
                         <input type="hidden" id="productos-<?php echo $i; ?>" value="<?php echo $categoria['productos']; ?>">
                         <input type="hidden" id="artesanal-<?php echo $i; ?>" value="<?php echo $categoria['artesanal'] ? '1' : '0'; ?>">
+                        <input type="hidden" id="id-<?php echo $i; ?>" value="<?php echo (int) valor($categoria, 'id', 0); ?>">
                     </article>
                 <?php endfor; ?>
             </div>

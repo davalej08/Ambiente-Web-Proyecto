@@ -10,9 +10,8 @@
    1. Filtros: pestañas por estado, buscador y chips.
    2. Confirmar pedido / Marcar como entregado.
    3. Resaltar el pedido que viene del dashboard (?id=...).
-   Por ahora los cambios son visuales (no se guardan). Cuando
-   exista el controlador se quita el preventDefault() de la
-   sección 2 para que los formularios se envíen.
+   Los formularios de la sección 2 se envían a VendedorController
+   (confirmar y entregar) después de preguntar.
    ========================================================== */
 
 const listaPedidos = document.getElementById("listaPedidos");
@@ -126,35 +125,20 @@ if (listaPedidos) {
 
     for (let i = 0; i < formsPedido.length; i++) {
         formsPedido[i].addEventListener("submit", function (evento) {
-            evento.preventDefault();
-
             const form = formsPedido[i];
             const tarjeta = form.closest(".pedido");
             const cliente = tarjeta.getElementsByTagName("h3")[0].textContent;
             const accion = form.getAttribute("data-accion");
 
-            if (accion === "confirmar") {
-                if (confirm("¿Confirmar el pedido de " + cliente + "?")) {
-                    cambiarEstado(tarjeta, "confirmado");
+            let pregunta = "¿Confirmar el pedido de " + cliente + "?";
+            if (accion === "entregar") {
+                pregunta = "¿Marcar como entregado el pedido de " + cliente + "?";
+            }
 
-                    // El mismo formulario pasa a ser "Marcar como entregado"
-                    form.setAttribute("data-accion", "entregar");
-                    form.setAttribute("action", form.getAttribute("action").replace("confirmar", "entregar"));
-                    form.getElementsByTagName("button")[0].className = "btn btn--primario btn--sm";
-                    form.getElementsByTagName("span")[0].textContent = "Marcar como entregado";
-                    form.getElementsByTagName("use")[0].setAttribute("href",
-                        form.getElementsByTagName("use")[0].getAttribute("href").replace("#i-check", "#i-camion"));
-                }
-            } else {
-                if (confirm("¿Marcar como entregado el pedido de " + cliente + "?")) {
-                    cambiarEstado(tarjeta, "entregado");
-
-                    // El botón se reemplaza por una nota
-                    const nota = document.createElement("p");
-                    nota.className = "pedido__nota";
-                    nota.textContent = "Notificado al cliente";
-                    form.parentElement.replaceChild(nota, form);
-                }
+            // Si la persona cancela, no se envía. Si acepta, el formulario va a
+            // VendedorController y la página vuelve con el estado nuevo.
+            if (!confirm(pregunta)) {
+                evento.preventDefault();
             }
         });
     }

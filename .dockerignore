@@ -1,0 +1,6 @@
+# Archivos que no se copian a la imagen de Render
+.git
+config/db.php
+storage
+*.log
+.vscode

@@ -139,7 +139,7 @@ require __DIR__ . '/../general/header.php';
                         <span class="ad-indicador__icono ad-indicador__icono--gris"><?php echo icono('efectivo'); ?></span>
                     </span>
                     <strong><?php echo colones($indicadores['ventas']); ?></strong>
-                    <p><span class="ad-sube ad-sube--chip"><?php echo icono('tendencia'); ?> +<?php echo $indicadores['variacion']; ?>%</span> <?php echo e($periodoAnterior); ?></p>
+                    <p><span class="ad-sube ad-sube--chip"><?php echo icono('tendencia'); ?> <?php echo $indicadores['variacion'] >= 0 ? '+' : ''; ?><?php echo (int) $indicadores['variacion']; ?>%</span> <?php echo e($periodoAnterior); ?></p>
                 </li>
                 <li class="ad-kpi">
                     <span class="ad-kpi__cabecera">
@@ -212,7 +212,7 @@ require __DIR__ . '/../general/header.php';
                     <span class="ad-indicador__icono ad-indicador__icono--celeste"><?php echo icono('ubicacion'); ?></span>
                     <div>
                         <h2>Cobertura Territorial</h2>
-                        <p><?php echo e($cobertura['lideres']); ?> lideran la oferta; <?php echo e($cobertura['crecimiento']); ?> muestran el crecimiento intermensual más acelerado (+<?php echo $cobertura['porcentaje']; ?>%).</p>
+                        <p><?php echo e($cobertura['lideres']); ?> lideran la oferta; <?php echo e($cobertura['crecimiento']); ?> muestran el crecimiento intermensual más acelerado (<?php echo $cobertura['porcentaje'] >= 0 ? '+' : ''; ?><?php echo (int) $cobertura['porcentaje']; ?>%).</p>
                     </div>
                 </section>
             </div>

@@ -76,11 +76,20 @@ if (!isset($totalPaginas)) {
 // Lo que la persona escogió en los filtros (para dejarlo marcado)
 $busqueda           = isset($_GET['q']) ? $_GET['q'] : '';
 $provinciaActual    = isset($_GET['provincia']) ? $_GET['provincia'] : '';
-$categoriasMarcadas = isset($_GET['categoria']) ? $_GET['categoria'] : ['1', '2'];
+$categoriasMarcadas = isset($_GET['categoria']) ? $_GET['categoria'] : [];
+if (!is_array($categoriasMarcadas)) {
+    // Desde el inicio llega una sola categoría (?categoria=3)
+    $categoriasMarcadas = [$categoriasMarcadas];
+}
 $precioMinimo       = isset($_GET['min']) ? $_GET['min'] : '';
 $precioMaximo       = isset($_GET['max']) ? $_GET['max'] : '';
-$pagoActual         = isset($_GET['pago']) ? $_GET['pago'] : 'sinpe';
-$entregasMarcadas   = isset($_GET['entrega']) ? $_GET['entrega'] : ['correos'];
+$pagoActual         = isset($_GET['pago']) ? $_GET['pago'] : '';
+$entregasMarcadas   = isset($_GET['entrega']) && is_array($_GET['entrega']) ? $_GET['entrega'] : [];
+
+// Productos que el cliente tiene en favoritos (corazón lleno)
+if (!isset($favoritosIds)) {
+    $favoritosIds = [];
+}
 $ordenActual        = isset($_GET['orden']) ? $_GET['orden'] : 'recomendados';
 
 // Parte de la URL que se repite en la paginación (búsqueda + provincia + orden)
@@ -257,9 +266,14 @@ require __DIR__ . '/../general/header.php';
                                             <span class="producto__sinpe"><?php echo icono('check'); ?> SINPE</span>
                                         <?php endif; ?>
                                     </div>
-                                    <button class="producto__favorito" type="button" aria-pressed="false" aria-label="Agregar a favoritos">
-                                        <?php echo icono('corazon'); ?>
-                                    </button>
+                                    <form class="producto__favorito-form" method="post" action="<?php echo e(ruta('favoritos/alternar')); ?>">
+                                    <input type="hidden" name="csrf_token" value="<?php echo e(valor($_SESSION, 'csrf_token', '')); ?>">
+                                    <input type="hidden" name="id_producto" value="<?php echo (int) $producto['id']; ?>">
+                                    <?php $esFavorito = in_array((int) $producto['id'], $favoritosIds, true); ?>
+                                    <button class="producto__favorito <?php echo $esFavorito ? 'es-favorito' : ''; ?>" type="submit" aria-pressed="<?php echo $esFavorito ? 'true' : 'false'; ?>" aria-label="<?php echo $esFavorito ? 'Quitar de favoritos' : 'Agregar a favoritos'; ?>">
+                                            <?php echo icono('corazon'); ?>
+                                        </button>
+                                    </form>
                                 </div>
 
                                 <div class="producto__cuerpo">
@@ -328,7 +342,7 @@ require __DIR__ . '/../general/header.php';
             </div>
             <div class="cta-comunidad__acciones">
                 <a class="btn btn--lima" href="<?php echo e(ruta('auth/registro-vendedor')); ?>">Registrar mi Taller Gratis</a>
-                <a class="btn btn--transparente" href="<?php echo e(ruta('') . '#comunidad'); ?>">Conocer más historias</a>
+                <a class="btn btn--transparente" href="<?php echo e(ruta('historias')); ?>">Conocer más historias</a>
             </div>
         </div>
     </section>
