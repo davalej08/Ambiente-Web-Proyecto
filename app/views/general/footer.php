@@ -42,7 +42,19 @@ if (!isset($scripts)) {
     </footer>
 <?php endif; ?>
 
-    <!-- Scripts base compartidos (menú móvil, cerrar mensajes, mostrar contraseña) -->
+    <!-- Pantalla de carga: general.js la muestra mientras se abre otra página o se envía un formulario -->
+    <div class="carga" id="pantallaCarga" aria-hidden="true">
+        <div class="carga__tarjeta" role="status">
+            <span class="carga__logo">
+                <span class="carga__anillo"></span>
+                <img src="<?php echo e(recurso('img/colibri.png')); ?>" alt="" width="64" height="64">
+            </span>
+            <p class="carga__texto">Cargando<span class="carga__puntos"><span>.</span><span>.</span><span>.</span></span></p>
+            <p class="carga__nota">Trayendo lo mejor hecho en Costa Rica</p>
+        </div>
+    </div>
+
+    <!-- Scripts base compartidos (menú móvil, mensajes, mostrar contraseña, pantalla de carga) -->
     <script src="<?php echo e(recurso('js/general.js')); ?>"></script>
 
     <!-- Scripts propios de cada página -->
