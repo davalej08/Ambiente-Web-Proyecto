@@ -200,6 +200,13 @@ textarea {
     gap: 1rem;
 }
 
+/* Provincia, cantón y distrito en una fila (general/ubicacion.php) */
+.rejilla-3 {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+}
+
 /* ---------- 5. Tipografía ---------- */
 .sobretitulo {
     font-size: 0.6875rem;
@@ -1173,7 +1180,8 @@ select.campo__entrada {
         padding-inline: 1rem;
     }
 
-    .rejilla-2 {
+    .rejilla-2,
+    .rejilla-3 {
         grid-template-columns: 1fr;
     }
 

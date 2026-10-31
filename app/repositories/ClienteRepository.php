@@ -5,7 +5,7 @@
  * Universidad Fidélitas · Costa Rica
  *
  * ClienteRepository
- * Favoritos del cliente (tabla favorito) mediante procedimientos almacenados.
+ * Favoritos del cliente (FIDE_FAVORITO_TB) mediante procedimientos almacenados.
  */
 
 class ClienteRepository extends Repository

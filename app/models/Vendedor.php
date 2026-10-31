@@ -5,7 +5,8 @@
  * Universidad Fidélitas · Costa Rica
  *
  * Vendedor
- * Emprendimiento de un usuario vendedor (tabla emprendimiento).
+ * Emprendimiento de un usuario vendedor (FIDE_EMPRENDIMIENTO_TB).
+ * metodosPago: códigos separados por coma (FIDE_EMPRENDIMIENTO_METODO_PAGO_TB).
  * Solo propiedades, getters y setters (las reglas van en los services).
  */
 
@@ -19,8 +20,10 @@ class Vendedor
     private $nombreNegocio = '';
     /** @var string Columna descripcion */
     private $descripcion = '';
-    /** @var string Columna ubicacion */
-    private $ubicacion = '';
+    /** @var int Columna id_distrito */
+    private $idDistrito = 0;
+    /** @var string Columna otras_senas */
+    private $otrasSenas = '';
     /** @var string Columna logo */
     private $logo = '';
     /** @var string Columna metodos_pago */
@@ -48,8 +51,11 @@ class Vendedor
         if (isset($fila['descripcion'])) {
             $this->descripcion = (string) $fila['descripcion'];
         }
-        if (isset($fila['ubicacion'])) {
-            $this->ubicacion = (string) $fila['ubicacion'];
+        if (isset($fila['id_distrito'])) {
+            $this->idDistrito = (int) $fila['id_distrito'];
+        }
+        if (isset($fila['otras_senas'])) {
+            $this->otrasSenas = (string) $fila['otras_senas'];
         }
         if (isset($fila['logo'])) {
             $this->logo = (string) $fila['logo'];
@@ -110,16 +116,28 @@ class Vendedor
         $this->descripcion = (string) $descripcion;
     }
 
-    /** @return string */
-    public function getUbicacion()
+    /** @return int */
+    public function getIdDistrito()
     {
-        return $this->ubicacion;
+        return $this->idDistrito;
     }
 
-    /** @param string $ubicacion */
-    public function setUbicacion($ubicacion)
+    /** @param int $idDistrito */
+    public function setIdDistrito($idDistrito)
     {
-        $this->ubicacion = (string) $ubicacion;
+        $this->idDistrito = (int) $idDistrito;
+    }
+
+    /** @return string */
+    public function getOtrasSenas()
+    {
+        return $this->otrasSenas;
+    }
+
+    /** @param string $otrasSenas */
+    public function setOtrasSenas($otrasSenas)
+    {
+        $this->otrasSenas = (string) $otrasSenas;
     }
 
     /** @return string */

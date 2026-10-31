@@ -79,8 +79,19 @@ class RegistroService
     {
         $errores = [];
 
-        if (!Validador::texto($datos['nombre'], 3, 100)) {
-            $errores['nombre'] = 'Escribí tu nombre completo.';
+        if (!Validador::cedula($datos['cedula'])) {
+            $errores['cedula'] = 'Escribí tu cédula solo con números (9 dígitos).';
+        } elseif ($this->usuarios->obtenerPorCedula($datos['cedula']) !== null) {
+            $errores['cedula'] = 'Ya existe una cuenta con esta cédula.';
+        }
+        if (!Validador::texto($datos['nombre'], 2, 60)) {
+            $errores['nombre'] = 'Escribí tu nombre.';
+        }
+        if (!Validador::texto($datos['primer_apellido'], 2, 40)) {
+            $errores['primer_apellido'] = 'Escribí tu primer apellido.';
+        }
+        if (!Validador::texto($datos['segundo_apellido'], 0, 40)) {
+            $errores['segundo_apellido'] = 'El segundo apellido es muy largo.';
         }
         if (!Validador::correo($datos['correo'])) {
             $errores['correo'] = 'Escribí un correo válido.';
@@ -113,7 +124,10 @@ class RegistroService
 
         $usuario = new Usuario();
         $usuario->setIdRol($rol->getIdRol());
+        $usuario->setCedula($datos['cedula']);
         $usuario->setNombre($datos['nombre']);
+        $usuario->setPrimerApellido($datos['primer_apellido']);
+        $usuario->setSegundoApellido($datos['segundo_apellido']);
         $usuario->setCorreo($datos['correo']);
         $usuario->setTelefono(Validador::formatoTelefono($datos['telefono']));
         // La contraseña NUNCA se guarda tal cual: password_hash() la cifra
@@ -125,7 +139,7 @@ class RegistroService
     /**
      * Crea una cuenta de cliente (RF-01).
      *
-     * @param array $datos ['nombre', 'correo', 'telefono', 'contrasena', 'terminos']
+     * @param array $datos ['cedula', 'nombre', 'primer_apellido', 'segundo_apellido', 'correo', 'telefono', 'contrasena', 'terminos']
      * @return array ['errores' => [...], 'usuario' => fila del usuario nuevo]
      */
     public function registrarCliente($datos)
@@ -136,7 +150,7 @@ class RegistroService
         }
 
         $idUsuario = $this->usuarios->crear($this->nuevoUsuario($datos, ROL_CLIENTE));
-        $this->correo->enviarBienvenida($datos['correo'], $datos['nombre'], false);
+        $this->correo->enviarBienvenida($datos['correo'], $datos['nombre'] . ' ' . $datos['primer_apellido'], false);
 
         return ['errores' => [], 'usuario' => $this->usuarios->obtenerPorId($idUsuario)];
     }
@@ -144,7 +158,7 @@ class RegistroService
     /**
      * Registra al emprendedor y su emprendimiento, que queda pendiente (RF-02).
      *
-     * @param array $datos ['nombre', 'correo', 'telefono', 'contrasena', 'negocio', 'provincia', 'canton', 'descripcion', 'terminos']
+     * @param array $datos Los del cliente + ['negocio', 'distrito', 'otras_senas', 'descripcion']
      * @return array ['errores' => [...]]
      */
     public function registrarVendedor($datos)
@@ -154,11 +168,11 @@ class RegistroService
         if (!Validador::texto($datos['negocio'], 3, 120)) {
             $errores['negocio'] = 'Escribí el nombre de tu emprendimiento.';
         }
-        if (!Validador::provincia($datos['provincia'])) {
-            $errores['provincia'] = 'Escogé tu provincia.';
+        if ((new UbicacionService())->distrito($datos['distrito']) === null) {
+            $errores['distrito'] = 'Elegí la provincia, el cantón y el distrito.';
         }
-        if (!Validador::texto($datos['canton'], 2, 60)) {
-            $errores['canton'] = 'Escribí tu cantón.';
+        if (!Validador::texto($datos['otras_senas'], 0, 255)) {
+            $errores['otras_senas'] = 'Las señas son muy largas.';
         }
         if (!Validador::texto($datos['descripcion'], 20, 300)) {
             $errores['descripcion'] = 'Contanos de tu emprendimiento (20 a 300 caracteres).';
@@ -189,7 +203,8 @@ class RegistroService
             $vendedor->setIdUsuario($idUsuario);
             $vendedor->setNombreNegocio($datos['negocio']);
             $vendedor->setDescripcion($datos['descripcion']);
-            $vendedor->setUbicacion($datos['canton'] . ', ' . $datos['provincia']);
+            $vendedor->setIdDistrito((int) $datos['distrito']);
+            $vendedor->setOtrasSenas($datos['otras_senas']);
             $vendedor->setLogo($rutaLogo);
             $vendedor->setMetodosPago('sinpe');
             $this->vendedores->crear($vendedor);
@@ -200,7 +215,7 @@ class RegistroService
             throw $error;
         }
 
-        $this->correo->enviarBienvenida($datos['correo'], $datos['nombre'], true);
+        $this->correo->enviarBienvenida($datos['correo'], $datos['nombre'] . ' ' . $datos['primer_apellido'], true);
         return ['errores' => []];
     }
 

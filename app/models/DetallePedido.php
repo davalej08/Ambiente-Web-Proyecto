@@ -5,7 +5,7 @@
  * Universidad Fidélitas · Costa Rica
  *
  * DetallePedido
- * Una línea del pedido: producto, cantidad y precio (tabla detalle_pedido).
+ * Una línea del pedido: producto, cantidad y precio (FIDE_DETALLE_PEDIDO_TB).
  * Solo propiedades, getters y setters (las reglas van en los services).
  */
 

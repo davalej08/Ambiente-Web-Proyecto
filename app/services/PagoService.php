@@ -31,7 +31,7 @@ class PagoService
     /**
      * Valida los datos de entrega del formulario del carrito.
      *
-     * @param array $datos ['nombre', 'telefono', 'provincia', 'canton', 'distrito', 'direccion', 'pago']
+     * @param array $datos ['nombre', 'telefono', 'distrito', 'direccion', 'pago'] (distrito = id)
      * @return array Errores ['campo' => 'mensaje']
      */
     public function validarEntrega($datos)
@@ -44,14 +44,8 @@ class PagoService
         if (!Validador::telefono($datos['telefono'])) {
             $errores['telefono'] = 'El teléfono debe tener 8 dígitos.';
         }
-        if (!Validador::provincia($datos['provincia'])) {
-            $errores['provincia'] = 'Escogé la provincia.';
-        }
-        if (!Validador::texto($datos['canton'], 3, 60)) {
-            $errores['canton'] = 'Escribí el cantón.';
-        }
-        if (!Validador::texto($datos['distrito'], 0, 60)) {
-            $errores['distrito'] = 'El distrito es muy largo.';
+        if ((new UbicacionService())->distrito($datos['distrito']) === null) {
+            $errores['distrito'] = 'Elegí la provincia, el cantón y el distrito.';
         }
         if (!Validador::texto($datos['direccion'], 15, 255)) {
             $errores['direccion'] = 'Escribí señas claras (mínimo 15 caracteres).';
@@ -80,21 +74,24 @@ class PagoService
             }
         }
 
-        $pedido = new Pedido();
-        $pedido->setIdUsuario($idUsuario);
-        $pedido->setMetodoPago($datos['pago']);
-        $pedido->setTotal($subtotal + COSTO_ENVIO);
-
         $entrega = new Cliente();
         $entrega->setNombreReceptor($datos['nombre']);
         $entrega->setTelefono(Validador::formatoTelefono($datos['telefono']));
-        $entrega->setProvincia($datos['provincia']);
-        $entrega->setCanton($datos['canton']);
-        $entrega->setDistrito($datos['distrito'] !== '' ? $datos['distrito'] : $datos['canton']);
+        $entrega->setIdDistrito((int) $datos['distrito']);
         $entrega->setDireccionExacta($datos['direccion']);
+
+        $pedido = new Pedido();
+        $pedido->setIdUsuario($idUsuario);
+        $pedido->setMetodoPago($datos['pago']);
+        $pedido->setNombreReceptor($entrega->getNombreReceptor());
+        $pedido->setTelefonoReceptor($entrega->getTelefono());
+        $pedido->setTotal($subtotal + COSTO_ENVIO);
 
         $this->pedidos->iniciarTransaccion();
         try {
+            // Primero la dirección de entrega (FIDE_DIRECCION_TB), después el pedido que la usa
+            $idDireccion = (new UbicacionRepository())->crearDireccion($entrega->getIdDistrito(), $entrega->getDireccionExacta());
+            $pedido->setIdDireccion($idDireccion);
             $idPedido = $this->pedidos->crear($pedido);
 
             foreach ($grupos as $grupo) {
@@ -108,7 +105,6 @@ class PagoService
                 }
             }
 
-            $this->pedidos->agregarDireccion($idPedido, $entrega);
             $this->pedidos->confirmarTransaccion();
         } catch (Exception $error) {
             $this->pedidos->deshacerTransaccion();
@@ -166,7 +162,7 @@ class PagoService
             'entrega' => [
                 'nombre'    => (string) $encabezado['nombre_receptor'],
                 'telefono'  => (string) $encabezado['telefono'],
-                'direccion' => $encabezado['canton'] . ', ' . $encabezado['provincia'] . '. ' . $encabezado['direccion_exacta'],
+                'direccion' => $encabezado['distrito'] . ', ' . $encabezado['canton'] . ', ' . $encabezado['provincia'] . '. ' . $encabezado['direccion_exacta'],
             ],
         ];
     }

@@ -36,6 +36,7 @@ class Database
         $opciones = [
             PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,   // errores como excepciones
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,         // filas como arreglos asociativos
+            PDO::ATTR_CASE               => PDO::CASE_LOWER,          // columnas en minúscula (ID_USUARIO llega como id_usuario)
             PDO::ATTR_EMULATE_PREPARES   => false,                    // sentencias preparadas reales
             PDO::ATTR_TIMEOUT            => 10,
         ];

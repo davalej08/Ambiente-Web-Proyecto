@@ -5,7 +5,7 @@
  * Universidad Fidélitas · Costa Rica
  *
  * VendedorRepository
- * Acceso a la tabla emprendimiento mediante procedimientos almacenados.
+ * Acceso a FIDE_EMPRENDIMIENTO_TB y sus métodos de pago y redes sociales mediante procedimientos almacenados.
  */
 
 class VendedorRepository extends Repository
@@ -18,11 +18,12 @@ class VendedorRepository extends Repository
      */
     public function crear($vendedor)
     {
-        return $this->insertar('CALL sp_emprendimiento_insertar(?, ?, ?, ?, ?, ?)', [
+        return $this->insertar('CALL sp_emprendimiento_insertar(?, ?, ?, ?, ?, ?, ?)', [
             $vendedor->getIdUsuario(),
             $vendedor->getNombreNegocio(),
             $vendedor->getDescripcion(),
-            $vendedor->getUbicacion(),
+            $vendedor->getIdDistrito(),
+            $vendedor->getOtrasSenas(),
             $vendedor->getLogo(),
             $vendedor->getMetodosPago(),
         ]);
@@ -59,11 +60,12 @@ class VendedorRepository extends Repository
      */
     public function actualizar($vendedor)
     {
-        $this->ejecutar('CALL sp_emprendimiento_actualizar(?, ?, ?, ?, ?, ?)', [
+        $this->ejecutar('CALL sp_emprendimiento_actualizar(?, ?, ?, ?, ?, ?, ?)', [
             $vendedor->getIdEmprendimiento(),
             $vendedor->getNombreNegocio(),
             $vendedor->getDescripcion(),
-            $vendedor->getUbicacion(),
+            $vendedor->getIdDistrito(),
+            $vendedor->getOtrasSenas(),
             $vendedor->getLogo(),
             $vendedor->getMetodosPago(),
         ]);
@@ -94,5 +96,14 @@ class VendedorRepository extends Repository
     public function listarHistorias()
     {
         return $this->consultar('CALL sp_emprendimiento_listar_historias()');
+    }
+
+    /**
+     * @param int $idEmprendimiento
+     * @return array Filas ['plataforma', 'url_perfil'] (FIDE_RED_SOCIAL_TB)
+     */
+    public function listarRedes($idEmprendimiento)
+    {
+        return $this->consultar('CALL sp_red_social_listar(?)', [$idEmprendimiento]);
     }
 }

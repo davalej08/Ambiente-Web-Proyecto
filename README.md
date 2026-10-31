@@ -48,7 +48,7 @@ VenticaProyecto/
 │       └── correo/     → Plantillas de los correos
 ├── config/             → config.php, rutas.php, database.php, seguridad.php, correo.php
 ├── database/
-│   ├── 01_tablas.sql           → Crea la base "ventica" y sus 11 tablas
+│   ├── 01_tablas.sql           → Crea la base "ventica": 24 tablas FIDE_..._TB, vistas y provincias/cantones/distritos
 │   ├── 02_procedimientos.sql   → Procedimientos almacenados (sp_tabla_accion)
 │   ├── 03_datos_prueba.sql     → Datos para probar con los 3 roles
 │   └── instalar.php            → Corre los 3 scripts en orden
@@ -91,7 +91,7 @@ El grupo usa una sola base MySQL en la nube (Aiven), así todos ven los mismos d
 Y abrir http://localhost:8000
 
 ### 5. Cuentas de prueba
-Todas usan la contraseña **Ventica2026**:
+Todas usan la contraseña **Ventica2026**. Para registrar cuentas nuevas se pide cédula, nombre y apellidos; las direcciones se eligen por provincia, cantón y distrito.
 
 | Rol | Correo | Qué se puede probar |
 |---|---|---|
@@ -174,7 +174,7 @@ Funciones disponibles en las vistas (`app/helpers/Vista.php`):
 | Módulo | Contenido | Estado |
 |---|---|---|
 | Base | Estructura MVC, estilos generales, header, navbar, footer, plantilla | Listo |
-| Base de datos | 11 tablas, procedimientos almacenados y datos de prueba | Listo |
+| Base de datos | Modelo E-R del Avance 1 (24 tablas FIDE_..._TB), división territorial completa, procedimientos y datos de prueba | Listo |
 | Backend | Router, controladores, servicios, repositorios, modelos, sesiones y roles | Listo |
 | Cliente | Landing, catálogo, vitrina, carrito, confirmación, Mi perfil, favoritos | Listo |
 | Acceso | Iniciar sesión, crear cuenta, registro de emprendedor, recuperar contraseña | Listo |

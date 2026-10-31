@@ -10,11 +10,12 @@
  * Variables que puede enviar VendedorController:
  *   $perfil   datos del emprendimiento (ver datos de muestra abajo)
  *   $errores  errores de validación del servidor ['campo' => 'mensaje']
+ *   $ubicaciones, $ubicacionElegida  selects de provincia, cantón y distrito (general/ubicacion.php)
  */
 
 $titulo       = 'Mi Perfil · Portal del emprendedor';
 $estilos      = ['vendedor'];
-$scripts      = ['validaciones', 'vendedor'];
+$scripts      = ['ubicacion', 'validaciones', 'vendedor'];
 $navbar       = false;
 $footer       = false;
 $claseBody    = 'body-panel';
@@ -27,7 +28,8 @@ if (!isset($perfil)) {
         'categoria'   => 'Comida & Café de Especialidad',
         'verificado'  => true,
         'descripcion' => 'Microbeneficio familiar en las montañas de Santa María de Dota, Tarrazú. Cosechamos café de especialidad con secado al sol en camas africanas y procesos 100% artesanales.',
-        'ubicacion'   => 'Tarrazú, San José',
+        'ubicacion'   => 'Dota, San José',
+        'otras_senas' => 'Finca La Pastora, 2 km al sur del templo',
         'telefono'    => '8841-2910',
         'pagos'       => ['sinpe', 'tarjeta'],
         'imagen'      => 'productos/cafe-geisha.jpg',
@@ -100,13 +102,16 @@ require __DIR__ . '/../general/header.php';
                         <p class="campo__error"><?php echo e(valor($errores, 'descripcion', 'La descripción debe tener al menos 30 caracteres.')); ?></p>
                     </div>
 
-                    <div class="campo <?php echo claseError($errores, 'ubicacion'); ?>" id="campo-ubicacion">
-                        <label class="campo__etiqueta" for="ubicacion">Ubicación / Cantón</label>
+                    <!-- Ubicación del taller: provincia, cantón y distrito (FIDE_DIRECCION_TB) -->
+                    <?php require __DIR__ . '/../general/ubicacion.php'; ?>
+
+                    <div class="campo <?php echo claseError($errores, 'otras_senas'); ?>" id="campo-otras_senas">
+                        <label class="campo__etiqueta" for="otras_senas">Otras señas del taller <span class="campo__nota">(opcional)</span></label>
                         <div class="campo__control campo__control--icono">
                             <?php echo icono('ubicacion', 'campo__icono-izq'); ?>
-                            <input class="campo__entrada" type="text" id="ubicacion" name="ubicacion" value="<?php echo e($perfil['ubicacion']); ?>" placeholder="Ej: Tarrazú, San José">
+                            <input class="campo__entrada" type="text" id="otras_senas" name="otras_senas" maxlength="255" value="<?php echo e($perfil['otras_senas']); ?>" placeholder="Ej: Finca La Pastora, 2 km al sur del templo">
                         </div>
-                        <p class="campo__error"><?php echo e(valor($errores, 'ubicacion', 'Indicá el cantón y la provincia.')); ?></p>
+                        <p class="campo__error"><?php echo e(valor($errores, 'otras_senas', 'Las señas son muy largas.')); ?></p>
                     </div>
 
                     <div class="campo <?php echo claseError($errores, 'telefono'); ?>" id="campo-telefono">

@@ -220,6 +220,9 @@ class VendedorController extends Controller
 
         $datos = $this->datosPortal();
         $datos['perfil'] = $this->vendedores->perfil($this->idEmprendimiento);
+        $ubicacion = new UbicacionService();
+        $datos['ubicaciones'] = $ubicacion->opciones();
+        $datos['ubicacionElegida'] = $ubicacion->elegidos($datos['perfil']);
         $this->vista('vendedor/perfil', $datos);
     }
 
@@ -232,7 +235,10 @@ class VendedorController extends Controller
         $datos = [
             'nombre'      => $this->entrada('nombre'),
             'descripcion' => $this->entrada('descripcion'),
-            'ubicacion'   => $this->entrada('ubicacion'),
+            'provincia'   => $this->entrada('provincia'),
+            'canton'      => $this->entrada('canton'),
+            'distrito'    => $this->entrada('distrito'),
+            'otras_senas' => $this->entrada('otras_senas'),
             'telefono'    => $this->entrada('telefono'),
             'pagos'       => isset($_POST['pagos']) && is_array($_POST['pagos']) ? $_POST['pagos'] : [],
         ];
@@ -243,10 +249,13 @@ class VendedorController extends Controller
             $perfil = $this->vendedores->perfil($this->idEmprendimiento);
             $perfil['nombre'] = $datos['nombre'];
             $perfil['descripcion'] = $datos['descripcion'];
-            $perfil['ubicacion'] = $datos['ubicacion'];
+            $perfil['otras_senas'] = $datos['otras_senas'];
             $perfil['telefono'] = $datos['telefono'];
             $perfil['pagos'] = $datos['pagos'];
             $vista['perfil'] = $perfil;
+            $ubicacion = new UbicacionService();
+            $vista['ubicaciones'] = $ubicacion->opciones();
+            $vista['ubicacionElegida'] = $ubicacion->elegidos($datos);
             $vista['errores'] = $errores;
             $vista['mensaje'] = ['tipo' => 'error', 'texto' => 'Revisá los campos marcados en rojo.'];
             $this->vista('vendedor/perfil', $vista);
