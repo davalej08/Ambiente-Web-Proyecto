@@ -103,4 +103,25 @@ class Validador
     {
         return in_array($provincia, PROVINCIAS, true);
     }
+
+    /**
+     * Cédula costarricense solo con números: 9 dígitos la física (1-0234-0567 = 102340567)
+     * o hasta 12 un DIMEX.
+     *
+     * @return bool
+     */
+    public static function cedula($cedula)
+    {
+        return ctype_digit($cedula) && strlen($cedula) >= 9 && strlen($cedula) <= 12;
+    }
+
+    /**
+     * Quita guiones y espacios de la cédula: '1-0234-0567' queda '102340567'.
+     *
+     * @return string
+     */
+    public static function formatoCedula($cedula)
+    {
+        return str_replace(['-', ' '], '', trim($cedula));
+    }
 }

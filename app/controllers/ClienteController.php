@@ -41,8 +41,11 @@ class ClienteController extends Controller
             $usuario[$campo] = $valor;
         }
 
+        $ubicacion = new UbicacionService();
         $this->vista('usuario/perfil', [
-            'usuario'   => $usuario,
+            'usuario'          => $usuario,
+            'ubicaciones'      => $ubicacion->opciones(),
+            'ubicacionElegida' => $ubicacion->elegidos(count($datosFormulario) > 0 ? $datosFormulario : $usuario),
             'pedidos'   => $this->usuarios->pedidosDelCliente($idUsuario),
             'favoritos' => $this->usuarios->favoritos($idUsuario),
             'errores'   => $errores,
@@ -56,11 +59,15 @@ class ClienteController extends Controller
         $this->validarCsrf('usuario/perfil');
 
         $datos = [
-            'nombre'    => $this->entrada('nombre'),
-            'correo'    => $this->entrada('correo'),
-            'telefono'  => $this->entrada('telefono'),
-            'provincia' => $this->entrada('provincia'),
-            'direccion' => $this->entrada('direccion'),
+            'nombre'           => $this->entrada('nombre'),
+            'primer_apellido'  => $this->entrada('primer_apellido'),
+            'segundo_apellido' => $this->entrada('segundo_apellido'),
+            'correo'           => $this->entrada('correo'),
+            'telefono'         => $this->entrada('telefono'),
+            'provincia'        => $this->entrada('provincia'),
+            'canton'           => $this->entrada('canton'),
+            'distrito'         => $this->entrada('distrito'),
+            'direccion'        => $this->entrada('direccion'),
         ];
         $errores = $this->usuarios->actualizarPerfil(Sesion::idUsuario(), $datos);
 
@@ -69,7 +76,7 @@ class ClienteController extends Controller
             return;
         }
 
-        Sesion::actualizarNombre($datos['nombre']);
+        Sesion::actualizarNombre(trim($datos['nombre'] . ' ' . $datos['primer_apellido'] . ' ' . $datos['segundo_apellido']));
         Sesion::mensaje('exito', 'Tus datos se guardaron.');
         $this->redirigir('usuario/perfil');
     }

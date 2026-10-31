@@ -5,7 +5,7 @@
  * Universidad Fidélitas · Costa Rica
  *
  * ProductoRepository
- * Acceso a las tablas producto, imagen_producto y resena mediante procedimientos almacenados.
+ * Acceso a FIDE_PRODUCTO_TB, FIDE_IMAGEN_PRODUCTO_TB y FIDE_RESENA_TB mediante procedimientos almacenados.
  */
 
 class ProductoRepository extends Repository

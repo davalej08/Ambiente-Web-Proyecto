@@ -5,7 +5,7 @@
  * Universidad Fidélitas · Costa Rica
  *
  * Rol
- * Tipo de usuario (tabla rol): Cliente, Emprendedor o Administrador.
+ * Tipo de usuario (FIDE_ROL_TB): Cliente, Emprendedor o Administrador.
  * Solo propiedades, getters y setters (las reglas van en los services).
  */
 

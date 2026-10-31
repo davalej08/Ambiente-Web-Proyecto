@@ -12,7 +12,9 @@
  * Ruta sugerida: usuario/perfil   (usuario/perfil#pedidos abre directo la pestaña de pedidos)
  *
  * Variables que puede enviar ClienteController:
- *   $usuario    ['nombre', 'correo', 'telefono', 'provincia', 'direccion', 'fecha_registro']
+ *   $usuario    ['nombre_completo', 'cedula', 'nombre', 'primer_apellido', 'segundo_apellido',
+ *                'correo', 'telefono', 'direccion', 'fecha_registro']
+ *   $ubicaciones, $ubicacionElegida  selects de provincia, cantón y distrito (general/ubicacion.php)
  *   $pedidos    pedidos del cliente (ver datos de muestra abajo)
  *   $favoritos  productos marcados como favoritos
  *   $errores    errores del formulario de datos ['campo' => 'mensaje']
@@ -22,19 +24,20 @@
 $titulo       = 'Mi perfil';
 $descripcion  = 'Tus datos, tus pedidos y tus productos favoritos en Ventica.';
 $estilos      = ['producto', 'usuario'];
-$scripts      = ['validaciones', 'usuario'];
+$scripts      = ['ubicacion', 'validaciones', 'usuario'];
 $paginaActiva = '';
-
-$provincias = ['San José', 'Alajuela', 'Cartago', 'Heredia', 'Guanacaste', 'Puntarenas', 'Limón'];
 
 if (!isset($usuario)) {
     $usuario = [
-        'nombre'         => 'Mariana Solano',
-        'correo'         => 'mariana@ejemplo.cr',
-        'telefono'       => '8888-1234',
-        'provincia'      => 'Heredia',
-        'direccion'      => 'Santo Domingo, 200 m norte de la iglesia, casa verde',
-        'fecha_registro' => 'septiembre 2026',
+        'nombre_completo'  => 'Mariana Solano Mora',
+        'cedula'           => '406183954',
+        'nombre'           => 'Mariana',
+        'primer_apellido'  => 'Solano',
+        'segundo_apellido' => 'Mora',
+        'correo'           => 'mariana@ejemplo.cr',
+        'telefono'         => '8888-1234',
+        'direccion'        => '200 m norte de la iglesia, casa verde',
+        'fecha_registro'   => 'septiembre 2026',
     ];
 }
 
@@ -69,7 +72,7 @@ $textoEstado = [
 ];
 
 // Iniciales para el círculo del avatar: "Mariana Solano" -> "MS" (función de Vista.php)
-$iniciales = iniciales($usuario['nombre']);
+$iniciales = iniciales($usuario['nombre_completo']);
 
 require __DIR__ . '/../general/header.php';
 ?>
@@ -81,7 +84,7 @@ require __DIR__ . '/../general/header.php';
         <span class="perfil__avatar" aria-hidden="true"><?php echo e($iniciales); ?></span>
         <div class="perfil__datos">
             <p class="sobretitulo">Mi cuenta</p>
-            <h1 class="titulo-pagina"><?php echo e($usuario['nombre']); ?></h1>
+            <h1 class="titulo-pagina"><?php echo e($usuario['nombre_completo']); ?></h1>
             <p class="texto-guia"><?php echo e($usuario['correo']); ?> · Cliente desde <?php echo e($usuario['fecha_registro']); ?></p>
         </div>
         <dl class="perfil__resumen">
@@ -111,10 +114,27 @@ require __DIR__ . '/../general/header.php';
                 <h2 class="titulo-seccion">Datos personales</h2>
 
                 <div class="rejilla-2">
+                    <div class="campo">
+                        <label class="campo__etiqueta" for="cedulaFija">Cédula</label>
+                        <input class="campo__entrada" id="cedulaFija" type="text" value="<?php echo e($usuario['cedula']); ?>" readonly>
+                    </div>
+
                     <div id="campo-nombre" class="campo <?php echo claseError($errores, 'nombre'); ?>">
-                        <label class="campo__etiqueta" for="nombre">Nombre y apellidos</label>
-                        <input class="campo__entrada" id="nombre" name="nombre" type="text" value="<?php echo e($usuario['nombre']); ?>" autocomplete="name" aria-describedby="nombreError">
-                        <p class="campo__error" id="nombreError"><?php echo e(valor($errores, 'nombre', 'Escribí tu nombre completo.')); ?></p>
+                        <label class="campo__etiqueta" for="nombre">Nombre</label>
+                        <input class="campo__entrada" id="nombre" name="nombre" type="text" maxlength="60" value="<?php echo e($usuario['nombre']); ?>" autocomplete="given-name" aria-describedby="nombreError">
+                        <p class="campo__error" id="nombreError"><?php echo e(valor($errores, 'nombre', 'Escribí tu nombre.')); ?></p>
+                    </div>
+
+                    <div id="campo-primer_apellido" class="campo <?php echo claseError($errores, 'primer_apellido'); ?>">
+                        <label class="campo__etiqueta" for="primer_apellido">Primer apellido</label>
+                        <input class="campo__entrada" id="primer_apellido" name="primer_apellido" type="text" maxlength="40" value="<?php echo e($usuario['primer_apellido']); ?>" autocomplete="family-name" aria-describedby="primer_apellidoError">
+                        <p class="campo__error" id="primer_apellidoError"><?php echo e(valor($errores, 'primer_apellido', 'Escribí tu primer apellido.')); ?></p>
+                    </div>
+
+                    <div id="campo-segundo_apellido" class="campo <?php echo claseError($errores, 'segundo_apellido'); ?>">
+                        <label class="campo__etiqueta" for="segundo_apellido">Segundo apellido</label>
+                        <input class="campo__entrada" id="segundo_apellido" name="segundo_apellido" type="text" maxlength="40" value="<?php echo e($usuario['segundo_apellido']); ?>" aria-describedby="segundo_apellidoError">
+                        <p class="campo__error" id="segundo_apellidoError"><?php echo e(valor($errores, 'segundo_apellido', 'El segundo apellido es muy largo.')); ?></p>
                     </div>
 
                     <div id="campo-correo" class="campo <?php echo claseError($errores, 'correo'); ?>">
@@ -131,20 +151,15 @@ require __DIR__ . '/../general/header.php';
                         </div>
                         <p class="campo__error" id="telefonoError"><?php echo e(valor($errores, 'telefono', 'Usá 8 dígitos, ej. 8888-0000.')); ?></p>
                     </div>
-
-                    <div class="campo">
-                        <label class="campo__etiqueta" for="provincia">Provincia</label>
-                        <select class="campo__entrada" id="provincia" name="provincia">
-                            <?php foreach ($provincias as $provincia): ?>
-                                <option value="<?php echo e($provincia); ?>" <?php echo $usuario['provincia'] === $provincia ? 'selected' : ''; ?>><?php echo e($provincia); ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
                 </div>
 
-                <div class="campo">
-                    <label class="campo__etiqueta" for="direccion">Dirección de entrega habitual</label>
-                    <textarea class="campo__entrada" id="direccion" name="direccion" rows="2"><?php echo e($usuario['direccion']); ?></textarea>
+                <h2 class="titulo-seccion">Dirección de entrega habitual</h2>
+                <?php require __DIR__ . '/../general/ubicacion.php'; ?>
+
+                <div id="campo-direccion" class="campo <?php echo claseError($errores, 'direccion'); ?>">
+                    <label class="campo__etiqueta" for="direccion">Otras señas</label>
+                    <textarea class="campo__entrada" id="direccion" name="direccion" rows="2" maxlength="255" placeholder="200 m norte de la iglesia, casa verde"><?php echo e($usuario['direccion']); ?></textarea>
+                    <p class="campo__error"><?php echo e(valor($errores, 'direccion', 'La dirección es muy larga.')); ?></p>
                 </div>
 
                 <p id="mensajePerfil" class="perfil__mensaje" role="status"></p>

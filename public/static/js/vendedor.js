@@ -198,7 +198,7 @@ if (formPerfil) {
 
         const nombre = entradaNombre.value.trim();
         const descripcion = document.getElementById("descripcion").value.trim();
-        const ubicacion = document.getElementById("ubicacion").value.trim();
+        const distrito = document.getElementById("distrito").value;
         const telefono = document.getElementById("telefono").value.trim();
 
         // Cuenta cuántos métodos de pago están marcados
@@ -224,10 +224,10 @@ if (formPerfil) {
             hayErrores = true;
         }
 
-        if (ubicacion.length >= 3) {
-            marcarError("ubicacion", false);
+        if (distrito !== "") {
+            marcarError("distrito", false);
         } else {
-            marcarError("ubicacion", true);
+            marcarError("distrito", true);
             hayErrores = true;
         }
 

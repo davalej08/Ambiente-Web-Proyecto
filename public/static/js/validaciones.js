@@ -41,6 +41,38 @@ function telefonoValido(telefono) {
     return numeros.length === 8 && !isNaN(Number(numeros));
 }
 
+// Cédula: de 9 a 12 números (se permiten guiones y espacios: 1-0234-0567)
+function cedulaValida(cedula) {
+    let numeros = "";
+    for (let i = 0; i < cedula.length; i++) {
+        const letra = cedula.charAt(i);
+        if (letra >= "0" && letra <= "9") {
+            numeros = numeros + letra;
+        } else if (letra !== "-" && letra !== " ") {
+            return false;
+        }
+    }
+    return numeros.length >= 9 && numeros.length <= 12;
+}
+
+// Cédula, nombre y apellidos (registro/datos_persona.php). Devuelve true si hay errores.
+function revisarDatosPersona() {
+    const revisiones = [
+        ["cedula", cedulaValida(document.getElementById("cedula").value.trim())],
+        ["nombre", document.getElementById("nombre").value.trim().length >= 2],
+        ["primer_apellido", document.getElementById("primer_apellido").value.trim().length >= 2]
+    ];
+    let hayErrores = false;
+
+    for (let i = 0; i < revisiones.length; i++) {
+        marcarError(revisiones[i][0], !revisiones[i][1]);
+        if (!revisiones[i][1]) {
+            hayErrores = true;
+        }
+    }
+    return hayErrores;
+}
+
 // ---------- Formulario: Iniciar sesión ----------
 const formLogin = document.getElementById("formLogin");
 
@@ -77,20 +109,12 @@ const formRegistro = document.getElementById("formRegistro");
 
 if (formRegistro) {
     formRegistro.addEventListener("submit", function (evento) {
-        let hayErrores = false;
+        let hayErrores = revisarDatosPersona();
 
-        const nombre = document.getElementById("nombre").value.trim();
         const correo = document.getElementById("correo").value.trim();
         const telefono = document.getElementById("telefono").value.trim();
         const contrasena = document.getElementById("contrasena").value;
         const aceptaTerminos = document.getElementById("terminos").checked;
-
-        if (nombre.length >= 3) {
-            marcarError("nombre", false);
-        } else {
-            marcarError("nombre", true);
-            hayErrores = true;
-        }
 
         if (correoValido(correo)) {
             marcarError("correo", false);
@@ -156,28 +180,28 @@ if (formRegistroVendedor) {
     });
 
     formRegistroVendedor.addEventListener("submit", function (evento) {
-        let hayErrores = false;
+        let hayErrores = revisarDatosPersona();
 
-        const nombre = document.getElementById("nombre").value.trim();
         const correo = document.getElementById("correo").value.trim();
         const telefono = document.getElementById("telefono").value.trim();
         const contrasena = document.getElementById("contrasena").value;
         const negocio = document.getElementById("negocio").value.trim();
         const provincia = document.getElementById("provincia").value;
-        const canton = document.getElementById("canton").value.trim();
+        const canton = document.getElementById("canton").value;
+        const distrito = document.getElementById("distrito").value;
         const descripcion = campoDescripcion.value.trim();
         const logo = document.getElementById("logo").files[0];
         const aceptaTerminos = document.getElementById("terminos").checked;
 
         // Cada condición: si es válida se despinta, si no se pinta en rojo
         const revisiones = [
-            ["nombre", nombre.length >= 3],
             ["correo", correoValido(correo)],
             ["telefono", telefonoValido(telefono)],
             ["contrasena", contrasena.length >= 8],
             ["negocio", negocio.length >= 3],
             ["provincia", provincia !== ""],
-            ["canton", canton.length >= 3],
+            ["canton", canton !== ""],
+            ["distrito", distrito !== ""],
             ["descripcion", descripcion.length >= 20],
             ["terminos", aceptaTerminos]
         ];

@@ -46,11 +46,19 @@ class UsuarioService
         $meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
 
         return [
-            'nombre'         => $fila['nombre'],
-            'correo'         => $fila['correo'],
-            'telefono'       => (string) $fila['telefono'],
-            'provincia'      => (string) $fila['provincia'],
-            'direccion'      => (string) $fila['direccion'],
+            'nombre_completo'  => $fila['nombre'],
+            'cedula'           => $fila['cedula'],
+            'nombre'           => $fila['nombre_pila'],
+            'primer_apellido'  => $fila['primer_apellido'],
+            'segundo_apellido' => (string) $fila['segundo_apellido'],
+            'correo'           => $fila['correo'],
+            'telefono'         => (string) $fila['telefono'],
+            'provincia'        => (string) $fila['provincia'],
+            'canton'           => (string) $fila['canton'],
+            'id_provincia'     => $fila['id_provincia'],
+            'id_canton'        => $fila['id_canton'],
+            'id_distrito'      => $fila['id_distrito'],
+            'direccion'        => (string) $fila['direccion'],
             'fecha_registro' => $meses[(int) date('n', $marca) - 1] . ' ' . date('Y', $marca),
         ];
     }
@@ -168,15 +176,22 @@ class UsuarioService
      * Guarda los cambios de "Mi perfil".
      *
      * @param int $idUsuario
-     * @param array $datos ['nombre', 'correo', 'telefono', 'provincia', 'direccion']
+     * @param array $datos ['nombre', 'primer_apellido', 'segundo_apellido', 'correo', 'telefono', 'distrito', 'direccion']
+     *                      distrito = '' si no quiere guardar dirección
      * @return array Errores ['campo' => 'mensaje']
      */
     public function actualizarPerfil($idUsuario, $datos)
     {
         $errores = [];
 
-        if (!Validador::texto($datos['nombre'], 3, 100)) {
-            $errores['nombre'] = 'Escribí tu nombre completo.';
+        if (!Validador::texto($datos['nombre'], 2, 60)) {
+            $errores['nombre'] = 'Escribí tu nombre.';
+        }
+        if (!Validador::texto($datos['primer_apellido'], 2, 40)) {
+            $errores['primer_apellido'] = 'Escribí tu primer apellido.';
+        }
+        if (!Validador::texto($datos['segundo_apellido'], 0, 40)) {
+            $errores['segundo_apellido'] = 'El segundo apellido es muy largo.';
         }
         if (!Validador::correo($datos['correo'])) {
             $errores['correo'] = 'Escribí un correo válido.';
@@ -189,8 +204,8 @@ class UsuarioService
         if (!Validador::telefono($datos['telefono'])) {
             $errores['telefono'] = 'El teléfono debe tener 8 dígitos.';
         }
-        if ($datos['provincia'] !== '' && !Validador::provincia($datos['provincia'])) {
-            $errores['provincia'] = 'Escogé una provincia.';
+        if ($datos['distrito'] !== '' && (new UbicacionService())->distrito($datos['distrito']) === null) {
+            $errores['distrito'] = 'Elegí la provincia, el cantón y el distrito.';
         }
         if (!Validador::texto($datos['direccion'], 0, 255)) {
             $errores['direccion'] = 'La dirección es muy larga.';
@@ -203,13 +218,27 @@ class UsuarioService
         $usuario = new Usuario();
         $usuario->setIdUsuario($idUsuario);
         $usuario->setNombre($datos['nombre']);
+        $usuario->setPrimerApellido($datos['primer_apellido']);
+        $usuario->setSegundoApellido($datos['segundo_apellido']);
         $usuario->setCorreo($datos['correo']);
         $usuario->setTelefono(Validador::formatoTelefono($datos['telefono']));
-        $usuario->setProvincia($datos['provincia']);
+        $usuario->setIdDistrito($datos['distrito'] !== '' ? (int) $datos['distrito'] : 0);
         $usuario->setDireccion($datos['direccion']);
         $this->usuarios->actualizarPerfil($usuario);
 
         return [];
+    }
+
+    /**
+     * Guarda la dirección principal del usuario (la que se ofrece al pagar).
+     *
+     * @param int $idUsuario
+     * @param int $idDistrito
+     * @param string $otrasSenas
+     */
+    public function guardarDireccion($idUsuario, $idDistrito, $otrasSenas)
+    {
+        $this->usuarios->guardarDireccion($idUsuario, $idDistrito, $otrasSenas);
     }
 
     /**
@@ -266,7 +295,7 @@ class UsuarioService
     /**
      * Crea (invita) o edita un usuario desde el panel del administrador.
      *
-     * @param array $datos ['id_usuario', 'nombre', 'correo', 'rol', 'contacto', 'contrasena']
+     * @param array $datos ['id_usuario', 'cedula', 'nombre', 'correo', 'rol', 'contacto', 'contrasena']
      * @return array ['errores' => [...], 'mensaje' => texto de éxito]
      */
     public function guardarDesdeAdmin($datos)
@@ -277,6 +306,11 @@ class UsuarioService
 
         if (!Validador::texto($datos['nombre'], 3, 100)) {
             $errores['nombre'] = 'Escribí el nombre.';
+        }
+        if ($idUsuario === 0 && !Validador::cedula($datos['cedula'])) {
+            $errores['cedula'] = 'Escribí la cédula solo con números (9 a 12).';
+        } elseif ($idUsuario === 0 && $this->usuarios->obtenerPorCedula($datos['cedula']) !== null) {
+            $errores['cedula'] = 'Ya existe una cuenta con esa cédula.';
         }
         if (!Validador::correo($datos['correo'])) {
             $errores['correo'] = 'Escribí un correo válido.';
@@ -298,6 +332,11 @@ class UsuarioService
 
         // En emprendedores: nombre = negocio y contacto = persona
         $nombrePersona = $esEmprendedor ? $datos['contacto'] : $datos['nombre'];
+        $partes = $this->partirNombre($nombrePersona);
+        if ($partes === null) {
+            $campo = $esEmprendedor ? 'contacto' : 'nombre';
+            return ['errores' => [$campo => 'Escribí el nombre y al menos un apellido.'], 'mensaje' => ''];
+        }
         $vendedores = new VendedorRepository();
 
         if ($idUsuario > 0) {
@@ -305,7 +344,16 @@ class UsuarioService
             if ($actual === null) {
                 return ['errores' => ['general' => 'Ese usuario no existe.'], 'mensaje' => ''];
             }
-            $this->usuarios->actualizarDesdeAdmin($idUsuario, $nombrePersona, $datos['correo']);
+            // Si el nombre completo no cambió se dejan las partes como estaban
+            // (así no se desacomoda un nombre compuesto como "María José")
+            $usuario = new Usuario($actual);
+            if ($nombrePersona !== $actual['nombre']) {
+                $usuario->setNombre($partes[0]);
+                $usuario->setPrimerApellido($partes[1]);
+                $usuario->setSegundoApellido($partes[2]);
+            }
+            $usuario->setCorreo($datos['correo']);
+            $this->usuarios->actualizarDesdeAdmin($usuario);
 
             // Si es emprendedor también se actualiza el nombre del negocio
             if ($actual['id_emprendimiento'] !== null) {
@@ -321,7 +369,10 @@ class UsuarioService
         $rol = $this->usuarios->obtenerRol($esEmprendedor ? ROL_EMPRENDEDOR : ROL_CLIENTE);
         $usuario = new Usuario();
         $usuario->setIdRol($rol->getIdRol());
-        $usuario->setNombre($nombrePersona);
+        $usuario->setCedula($datos['cedula']);
+        $usuario->setNombre($partes[0]);
+        $usuario->setPrimerApellido($partes[1]);
+        $usuario->setSegundoApellido($partes[2]);
         $usuario->setCorreo($datos['correo']);
         $usuario->setContrasena(password_hash($datos['contrasena'], PASSWORD_DEFAULT));
 
@@ -335,7 +386,7 @@ class UsuarioService
                 $vendedor->setIdUsuario($idNuevo);
                 $vendedor->setNombreNegocio($datos['nombre']);
                 $vendedor->setDescripcion('');
-                $vendedor->setUbicacion('');
+                $vendedor->setIdDistrito(0);   // la dirección la completa el emprendedor en su perfil
                 $idEmprendimiento = $vendedores->crear($vendedor);
                 $vendedores->resolver($idEmprendimiento, 'aprobado', '');
             }
@@ -346,6 +397,30 @@ class UsuarioService
         }
 
         return ['errores' => [], 'mensaje' => 'Se creó la cuenta de ' . $datos['nombre'] . '. Compartile la contraseña temporal.'];
+    }
+
+    /**
+     * Separa un nombre completo escrito en un solo campo (panel del admin):
+     * "Laura Vargas Mora" => ['Laura', 'Vargas', 'Mora'].
+     * Si hay más de tres palabras, las que sobran van al segundo apellido.
+     *
+     * @param string $completo
+     * @return array|null [nombre, primer apellido, segundo apellido] o null si falta el apellido
+     */
+    private function partirNombre($completo)
+    {
+        $palabras = explode(' ', trim($completo));
+        $limpias = [];
+        for ($i = 0; $i < count($palabras); $i++) {
+            if ($palabras[$i] !== '') {
+                $limpias[] = $palabras[$i];
+            }
+        }
+
+        if (count($limpias) < 2) {
+            return null;
+        }
+        return [$limpias[0], $limpias[1], implode(' ', array_slice($limpias, 2))];
     }
 
     /**

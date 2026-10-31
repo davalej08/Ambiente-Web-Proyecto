@@ -76,9 +76,13 @@ class VendedorService
             'categoria'   => $fila['categoria_principal'] !== null ? $fila['categoria_principal'] : 'Emprendimiento local',
             'verificado'  => $fila['estado_verificacion'] === 'aprobado',
             'descripcion' => (string) $fila['descripcion'],
-            'ubicacion'   => (string) $fila['ubicacion'],
-            'telefono'    => (string) $fila['telefono'],
-            'pagos'       => explode(',', $fila['metodos_pago']),
+            'ubicacion'    => (string) $fila['ubicacion'],
+            'id_provincia' => $fila['id_provincia'],
+            'id_canton'    => $fila['id_canton'],
+            'id_distrito'  => $fila['id_distrito'],
+            'otras_senas'  => (string) $fila['otras_senas'],
+            'telefono'     => (string) $fila['telefono'],
+            'pagos'        => explode(',', $fila['metodos_pago']),
             'imagen'      => imagenO($imagen),
         ];
     }
@@ -88,7 +92,7 @@ class VendedorService
      *
      * @param int $idEmprendimiento
      * @param int $idUsuario
-     * @param array $datos ['nombre', 'descripcion', 'ubicacion', 'telefono', 'pagos' => [...]]
+     * @param array $datos ['nombre', 'descripcion', 'distrito', 'otras_senas', 'telefono', 'pagos' => [...]]
      * @return array Errores ['campo' => 'mensaje']
      */
     public function guardarPerfil($idEmprendimiento, $idUsuario, $datos)
@@ -102,8 +106,11 @@ class VendedorService
         if (!Validador::texto($datos['descripcion'], 20, 400)) {
             $errores['descripcion'] = 'Contá tu historia en 20 a 400 caracteres.';
         }
-        if (!Validador::texto($datos['ubicacion'], 3, 150)) {
-            $errores['ubicacion'] = 'Escribí tu cantón y provincia.';
+        if ((new UbicacionService())->distrito($datos['distrito']) === null) {
+            $errores['distrito'] = 'Elegí la provincia, el cantón y el distrito.';
+        }
+        if (!Validador::texto($datos['otras_senas'], 0, 255)) {
+            $errores['otras_senas'] = 'Las señas son muy largas.';
         }
         if (!Validador::telefono($datos['telefono'])) {
             $errores['telefono'] = 'El teléfono debe tener 8 dígitos.';
@@ -138,7 +145,8 @@ class VendedorService
         $vendedor->setIdEmprendimiento($idEmprendimiento);
         $vendedor->setNombreNegocio($datos['nombre']);
         $vendedor->setDescripcion($datos['descripcion']);
-        $vendedor->setUbicacion($datos['ubicacion']);
+        $vendedor->setIdDistrito((int) $datos['distrito']);
+        $vendedor->setOtrasSenas($datos['otras_senas']);
         $vendedor->setLogo($rutaLogo);
         $vendedor->setMetodosPago(implode(',', $pagos));
         $this->vendedores->actualizar($vendedor);

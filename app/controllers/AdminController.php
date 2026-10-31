@@ -145,6 +145,7 @@ class AdminController extends Controller
 
         $resultado = $this->usuarios->guardarDesdeAdmin([
             'id_usuario' => $this->entrada('id_usuario', '0'),
+            'cedula'     => Validador::formatoCedula($this->entrada('cedula')),
             'nombre'     => $this->entrada('nombre'),
             'correo'     => $this->entrada('correo'),
             'rol'        => $this->entrada('rol'),

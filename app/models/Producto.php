@@ -5,7 +5,7 @@
  * Universidad Fidélitas · Costa Rica
  *
  * Producto
- * Producto que publica un emprendimiento (tabla producto).
+ * Producto que publica un emprendimiento (FIDE_PRODUCTO_TB).
  * Solo propiedades, getters y setters (las reglas van en los services).
  */
 

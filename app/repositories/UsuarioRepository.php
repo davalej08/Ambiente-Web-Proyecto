@@ -5,7 +5,7 @@
  * Universidad Fidélitas · Costa Rica
  *
  * UsuarioRepository
- * Acceso a las tablas usuario y rol mediante procedimientos almacenados.
+ * Acceso a FIDE_USUARIO_TB, FIDE_ROL_TB, FIDE_CORREO_TB y FIDE_TELEFONO_TB mediante procedimientos almacenados.
  */
 
 class UsuarioRepository extends Repository
@@ -53,9 +53,12 @@ class UsuarioRepository extends Repository
      */
     public function crear($usuario)
     {
-        return $this->insertar('CALL sp_usuario_insertar(?, ?, ?, ?, ?)', [
+        return $this->insertar('CALL sp_usuario_insertar(?, ?, ?, ?, ?, ?, ?, ?)', [
             $usuario->getIdRol(),
+            $usuario->getCedula(),
             $usuario->getNombre(),
+            $usuario->getPrimerApellido(),
+            $usuario->getSegundoApellido(),
             $usuario->getCorreo(),
             $usuario->getContrasena(),
             $usuario->getTelefono(),
@@ -69,12 +72,14 @@ class UsuarioRepository extends Repository
      */
     public function actualizarPerfil($usuario)
     {
-        $this->ejecutar('CALL sp_usuario_actualizar_perfil(?, ?, ?, ?, ?, ?)', [
+        $this->ejecutar('CALL sp_usuario_actualizar_perfil(?, ?, ?, ?, ?, ?, ?, ?)', [
             $usuario->getIdUsuario(),
             $usuario->getNombre(),
+            $usuario->getPrimerApellido(),
+            $usuario->getSegundoApellido(),
             $usuario->getCorreo(),
             $usuario->getTelefono(),
-            $usuario->getProvincia(),
+            $usuario->getIdDistrito(),
             $usuario->getDireccion(),
         ]);
     }
@@ -104,9 +109,36 @@ class UsuarioRepository extends Repository
      * @param string $nombre
      * @param string $correo
      */
-    public function actualizarDesdeAdmin($idUsuario, $nombre, $correo)
+    public function actualizarDesdeAdmin($usuario)
     {
-        $this->ejecutar('CALL sp_usuario_actualizar_admin(?, ?, ?)', [$idUsuario, $nombre, $correo]);
+        $this->ejecutar('CALL sp_usuario_actualizar_admin(?, ?, ?, ?, ?)', [
+            $usuario->getIdUsuario(),
+            $usuario->getNombre(),
+            $usuario->getPrimerApellido(),
+            $usuario->getSegundoApellido(),
+            $usuario->getCorreo(),
+        ]);
+    }
+
+    /**
+     * @param string $cedula
+     * @return array|null Fila si ya hay una cuenta con esa cédula
+     */
+    public function obtenerPorCedula($cedula)
+    {
+        return $this->consultarUno('CALL sp_usuario_obtener_por_cedula(?)', [$cedula]);
+    }
+
+    /**
+     * Guarda la dirección principal (la que se ofrece al pagar).
+     *
+     * @param int $idUsuario
+     * @param int $idDistrito
+     * @param string $otrasSenas
+     */
+    public function guardarDireccion($idUsuario, $idDistrito, $otrasSenas)
+    {
+        $this->ejecutar('CALL sp_usuario_guardar_direccion(?, ?, ?)', [$idUsuario, $idDistrito, $otrasSenas]);
     }
 
     /** @return array Clientes y emprendedores (Gestión de Usuarios) */
