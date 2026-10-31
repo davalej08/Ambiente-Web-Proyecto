@@ -207,13 +207,13 @@ require __DIR__ . '/../general/header.php';
 
                     <div class="pedidos-pestanas" role="group" aria-label="Filtrar pedidos por estado">
                         <button class="pedidos-pestanas__boton" type="button" data-grupo="todos" aria-pressed="true">
-                            Todos <span data-conteo="todos">(<?php echo (int) $totalPedidos; ?>)</span>
+                            Todos <span id="conteoTodos" data-conteo="todos">(<?php echo (int) $totalPedidos; ?>)</span>
                         </button>
                         <button class="pedidos-pestanas__boton" type="button" data-grupo="pendientes" aria-pressed="false">
-                            Pendientes <span data-conteo="pendientes">(<?php echo (int) $cantPendientes; ?>)</span>
+                            Pendientes <span id="conteoPendientes" data-conteo="pendientes">(<?php echo (int) $cantPendientes; ?>)</span>
                         </button>
                         <button class="pedidos-pestanas__boton" type="button" data-grupo="listos" aria-pressed="false">
-                            Listos <span data-conteo="listos">(<?php echo (int) $cantListos; ?>)</span>
+                            Listos <span id="conteoListos" data-conteo="listos">(<?php echo (int) $cantListos; ?>)</span>
                         </button>
                     </div>
                 </aside>
@@ -324,6 +324,9 @@ require __DIR__ . '/../general/header.php';
                     </li>
                 <?php endforeach; ?>
             </ul>
+
+            <!-- Pedido que viene marcado desde el inicio del portal (vendedor/pedidos?id=...) -->
+            <input type="hidden" id="pedidoResaltado" value="<?php echo (int) valor($_GET, 'id', 0); ?>">
 
             <div class="tarjeta vacio" id="sinResultados" hidden>
                 <?php echo icono('buscar'); ?>
