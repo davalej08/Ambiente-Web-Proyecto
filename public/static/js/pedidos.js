@@ -26,12 +26,6 @@ if (listaPedidos) {
     // Lo que el usuario tiene escogido en este momento
     let grupoActivo = "todos";
 
-    // Texto y color de cada estado (igual que en pedidos.php)
-    const ESTADOS = {
-        confirmado: { texto: "Confirmado y Pagado", clase: "estado-pedido--oscuro", grupo: "listos" },
-        entregado: { texto: "Entregado con éxito", clase: "estado-pedido--verde", grupo: "listos" }
-    };
-
     // ---------- 1. Filtros ----------
 
     // Un chip está activo si su aria-pressed es "true"
@@ -78,25 +72,6 @@ if (listaPedidos) {
         sinResultados.hidden = visibles > 0;
     }
 
-    // Cuenta los pedidos de cada grupo y actualiza los números de arriba
-    function actualizarConteos() {
-        let pendientes = 0;
-        let listos = 0;
-
-        for (let i = 0; i < tarjetas.length; i++) {
-            if (tarjetas[i].getAttribute("data-grupo") === "pendientes") {
-                pendientes++;
-            } else {
-                listos++;
-            }
-        }
-
-        document.querySelector('[data-conteo="todos"]').textContent = "(" + tarjetas.length + ")";
-        document.querySelector('[data-conteo="pendientes"]').textContent = "(" + pendientes + ")";
-        document.querySelector('[data-conteo="listos"]').textContent = "(" + listos + ")";
-        document.getElementById("datoPorDespachar").textContent = pendientes + (pendientes === 1 ? " envío" : " envíos");
-    }
-
     // Pestañas Todos / Pendientes / Listos
     for (let i = 0; i < botonesGrupo.length; i++) {
         botonesGrupo[i].addEventListener("click", function () {
@@ -126,7 +101,8 @@ if (listaPedidos) {
     for (let i = 0; i < formsPedido.length; i++) {
         formsPedido[i].addEventListener("submit", function (evento) {
             const form = formsPedido[i];
-            const tarjeta = form.closest(".pedido");
+            // form -> div.pedido__acciones -> div.pedido__estado-acciones -> li.pedido
+            const tarjeta = form.parentElement.parentElement.parentElement;
             const cliente = tarjeta.getElementsByTagName("h3")[0].textContent;
             const accion = form.getAttribute("data-accion");
 
@@ -143,25 +119,11 @@ if (listaPedidos) {
         });
     }
 
-    // Cambia la etiqueta y el grupo de una tarjeta y refresca los números
-    function cambiarEstado(tarjeta, nuevoEstado) {
-        const etiqueta = tarjeta.getElementsByClassName("estado-pedido")[0];
-
-        tarjeta.setAttribute("data-estado", nuevoEstado);
-        tarjeta.setAttribute("data-grupo", ESTADOS[nuevoEstado].grupo);
-
-        etiqueta.className = "estado-pedido " + ESTADOS[nuevoEstado].clase;
-        etiqueta.innerHTML = '<span class="punto"></span> ' + ESTADOS[nuevoEstado].texto;
-
-        actualizarConteos();
-        aplicarFiltros();
-    }
-
     // ---------- 3. Pedido resaltado desde el dashboard ----------
-    // El dashboard enlaza a vendedor/pedidos?id=8491
-    const idBuscado = new URLSearchParams(window.location.search).get("id");
+    // El dashboard enlaza a vendedor/pedidos?id=8491; PHP deja ese número en #pedidoResaltado
+    const idBuscado = document.getElementById("pedidoResaltado").value;
 
-    if (idBuscado) {
+    if (idBuscado !== "0") {
         const tarjetaBuscada = document.getElementById("pedido-" + idBuscado);
 
         if (tarjetaBuscada) {
