@@ -654,6 +654,299 @@ select.campo__entrada {
     cursor: pointer;
 }
 
+/* Mensajes dentro de la página (formularios): misma línea de color a la izquierda que los toasts */
+.mensaje {
+    border: 1px solid currentColor;
+    border-left-width: 4px;
+    border-color: color-mix(in srgb, currentColor 22%, transparent);
+    border-left-color: currentColor;
+}
+
+/* ---------- 11b. Toast (mensaje flotante) ----------
+   Lo arma mensajes.php y lo controla general.js:
+   entra deslizándose, la barrita de abajo marca el tiempo y se va solo. */
+.toast {
+    position: fixed;
+    top: calc(var(--alto-navbar) + 0.75rem);
+    right: 1.25rem;
+    z-index: 200;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.8rem;
+    width: min(400px, calc(100vw - 2rem));
+    padding: 0.95rem 0.9rem 1.05rem 1rem;
+    overflow: hidden;
+    border: 1px solid var(--borde);
+    border-left: 4px solid var(--toast-color);
+    border-radius: var(--radio-lg);
+    background: var(--blanco);
+    box-shadow: var(--sombra-lg);
+    color: var(--texto);
+    animation: toastEntra 0.35s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+}
+
+/* En los portales (sin navbar pública) el toast queda más arriba */
+.body-panel .toast,
+.body-acceso .toast {
+    top: 1rem;
+}
+
+.toast--exito { --toast-color: var(--verde);  --toast-fondo: var(--exito-fondo); }
+.toast--error { --toast-color: var(--error);  --toast-fondo: var(--error-fondo); }
+.toast--aviso { --toast-color: #C98A00;       --toast-fondo: var(--aviso-fondo); }
+.toast--info  { --toast-color: var(--teal);   --toast-fondo: var(--info-fondo); }
+
+.toast__icono {
+    display: grid;
+    flex-shrink: 0;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 50%;
+    background: var(--toast-fondo);
+    color: var(--toast-color);
+}
+
+.toast__icono .icono {
+    width: 1.15rem;
+    height: 1.15rem;
+}
+
+.toast__cuerpo {
+    flex: 1;
+    min-width: 0;
+    padding-top: 0.1rem;
+}
+
+.toast__titulo {
+    font-family: var(--fuente-titulos);
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: var(--azul-oscuro);
+}
+
+.toast__texto {
+    margin-top: 0.15rem;
+    font-size: 0.84rem;
+    line-height: 1.45;
+    color: var(--texto-2);
+}
+
+.toast__cerrar {
+    display: grid;
+    flex-shrink: 0;
+    place-items: center;
+    width: 1.9rem;
+    height: 1.9rem;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--texto-tenue);
+    cursor: pointer;
+    transition: background-color 0.15s, color 0.15s;
+}
+
+.toast__cerrar:hover {
+    background: var(--crema);
+    color: var(--azul-oscuro);
+}
+
+.toast__cerrar .icono {
+    width: 0.95rem;
+    height: 0.95rem;
+}
+
+/* Barrita que se va vaciando mientras el toast está visible (6 segundos) */
+.toast__tiempo {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: var(--toast-color);
+    opacity: 0.55;
+    transform-origin: left;
+    animation: toastTiempo 6s linear forwards;
+}
+
+.toast[data-cierre="manual"] .toast__tiempo {
+    display: none;
+}
+
+/* Al pasar el mouse el tiempo se detiene (general.js también lo pausa) */
+.toast:hover .toast__tiempo {
+    animation-play-state: paused;
+}
+
+.toast.es-saliendo {
+    animation: toastSale 0.3s ease-in forwards;
+}
+
+@keyframes toastEntra {
+    from { opacity: 0; transform: translateX(110%); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes toastSale {
+    to { opacity: 0; transform: translateX(110%); }
+}
+
+@keyframes toastTiempo {
+    from { transform: scaleX(1); }
+    to   { transform: scaleX(0); }
+}
+
+/* ---------- 11c. Pantalla de carga y botones cargando ---------- */
+.carga {
+    position: fixed;
+    inset: 0;
+    z-index: 300;
+    display: grid;
+    place-items: center;
+    padding: 1rem;
+    background: rgba(250, 247, 236, 0.72);
+    backdrop-filter: blur(3px);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s;
+}
+
+.carga.es-visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.carga__tarjeta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 1.75rem 2.25rem;
+    border: 1px solid var(--borde);
+    border-radius: var(--radio-xl);
+    background: var(--blanco);
+    box-shadow: var(--sombra-lg);
+    text-align: center;
+    transform: translateY(8px) scale(0.97);
+    transition: transform 0.25s ease;
+}
+
+.carga.es-visible .carga__tarjeta {
+    transform: translateY(0) scale(1);
+}
+
+.carga__logo {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 92px;
+    height: 92px;
+    margin-bottom: 0.5rem;
+}
+
+.carga__logo img {
+    width: 62px;
+    height: 62px;
+    border-radius: 50%;
+    object-fit: cover;
+    animation: cargaVuelo 1.4s ease-in-out infinite;
+}
+
+/* Anillo con los colores de la marca girando alrededor del colibrí */
+.carga__anillo {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: conic-gradient(from 0deg, var(--azul), var(--teal), var(--verde), var(--lima), transparent 75%);
+    -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 5px), #000 calc(100% - 4px));
+    mask: radial-gradient(farthest-side, transparent calc(100% - 5px), #000 calc(100% - 4px));
+    animation: cargaGiro 0.9s linear infinite;
+}
+
+.carga__texto {
+    font-family: var(--fuente-titulos);
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: var(--azul-oscuro);
+}
+
+.carga__puntos span {
+    animation: cargaPunto 1.2s infinite;
+}
+
+.carga__puntos span:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.carga__puntos span:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+.carga__nota {
+    font-size: 0.78rem;
+    color: var(--texto-suave);
+}
+
+/* Botón de un formulario que se está enviando */
+.btn.es-cargando {
+    position: relative;
+    pointer-events: none;
+    opacity: 0.85;
+}
+
+.btn.es-cargando .icono {
+    display: none;
+}
+
+.btn__giro {
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    border: 2px solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: cargaGiro 0.7s linear infinite;
+}
+
+@keyframes cargaGiro {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes cargaVuelo {
+    0%, 100% { transform: translateY(0) rotate(-4deg); }
+    50%      { transform: translateY(-5px) rotate(3deg); }
+}
+
+@keyframes cargaPunto {
+    0%, 20%  { opacity: 0.2; }
+    50%      { opacity: 1; }
+    100%     { opacity: 0.2; }
+}
+
+/* Personas que prefieren menos movimiento: sin animaciones */
+@media (prefers-reduced-motion: reduce) {
+    .toast,
+    .toast.es-saliendo,
+    .carga__logo img,
+    .carga__puntos span {
+        animation: none;
+    }
+
+    .carga__anillo,
+    .btn__giro {
+        animation-duration: 2.5s;
+    }
+}
+
+@media (max-width: 560px) {
+    .toast {
+        top: calc(var(--alto-navbar) + 0.5rem);
+        right: 1rem;
+        left: 1rem;
+        width: auto;
+    }
+}
+
 /* ---------- 12. Navbar ---------- */
 .navbar {
     position: sticky;
