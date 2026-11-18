@@ -82,6 +82,52 @@
     outline-offset: 2px;
 }
 
+/* ---------- Rango de fechas personalizado (HU-13) ---------- */
+.rango {
+    margin-bottom: 1.75rem;
+}
+
+.rango__formulario {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 1rem 1.25rem;
+}
+
+.rango__titulo {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    align-self: center;
+    margin-right: 0.5rem;
+    font-size: 0.9375rem;
+    color: var(--azul-oscuro);
+}
+
+.rango__titulo .icono {
+    width: 1rem;
+    height: 1rem;
+    color: var(--teal-oscuro);
+}
+
+.rango .campo {
+    min-width: 11rem;
+}
+
+.rango__botones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-self: flex-end;
+}
+
+.rango__nota {
+    margin-top: 0.9rem;
+    font-size: 0.75rem;
+    color: var(--texto-tenue);
+}
+
+
 /* ---------- 2. Indicadores ---------- */
 .kpi {
     position: relative;
@@ -344,5 +390,130 @@
     .segmentado__opcion {
         flex: 1 0 auto;
         text-align: center;
+    }
+}
+
+/* ---------- 5. Impresión / PDF ---------- */
+/* Encabezado que solo se ve en el papel (en pantalla está oculto) */
+.solo-impresion {
+    display: none;
+}
+
+@page {
+    size: A4;
+    margin: 12mm;
+}
+
+@media print {
+    /* Que se impriman los colores de fondo y de la gráfica */
+    * {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    body,
+    .panel {
+        background: #fff;
+    }
+
+    /* Fuera lo que solo sirve en pantalla: menú, barra, selector de período, rango y avisos */
+    .panel__lateral,
+    .panel__barra,
+    .reportes-cabecera,
+    .rango,
+    .toast {
+        display: none;
+    }
+
+    .panel {
+        display: block;
+        min-height: 0;
+    }
+
+    .panel__contenido {
+        max-width: none;
+        padding: 0;
+    }
+
+    /* Encabezado del documento */
+    .solo-impresion {
+        display: block;
+        margin-bottom: 1rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 2px solid var(--azul);
+    }
+
+    .solo-impresion__marca {
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--teal-oscuro);
+    }
+
+    .solo-impresion__titulo {
+        margin: 0.2rem 0;
+        font-size: 1.5rem;
+        color: var(--azul-oscuro);
+    }
+
+    .solo-impresion__detalle {
+        font-size: 0.8rem;
+        color: var(--texto-2);
+    }
+
+    /* Los 3 indicadores en una fila, sin partirse entre páginas */
+    .indicadores {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.6rem;
+        margin-bottom: 1rem;
+    }
+
+    .kpi {
+        padding: 0.9rem;
+        gap: 0.5rem;
+        box-shadow: none;
+    }
+
+    .kpi__valor {
+        font-size: 1.5rem;
+    }
+
+    .kpi__producto {
+        font-size: 1rem;
+    }
+
+    .tarjeta,
+    .kpi,
+    .grafica__resumen li {
+        break-inside: avoid;
+        box-shadow: none;
+    }
+
+    /* La gráfica y su detalle caben en la misma hoja */
+    .grafica {
+        padding: 1rem;
+    }
+
+    .grafica__svg {
+        width: 100%;
+        height: auto;
+    }
+
+    .grafica__eje {
+        font-size: 12px;
+    }
+
+    .grafica__eje--x {
+        font-size: 13px;
+    }
+
+    .grafica__resumen {
+        grid-template-columns: repeat(auto-fit, minmax(6.5rem, 1fr));
+        gap: 0.4rem;
+    }
+
+    .grafica__resumen li {
+        padding: 0.45rem 0.3rem;
     }
 }

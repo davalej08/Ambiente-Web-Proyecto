@@ -60,6 +60,7 @@ $router->get('vendedor/productos/editar', 'VendedorController', 'editarProducto'
 $router->post('vendedor/productos/guardar', 'VendedorController', 'guardarProducto');
 $router->post('vendedor/productos/actualizar', 'VendedorController', 'guardarProducto');
 $router->post('vendedor/productos/disponibilidad', 'VendedorController', 'disponibilidad');
+$router->post('vendedor/productos/eliminar', 'VendedorController', 'eliminarProducto');
 $router->get('vendedor/pedidos', 'VendedorController', 'pedidos');
 $router->post('vendedor/pedidos/confirmar', 'VendedorController', 'confirmarPedido');
 $router->post('vendedor/pedidos/entregar', 'VendedorController', 'entregarPedido');

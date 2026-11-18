@@ -847,6 +847,19 @@
     color: var(--teal-oscuro);
 }
 
+/* Editar y eliminar, uno junto al otro */
+.acciones-fila {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.panel__boton-icono--peligro:hover,
+.panel__boton-icono--peligro:focus-visible {
+    background: var(--error-fondo);
+    color: var(--error);
+}
+
 /* ---------- 4. Agregar producto ---------- */
 .formulario-producto__barra {
     display: flex;

@@ -169,7 +169,40 @@ if (formProducto) {
     });
 }
 
-// ---------- 4. Mi Perfil ----------
+// ---------- 4. Eliminar producto ----------
+// Sin pedidos se elimina. Con pedidos no se puede borrar: se ofrece ocultarlo de la tienda.
+const formsEliminar = document.getElementsByClassName("form-eliminar");
+
+for (let i = 0; i < formsEliminar.length; i++) {
+    formsEliminar[i].addEventListener("submit", function (evento) {
+        const form = formsEliminar[i];
+        const nombre = form.dataset.nombre;
+        const pedidos = parseInt(form.dataset.pedidos, 10);
+        const enCurso = parseInt(form.dataset.enCurso, 10);
+
+        if (pedidos === 0) {
+            if (!confirm("¿Eliminar \"" + nombre + "\" para siempre? Esta acción no se puede deshacer.")) {
+                evento.preventDefault();
+            }
+            return;
+        }
+
+        let texto = "\"" + nombre + "\" ya está en " + pedidos + " pedido(s), por eso no se puede eliminar.";
+        if (enCurso > 0) {
+            texto += "\n\n" + enCurso + " de esos pedidos siguen en curso: ocultar el producto no los cancela, tenés que cumplirlos.";
+        }
+        texto += "\n\n¿Querés ocultarlo de tu tienda?";
+
+        if (!confirm(texto)) {
+            evento.preventDefault();
+            return;
+        }
+        // El servidor oculta el producto (queda pausado) en vez de borrarlo
+        form.elements["accion"].value = "ocultar";
+    });
+}
+
+// ---------- 5. Mi Perfil ----------
 const formPerfil = document.getElementById("formPerfil");
 
 if (formPerfil) {
