@@ -260,3 +260,114 @@
         justify-content: space-between;
     }
 }
+
+/* ===== Calificá tu compra (HU-04, usuario/resenas.php) ===== */
+.resenas-cliente {
+    max-width: 760px;
+}
+
+.enlace-volver {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-bottom: 0.75rem;
+    color: var(--azul);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.enlace-volver .icono {
+    width: 1rem;
+    height: 1rem;
+}
+
+.resenas-cliente__lista {
+    display: grid;
+    gap: 1rem;
+    margin: 1.5rem 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.resena-producto {
+    display: flex;
+    gap: 1.25rem;
+    align-items: flex-start;
+}
+
+.resena-producto__foto {
+    width: 96px;
+    height: 96px;
+    border-radius: var(--radio-md);
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.resena-producto__formulario {
+    flex: 1;
+    display: grid;
+    gap: 0.75rem;
+}
+
+.resena-producto__formulario .btn {
+    justify-self: start;
+}
+
+.resena-producto__nombre {
+    margin: 0;
+    font-family: var(--fuente-titulos);
+    font-size: 1.1rem;
+    color: var(--azul-oscuro);
+}
+
+/* Estrellas para calificar: 5 radios de 5 a 1 en fila invertida.
+   La marcada y las de su derecha en el HTML (que se ven a su izquierda) se pintan. */
+.calificar {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+.calificar__estrellas {
+    display: inline-flex;
+    flex-direction: row-reverse;
+    gap: 0.25rem;
+}
+
+.calificar__estrellas input {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+}
+
+.calificar__estrellas label {
+    cursor: pointer;
+    color: var(--borde);
+    line-height: 0;
+}
+
+.calificar__estrellas label .icono {
+    width: 2rem;
+    height: 2rem;
+    fill: currentColor;
+    transition: color 0.15s ease;
+}
+
+.calificar__estrellas input:checked ~ label,
+.calificar__estrellas label:hover,
+.calificar__estrellas label:hover ~ label {
+    color: #E0A82E;
+}
+
+.calificar__estrellas input:focus-visible + label {
+    outline: 2px solid var(--azul);
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
+@media (max-width: 600px) {
+    .resena-producto {
+        flex-direction: column;
+    }
+}

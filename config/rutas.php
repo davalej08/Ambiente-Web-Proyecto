@@ -21,6 +21,7 @@ $router->get('terminos', 'CatalogoController', 'terminos');
 $router->get('ayuda', 'CatalogoController', 'ayuda');
 $router->get('contacto', 'CatalogoController', 'contacto');
 $router->post('contacto', 'CatalogoController', 'enviarContacto');
+$router->get('idioma', 'CatalogoController', 'idioma');         // HU-08: cambiar idioma ES/EN
 $router->get('plantilla', 'CatalogoController', 'plantilla');   // guía de componentes para el equipo
 
 // ---------- Acceso (AuthController) RF-01, RF-02, RF-04, RF-07 ----------
@@ -48,6 +49,8 @@ $router->get('usuario/perfil', 'ClienteController', 'perfil');
 $router->post('usuario/perfil/guardar', 'ClienteController', 'guardarPerfil');
 $router->post('favoritos/alternar', 'ClienteController', 'alternarFavorito');
 $router->post('usuario/favoritos/quitar', 'ClienteController', 'quitarFavorito');
+$router->get('usuario/resenas', 'ClienteController', 'resenas');                 // HU-04
+$router->post('usuario/resenas/guardar', 'ClienteController', 'guardarResena');
 
 // ---------- Portal del emprendedor (VendedorController, ReporteController) RF-12, RF-13 ----------
 $router->get('vendedor/dashboard', 'VendedorController', 'dashboard');

@@ -9,7 +9,8 @@
  * usando las credenciales de config/db.php.
  *
  * Uso (desde la carpeta del proyecto, en la terminal):
- *     php database/instalar.php
+ *     php database/instalar.php                    (todo: borra los datos y los vuelve a crear)
+ *     php database/instalar.php procedimientos     (solo 02: actualiza los procedimientos sin tocar los datos)
  *
  * OJO: 01_tablas.sql borra y vuelve a crear las tablas. Lo corre UNA sola persona.
  */
@@ -17,6 +18,11 @@
 require_once __DIR__ . '/../config/database.php';
 
 $scripts = ['01_tablas.sql', '02_procedimientos.sql', '03_datos_prueba.sql'];
+
+// Con el parámetro "procedimientos" solo se recrean los procedimientos (los datos se quedan)
+if (isset($argv[1]) && $argv[1] === 'procedimientos') {
+    $scripts = ['02_procedimientos.sql'];
+}
 
 // Se conecta SIN escoger base, porque 01_tablas.sql es el que la crea
 $dsn = 'mysql:host=' . DB_HOST . ';port=' . DB_PUERTO . ';charset=utf8mb4';
