@@ -5,7 +5,7 @@
  * Universidad Fidélitas · Costa Rica
  *
  * PedidoRepository
- * Acceso a pedido, detalle_pedido y direccion_entrega mediante procedimientos almacenados.
+ * Acceso a FIDE_PEDIDO_TB y FIDE_DETALLE_PEDIDO_TB mediante procedimientos almacenados.
  */
 
 class PedidoRepository extends Repository
@@ -16,9 +16,12 @@ class PedidoRepository extends Repository
      */
     public function crear($pedido)
     {
-        return $this->insertar('CALL sp_pedido_insertar(?, ?, ?)', [
+        return $this->insertar('CALL sp_pedido_insertar(?, ?, ?, ?, ?, ?)', [
             $pedido->getIdUsuario(),
+            $pedido->getIdDireccion(),
             $pedido->getMetodoPago(),
+            $pedido->getNombreReceptor(),
+            $pedido->getTelefonoReceptor(),
             $pedido->getTotal(),
         ]);
     }
@@ -35,23 +38,6 @@ class PedidoRepository extends Repository
             $detalle->getIdProducto(),
             $detalle->getCantidad(),
             $detalle->getPrecioUnitario(),
-        ]);
-    }
-
-    /**
-     * @param int $idPedido
-     * @param Cliente $entrega Datos de entrega
-     */
-    public function agregarDireccion($idPedido, $entrega)
-    {
-        $this->ejecutar('CALL sp_direccion_entrega_insertar(?, ?, ?, ?, ?, ?, ?)', [
-            $idPedido,
-            $entrega->getNombreReceptor(),
-            $entrega->getTelefono(),
-            $entrega->getProvincia(),
-            $entrega->getCanton(),
-            $entrega->getDistrito(),
-            $entrega->getDireccionExacta(),
         ]);
     }
 

@@ -5,7 +5,7 @@
  * Universidad Fidélitas · Costa Rica
  *
  * CategoriaRepository
- * Acceso a la tabla categoria mediante procedimientos almacenados.
+ * Acceso a FIDE_CATEGORIA_TB mediante procedimientos almacenados.
  */
 
 class CategoriaRepository extends Repository

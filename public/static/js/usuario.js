@@ -53,10 +53,19 @@ if (formPerfil) {
         const telefono = document.getElementById("telefono").value.trim();
         const mensaje = document.getElementById("mensajePerfil");
 
-        if (nombre.length >= 3) {
+        const primerApellido = document.getElementById("primer_apellido").value.trim();
+
+        if (nombre.length >= 2) {
             marcarError("nombre", false);
         } else {
             marcarError("nombre", true);
+            hayErrores = true;
+        }
+
+        if (primerApellido.length >= 2) {
+            marcarError("primer_apellido", false);
+        } else {
+            marcarError("primer_apellido", true);
             hayErrores = true;
         }
 

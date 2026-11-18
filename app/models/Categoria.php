@@ -5,7 +5,7 @@
  * Universidad Fidélitas · Costa Rica
  *
  * Categoria
- * Categoría del catálogo (tabla categoria).
+ * Categoría del catálogo (FIDE_CATEGORIA_TB).
  * Solo propiedades, getters y setters (las reglas van en los services).
  */
 

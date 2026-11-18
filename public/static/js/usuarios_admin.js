@@ -175,6 +175,7 @@ function cambiarEstado(indice) {
 
 // ---------- 4. Formulario ----------
 function limpiarErrores() {
+    marcarError("cedula", false);
     marcarError("nombre", false);
     marcarError("correo", false);
     marcarError("contacto", false);
@@ -212,6 +213,7 @@ document.getElementById("botonInvitar").addEventListener("click", function () {
     document.getElementById("tituloFormulario").textContent = "Invitar usuario";
     document.getElementById("textoGuardar").textContent = "Enviar invitación";
     document.getElementById("notaContrasena").textContent = "El usuario la cambia al iniciar sesión.";
+    document.getElementById("campo-cedula").style.display = "flex";
     abrirFormulario();
 });
 
@@ -227,6 +229,7 @@ function abrirDetalle(indice) {
     document.getElementById("tituloFormulario").textContent = "Datos de " + document.getElementById("nombre-" + indice).textContent;
     document.getElementById("textoGuardar").textContent = "Guardar cambios";
     document.getElementById("notaContrasena").textContent = "Opcional: generá una nueva solo si el usuario la olvidó.";
+    document.getElementById("campo-cedula").style.display = "none";
     abrirFormulario();
 }
 
@@ -275,7 +278,16 @@ document.getElementById("guardarUsuario").addEventListener("click", function () 
     const rol = document.getElementById("rol").value;
     const contacto = document.getElementById("contacto").value.trim();
     const contrasena = document.getElementById("contrasenaTemporal").value;
+    const cedula = document.getElementById("cedula").value.trim().replace("-", "").replace("-", "");
     let hayErrores = false;
+
+    // Cédula: solo al invitar, de 9 a 12 números
+    if (esNuevo && (cedula.length < 9 || cedula.length > 12 || isNaN(Number(cedula)))) {
+        marcarError("cedula", true);
+        hayErrores = true;
+    } else {
+        marcarError("cedula", false);
+    }
 
     if (nombre.length < 3) {
         marcarError("nombre", true);

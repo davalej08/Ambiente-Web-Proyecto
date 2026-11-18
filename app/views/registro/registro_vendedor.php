@@ -15,15 +15,16 @@
  * El administrador la revisa en "Emprendimientos Pendientes".
  *
  * Variables que puede enviar el controlador:
- *   $datos   ['nombre', 'correo', 'telefono', 'negocio', 'provincia', 'canton', 'descripcion']
- *   $errores ['nombre', 'correo', 'telefono', 'contrasena', 'negocio', 'provincia', 'canton',
- *             'descripcion', 'logo', 'terminos', 'general']
+ *   $datos   ['cedula', 'nombre', 'primer_apellido', 'segundo_apellido', 'correo', 'telefono',
+ *             'negocio', 'provincia', 'canton', 'distrito', 'otras_senas', 'descripcion']
+ *   $errores los mismos campos + 'contrasena', 'logo', 'terminos', 'general'
+ *   $ubicaciones, $ubicacionElegida  para general/ubicacion.php
  */
 
 $titulo      = 'Vender en Ventica';
 $descripcion = 'Abrí la vitrina digital de tu emprendimiento costarricense en Ventica.';
 $estilos     = ['registro'];
-$scripts     = ['validaciones'];
+$scripts     = ['ubicacion', 'validaciones'];
 $navbar      = false;
 $footer      = false;
 $claseBody   = 'body-acceso';
@@ -35,10 +36,7 @@ if (!isset($errores)) {
     $errores = [];
 }
 
-$provincias = ['San José', 'Alajuela', 'Cartago', 'Heredia', 'Guanacaste', 'Puntarenas', 'Limón'];
 require __DIR__ . '/../general/header.php';
-
-$provinciaElegida = valor($datos, 'provincia', '');
 ?>
 
 <main id="contenido" class="acceso acceso--registro">
@@ -131,18 +129,9 @@ $provinciaElegida = valor($datos, 'provincia', '');
 
                 <!-- Datos de la persona responsable -->
                 <p class="formulario__seccion"><?php echo icono('usuario'); ?> Tus datos</p>
-                <div class="rejilla-2">
-                    <div id="campo-nombre" class="campo <?php echo claseError($errores, 'nombre'); ?>">
-                        <label class="campo__etiqueta" for="nombre">Nombre y apellidos</label>
-                        <div class="campo__control">
-                            <input class="campo__entrada" id="nombre" name="nombre" type="text"
-                                   placeholder="Mincho Valverde" autocomplete="name" required minlength="3"
-                                   value="<?php echo e(valor($datos, 'nombre', '')); ?>" aria-describedby="nombreError">
-                            <?php echo icono('usuario', 'campo__icono'); ?>
-                        </div>
-                        <p class="campo__error" id="nombreError"><?php echo e(valor($errores, 'nombre', 'Escribí tu nombre completo.')); ?></p>
-                    </div>
+                <?php require __DIR__ . '/datos_persona.php'; ?>
 
+                <div class="rejilla-2">
                     <div id="campo-correo" class="campo <?php echo claseError($errores, 'correo'); ?>">
                         <label class="campo__etiqueta" for="correo">Correo electrónico</label>
                         <div class="campo__control">
@@ -195,25 +184,14 @@ $provinciaElegida = valor($datos, 'provincia', '');
                     <p class="campo__error" id="negocioError"><?php echo e(valor($errores, 'negocio', 'Escribí el nombre de tu emprendimiento.')); ?></p>
                 </div>
 
-                <div class="rejilla-2">
-                    <div id="campo-provincia" class="campo <?php echo claseError($errores, 'provincia'); ?>">
-                        <label class="campo__etiqueta" for="provincia">Provincia</label>
-                        <select class="campo__entrada" id="provincia" name="provincia" required aria-describedby="provinciaError">
-                            <option value="">Elegí una provincia</option>
-                            <?php foreach ($provincias as $provincia): ?>
-                                <option value="<?php echo e($provincia); ?>" <?php echo $provinciaElegida === $provincia ? 'selected' : ''; ?>><?php echo e($provincia); ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                        <p class="campo__error" id="provinciaError"><?php echo e(valor($errores, 'provincia', 'Elegí la provincia.')); ?></p>
-                    </div>
+                <?php require __DIR__ . '/../general/ubicacion.php'; ?>
 
-                    <div id="campo-canton" class="campo <?php echo claseError($errores, 'canton'); ?>">
-                        <label class="campo__etiqueta" for="canton">Cantón</label>
-                        <input class="campo__entrada" id="canton" name="canton" type="text"
-                               placeholder="Dota" required maxlength="60"
-                               value="<?php echo e(valor($datos, 'canton', '')); ?>" aria-describedby="cantonError">
-                        <p class="campo__error" id="cantonError"><?php echo e(valor($errores, 'canton', 'Escribí el cantón.')); ?></p>
-                    </div>
+                <div id="campo-otras_senas" class="campo <?php echo claseError($errores, 'otras_senas'); ?>">
+                    <label class="campo__etiqueta" for="otras_senas">Otras señas <span class="campo__nota">(opcional)</span></label>
+                    <input class="campo__entrada" id="otras_senas" name="otras_senas" type="text"
+                           placeholder="Finca La Pastora, 2 km al sur del templo" maxlength="255"
+                           value="<?php echo e(valor($datos, 'otras_senas', '')); ?>" aria-describedby="otras_senasError">
+                    <p class="campo__error" id="otras_senasError"><?php echo e(valor($errores, 'otras_senas', 'Las señas son muy largas.')); ?></p>
                 </div>
 
                 <div id="campo-descripcion" class="campo <?php echo claseError($errores, 'descripcion'); ?>">

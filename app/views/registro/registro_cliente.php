@@ -14,8 +14,8 @@
  * La tarjeta "Emprendedor / Artesano" lleva a registro_vendedor.php (otra persona del grupo).
  *
  * Variables que puede enviar el controlador:
- *   $datos   ['nombre', 'correo', 'telefono']   para volver a llenar los campos
- *   $errores ['nombre', 'correo', 'telefono', 'contrasena', 'terminos', 'general']
+ *   $datos   ['cedula', 'nombre', 'primer_apellido', 'segundo_apellido', 'correo', 'telefono']
+ *   $errores los mismos campos + 'contrasena', 'terminos', 'general'
  */
 
 $titulo      = 'Crear cuenta';
@@ -129,18 +129,9 @@ require __DIR__ . '/../general/header.php';
                 <input type="hidden" name="csrf_token" value="<?php echo e(valor($_SESSION, 'csrf_token', '')); ?>">
                 <input type="hidden" name="rol" value="cliente">
 
-                <div class="rejilla-2">
-                    <div id="campo-nombre" class="campo <?php echo claseError($errores, 'nombre'); ?>">
-                        <label class="campo__etiqueta" for="nombre">Nombre y apellidos</label>
-                        <div class="campo__control">
-                            <input class="campo__entrada" id="nombre" name="nombre" type="text"
-                                   placeholder="Mariana Solano" autocomplete="name" required minlength="3"
-                                   value="<?php echo e(valor($datos, 'nombre', '')); ?>" aria-describedby="nombreError">
-                            <?php echo icono('usuario', 'campo__icono'); ?>
-                        </div>
-                        <p class="campo__error" id="nombreError"><?php echo e(valor($errores, 'nombre', 'Escribí tu nombre completo.')); ?></p>
-                    </div>
+                <?php require __DIR__ . '/datos_persona.php'; ?>
 
+                <div class="rejilla-2">
                     <div id="campo-correo" class="campo <?php echo claseError($errores, 'correo'); ?>">
                         <label class="campo__etiqueta" for="correo">Correo electrónico</label>
                         <div class="campo__control">

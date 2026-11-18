@@ -24,9 +24,11 @@ Universidad Fidélitas · Costa Rica
 | Métodos y variables | camelCase, verbo al inicio en métodos | `obtenerPorId()`, `$totalCarrito` |
 | Constantes | MAYÚSCULAS con guion bajo | `DB_HOST` |
 | Vistas, CSS, JS | minúscula con guion bajo | `registro_vendedor.php`, `carrito.js` |
-| Tablas | minúscula, singular | `producto`, `detalle_pedido` |
-| Columnas | minúscula con guion bajo | `id_producto`, `fecha_creacion` |
-| Procedimientos almacenados | `sp_<tabla>_<acción>` | `sp_producto_insertar`, `sp_usuario_login` |
+| Tablas | `FIDE_<NOMBRE>_TB`, mayúscula, singular (modelo E-R del Avance 1) | `FIDE_PRODUCTO_TB`, `FIDE_DETALLE_PEDIDO_TB` |
+| Vistas de la base | `FIDE_<NOMBRE>_V` | `FIDE_USUARIO_V`, `FIDE_PRODUCTO_V` |
+| Columnas | mayúscula con guion bajo | `ID_PRODUCTO`, `FECHA_PUBLICACION` |
+| Columnas que llegan a PHP | minúscula (PDO las convierte con `PDO::CASE_LOWER`) | `$fila['id_producto']` |
+| Procedimientos almacenados | `sp_<tabla>_<acción>` | `sp_producto_insertar`, `sp_carrito_listar` |
 | IDs/clases HTML | minúscula con guion | `form-registro`, `btn-agregar-carrito` |
 
 Verbos sugeridos para métodos: `listar`, `obtener`, `crear`, `actualizar`, `desactivar`, `eliminar`, `validar`.

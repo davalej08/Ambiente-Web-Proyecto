@@ -78,6 +78,12 @@ require __DIR__ . '/../general/header.php';
                     <input type="hidden" id="idUsuarioEdicion" name="id_usuario" value="0">
 
                     <div class="ad-formulario__campos">
+                        <!-- Solo al invitar: la cédula no se cambia después -->
+                        <div id="campo-cedula" class="campo">
+                            <label class="campo__etiqueta" for="cedula">Cédula de la persona</label>
+                            <input class="campo__entrada" id="cedula" name="cedula" type="text" inputmode="numeric" maxlength="14" placeholder="Ej. 102340567">
+                            <p class="campo__error">Escribí la cédula solo con números (9 a 12).</p>
+                        </div>
                         <div id="campo-nombre" class="campo">
                             <label class="campo__etiqueta" for="nombre">Nombre completo o comercial</label>
                             <input class="campo__entrada" id="nombre" name="nombre" type="text" maxlength="60" placeholder="Ej. Laura Vargas Mora">

@@ -5,7 +5,7 @@
  * Universidad Fidélitas · Costa Rica
  *
  * Pedido
- * Encabezado de una compra (tabla pedido).
+ * Encabezado de una compra (FIDE_PEDIDO_TB).
  * Solo propiedades, getters y setters (las reglas van en los services).
  */
 
@@ -15,10 +15,18 @@ class Pedido
     private $idPedido = 0;
     /** @var int Columna id_usuario */
     private $idUsuario = 0;
+    /** @var int Columna id_direccion */
+    private $idDireccion = 0;
     /** @var string Columna metodo_pago */
     private $metodoPago = 'sinpe';
+    /** @var string Columna nombre_receptor */
+    private $nombreReceptor = '';
+    /** @var string Columna telefono */
+    private $telefonoReceptor = '';
     /** @var float Columna total */
     private $total = 0;
+    /** @var string Columna estado */
+    private $estado = 'pendiente';
 
     /**
      * Crea el objeto. Si se manda una fila de la base de datos, copia sus columnas.
@@ -34,11 +42,23 @@ class Pedido
         if (isset($fila['id_usuario'])) {
             $this->idUsuario = (int) $fila['id_usuario'];
         }
+        if (isset($fila['id_direccion'])) {
+            $this->idDireccion = (int) $fila['id_direccion'];
+        }
         if (isset($fila['metodo_pago'])) {
             $this->metodoPago = (string) $fila['metodo_pago'];
         }
+        if (isset($fila['nombre_receptor'])) {
+            $this->nombreReceptor = (string) $fila['nombre_receptor'];
+        }
+        if (isset($fila['telefono'])) {
+            $this->telefonoReceptor = (string) $fila['telefono'];
+        }
         if (isset($fila['total'])) {
             $this->total = (float) $fila['total'];
+        }
+        if (isset($fila['estado'])) {
+            $this->estado = (string) $fila['estado'];
         }
     }
 
@@ -66,6 +86,18 @@ class Pedido
         $this->idUsuario = (int) $idUsuario;
     }
 
+    /** @return int */
+    public function getIdDireccion()
+    {
+        return $this->idDireccion;
+    }
+
+    /** @param int $idDireccion */
+    public function setIdDireccion($idDireccion)
+    {
+        $this->idDireccion = (int) $idDireccion;
+    }
+
     /** @return string */
     public function getMetodoPago()
     {
@@ -78,6 +110,30 @@ class Pedido
         $this->metodoPago = (string) $metodoPago;
     }
 
+    /** @return string */
+    public function getNombreReceptor()
+    {
+        return $this->nombreReceptor;
+    }
+
+    /** @param string $nombreReceptor */
+    public function setNombreReceptor($nombreReceptor)
+    {
+        $this->nombreReceptor = (string) $nombreReceptor;
+    }
+
+    /** @return string */
+    public function getTelefonoReceptor()
+    {
+        return $this->telefonoReceptor;
+    }
+
+    /** @param string $telefonoReceptor */
+    public function setTelefonoReceptor($telefonoReceptor)
+    {
+        $this->telefonoReceptor = (string) $telefonoReceptor;
+    }
+
     /** @return float */
     public function getTotal()
     {
@@ -88,5 +144,17 @@ class Pedido
     public function setTotal($total)
     {
         $this->total = (float) $total;
+    }
+
+    /** @return string */
+    public function getEstado()
+    {
+        return $this->estado;
+    }
+
+    /** @param string $estado */
+    public function setEstado($estado)
+    {
+        $this->estado = (string) $estado;
     }
 }

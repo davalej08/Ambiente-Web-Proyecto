@@ -8,20 +8,68 @@
  * Lógica del carrito de compras (RF-14).
  *
  * El carrito vive en la sesión: $_SESSION['carrito'] = [id_producto => cantidad].
- * Los precios NUNCA se guardan en la sesión: siempre se leen de la base de datos.
+ * Si la persona inició sesión, además se guarda en FIDE_CARRITO_TB, así lo
+ * encuentra otro día o en otro dispositivo. Lo que tenía antes de iniciar
+ * sesión se junta con lo guardado.
+ * Los precios NUNCA se guardan: siempre se leen de la base de datos.
  */
 
 class CarritoService
 {
     /** @var ProductoRepository */
     private $productos;
+    /** @var CarritoRepository */
+    private $guardado;
 
     public function __construct()
     {
         $this->productos = new ProductoRepository();
+        $this->guardado = new CarritoRepository();
 
         if (!isset($_SESSION['carrito']) || !is_array($_SESSION['carrito'])) {
             $_SESSION['carrito'] = [];
+        }
+
+        $this->sincronizar();
+    }
+
+    /**
+     * La primera vez que se usa el carrito con una sesión iniciada, junta el
+     * carrito de la sesión con el guardado en la base de datos.
+     */
+    private function sincronizar()
+    {
+        $idUsuario = Sesion::idUsuario();
+        if ($idUsuario === 0 || (isset($_SESSION['carrito_de']) && $_SESSION['carrito_de'] === $idUsuario)) {
+            return;
+        }
+
+        $filas = $this->guardado->listar($idUsuario);
+        foreach ($filas as $fila) {
+            $idProducto = (int) $fila['id_producto'];
+            if (!isset($_SESSION['carrito'][$idProducto])) {
+                $_SESSION['carrito'][$idProducto] = (int) $fila['cantidad'];
+            }
+        }
+
+        // Lo que se agregó antes de iniciar sesión también queda guardado
+        foreach ($_SESSION['carrito'] as $idProducto => $cantidad) {
+            $this->guardado->guardarProducto($idUsuario, $idProducto, $cantidad);
+        }
+
+        $_SESSION['carrito_de'] = $idUsuario;
+    }
+
+    /**
+     * Guarda el cambio en la base de datos si hay sesión iniciada.
+     *
+     * @param int $idProducto
+     * @param int $cantidad 0 = quitar
+     */
+    private function guardar($idProducto, $cantidad)
+    {
+        if (Sesion::idUsuario() > 0) {
+            $this->guardado->guardarProducto(Sesion::idUsuario(), $idProducto, $cantidad);
         }
     }
 
@@ -51,6 +99,7 @@ class CarritoService
         }
 
         $_SESSION['carrito'][$idProducto] = $nueva;
+        $this->guardar($idProducto, $nueva);
         return '';
     }
 
@@ -58,6 +107,7 @@ class CarritoService
     public function quitar($idProducto)
     {
         unset($_SESSION['carrito'][$idProducto]);
+        $this->guardar($idProducto, 0);
     }
 
     /**
@@ -72,6 +122,9 @@ class CarritoService
         foreach ($_SESSION['carrito'] as $idProducto => $cantidadAnterior) {
             if (isset($cantidades[$idProducto]) && Validador::entero($cantidades[$idProducto], 1)) {
                 $nuevo[$idProducto] = min(99, (int) $cantidades[$idProducto]);
+                $this->guardar($idProducto, $nuevo[$idProducto]);
+            } else {
+                $this->guardar($idProducto, 0);
             }
         }
         $_SESSION['carrito'] = $nuevo;
@@ -81,6 +134,9 @@ class CarritoService
     public function vaciar()
     {
         $_SESSION['carrito'] = [];
+        if (Sesion::idUsuario() > 0) {
+            $this->guardado->vaciar(Sesion::idUsuario());
+        }
     }
 
     /** @return array Ids de los productos en el carrito */
@@ -140,7 +196,14 @@ class CarritoService
             $subtotal = $subtotal + $fila['precio'] * $cantidad;
         }
 
-        // El carrito queda solo con lo que todavía se puede comprar
+        // El carrito queda solo con lo que todavía se puede comprar (también el guardado)
+        foreach ($_SESSION['carrito'] as $idProducto => $cantidadAnterior) {
+            if (!isset($vigentes[$idProducto])) {
+                $this->guardar($idProducto, 0);
+            } elseif ($vigentes[$idProducto] !== $cantidadAnterior) {
+                $this->guardar($idProducto, $vigentes[$idProducto]);
+            }
+        }
         $_SESSION['carrito'] = $vigentes;
 
         // array_values() quita las llaves (id) para que la vista recorra 0, 1, 2…

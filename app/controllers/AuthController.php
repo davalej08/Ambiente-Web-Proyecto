@@ -85,7 +85,10 @@ class AuthController extends Controller
         $this->validarCsrf('auth/registro');
 
         $datos = [
-            'nombre'     => $this->entrada('nombre'),
+            'cedula'           => Validador::formatoCedula($this->entrada('cedula')),
+            'nombre'           => $this->entrada('nombre'),
+            'primer_apellido'  => $this->entrada('primer_apellido'),
+            'segundo_apellido' => $this->entrada('segundo_apellido'),
             'correo'     => $this->entrada('correo'),
             'telefono'   => $this->entrada('telefono'),
             'contrasena' => $this->entrada('contrasena'),
@@ -109,7 +112,24 @@ class AuthController extends Controller
     public function registroVendedor()
     {
         $this->siYaInicioSesion();
-        $this->vista('registro/registro_vendedor');
+        $this->vistaRegistroVendedor([], []);
+    }
+
+    /**
+     * Pantalla de registro del emprendedor con los selects de provincia, cantón y distrito.
+     *
+     * @param array $datos
+     * @param array $errores
+     */
+    private function vistaRegistroVendedor($datos, $errores)
+    {
+        $ubicacion = new UbicacionService();
+        $this->vista('registro/registro_vendedor', [
+            'datos'            => $datos,
+            'errores'          => $errores,
+            'ubicaciones'      => $ubicacion->opciones(),
+            'ubicacionElegida' => $ubicacion->elegidos($datos),
+        ]);
     }
 
     /** POST auth/registro-vendedor */
@@ -118,13 +138,18 @@ class AuthController extends Controller
         $this->validarCsrf('auth/registro-vendedor');
 
         $datos = [
-            'nombre'      => $this->entrada('nombre'),
+            'cedula'           => Validador::formatoCedula($this->entrada('cedula')),
+            'nombre'           => $this->entrada('nombre'),
+            'primer_apellido'  => $this->entrada('primer_apellido'),
+            'segundo_apellido' => $this->entrada('segundo_apellido'),
             'correo'      => $this->entrada('correo'),
             'telefono'    => $this->entrada('telefono'),
             'contrasena'  => $this->entrada('contrasena'),
             'negocio'     => $this->entrada('negocio'),
             'provincia'   => $this->entrada('provincia'),
             'canton'      => $this->entrada('canton'),
+            'distrito'    => $this->entrada('distrito'),
+            'otras_senas' => $this->entrada('otras_senas'),
             'descripcion' => $this->entrada('descripcion'),
             'terminos'    => $this->entrada('terminos'),
         ];
@@ -132,7 +157,7 @@ class AuthController extends Controller
 
         if (count($resultado['errores']) > 0) {
             unset($datos['contrasena']);
-            $this->vista('registro/registro_vendedor', ['datos' => $datos, 'errores' => $resultado['errores']]);
+            $this->vistaRegistroVendedor($datos, $resultado['errores']);
             return;
         }
 

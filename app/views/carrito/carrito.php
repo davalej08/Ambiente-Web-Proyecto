@@ -11,7 +11,8 @@
  *   $grupos           productos del carrito agrupados por emprendimiento (ver datos de muestra abajo)
  *   $costoEnvio       tarifa de envío de Correos de Costa Rica
  *   $recomendados     productos sugeridos para agregar
- *   $datosEntrega     datos guardados del cliente (nombre, teléfono, provincia…)
+ *   $datosEntrega     datos guardados del cliente (nombre, teléfono, dirección…)
+ *   $ubicaciones, $ubicacionElegida  selects de provincia, cantón y distrito (general/ubicacion.php)
  *   $errores          errores de validación del servidor ['campo' => 'mensaje']
  * Si no llegan, se usan datos de muestra para el Avance 2.
  */
@@ -19,10 +20,9 @@
 $titulo       = 'Tu carrito';
 $descripcion  = 'Revisá tu pedido y pagá directo al emprendedor por SINPE Móvil.';
 $estilos      = ['carrito'];
-$scripts      = ['validaciones', 'carrito'];
+$scripts      = ['ubicacion', 'validaciones', 'carrito'];
 $paginaActiva = '';
 
-$provincias = ['San José', 'Alajuela', 'Cartago', 'Heredia', 'Guanacaste', 'Puntarenas', 'Limón'];
 
 if (!isset($grupos)) {
     $grupos = [
@@ -207,28 +207,9 @@ require __DIR__ . '/../general/header.php';
                             <p class="campo__error"><?php echo e(valor($errores, 'telefono', 'El teléfono debe tener 8 números.')); ?></p>
                         </div>
 
-                        <div class="campo <?php echo claseError($errores, 'provincia'); ?>" id="campo-provincia">
-                            <label class="campo__etiqueta" for="provincia">Provincia *</label>
-                            <select class="campo__entrada" id="provincia" name="provincia">
-                                <option value="">Seleccioná</option>
-                                <?php foreach ($provincias as $provincia): ?>
-                                    <option value="<?php echo e($provincia); ?>" <?php echo valor($datosEntrega, 'provincia', '') === $provincia ? 'selected' : ''; ?>><?php echo e($provincia); ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                            <p class="campo__error"><?php echo e(valor($errores, 'provincia', 'Seleccioná la provincia.')); ?></p>
-                        </div>
-
-                        <div class="campo <?php echo claseError($errores, 'canton'); ?>" id="campo-canton">
-                            <label class="campo__etiqueta" for="canton">Cantón *</label>
-                            <input class="campo__entrada" type="text" id="canton" name="canton"
-                                   value="<?php echo e(valor($datosEntrega, 'canton', '')); ?>" placeholder="Ej: Curridabat">
-                            <p class="campo__error"><?php echo e(valor($errores, 'canton', 'Escribí el cantón.')); ?></p>
-                        </div>
-
-                        <div class="campo" id="campo-distrito">
-                            <label class="campo__etiqueta" for="distrito">Distrito / código postal</label>
-                            <input class="campo__entrada" type="text" id="distrito" name="distrito"
-                                   value="<?php echo e(valor($datosEntrega, 'distrito', '')); ?>" placeholder="Ej: Granadilla (11803)">
+                        <!-- Provincia, cantón y distrito (FIDE_DISTRITO_TB); el código postal sale del distrito -->
+                        <div class="entrega__ancho">
+                            <?php require __DIR__ . '/../general/ubicacion.php'; ?>
                         </div>
 
                         <div class="campo entrega__ancho <?php echo claseError($errores, 'direccion'); ?>" id="campo-direccion">

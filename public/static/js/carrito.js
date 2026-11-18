@@ -169,7 +169,8 @@ if (formCarrito) {
         const nombre = document.getElementById("nombre").value.trim();
         const telefono = document.getElementById("telefono").value.trim();
         const provincia = document.getElementById("provincia").value;
-        const canton = document.getElementById("canton").value.trim();
+        const canton = document.getElementById("canton").value;
+        const distrito = document.getElementById("distrito").value;
         const direccion = document.getElementById("direccion").value.trim();
 
         if (nombre.length >= 5) {
@@ -193,7 +194,14 @@ if (formCarrito) {
             hayErrores = true;
         }
 
-        if (canton.length >= 3) {
+        if (distrito !== "") {
+            marcarError("distrito", false);
+        } else {
+            marcarError("distrito", true);
+            hayErrores = true;
+        }
+
+        if (canton !== "") {
             marcarError("canton", false);
         } else {
             marcarError("canton", true);

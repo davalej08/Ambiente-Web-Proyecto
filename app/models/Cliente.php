@@ -5,7 +5,7 @@
  * Universidad Fidélitas · Costa Rica
  *
  * Cliente
- * Datos de entrega de un pedido (tabla direccion_entrega): a quién y a dónde se envía.
+ * Datos de entrega de un pedido: a quién (FIDE_PEDIDO_TB) y a dónde (FIDE_DIRECCION_TB) se envía.
  * Solo propiedades, getters y setters (las reglas van en los services).
  */
 
@@ -15,12 +15,8 @@ class Cliente
     private $nombreReceptor = '';
     /** @var string Columna telefono */
     private $telefono = '';
-    /** @var string Columna provincia */
-    private $provincia = '';
-    /** @var string Columna canton */
-    private $canton = '';
-    /** @var string Columna distrito */
-    private $distrito = '';
+    /** @var int Columna id_distrito */
+    private $idDistrito = 0;
     /** @var string Columna direccion_exacta */
     private $direccionExacta = '';
 
@@ -38,14 +34,8 @@ class Cliente
         if (isset($fila['telefono'])) {
             $this->telefono = (string) $fila['telefono'];
         }
-        if (isset($fila['provincia'])) {
-            $this->provincia = (string) $fila['provincia'];
-        }
-        if (isset($fila['canton'])) {
-            $this->canton = (string) $fila['canton'];
-        }
-        if (isset($fila['distrito'])) {
-            $this->distrito = (string) $fila['distrito'];
+        if (isset($fila['id_distrito'])) {
+            $this->idDistrito = (int) $fila['id_distrito'];
         }
         if (isset($fila['direccion_exacta'])) {
             $this->direccionExacta = (string) $fila['direccion_exacta'];
@@ -76,40 +66,16 @@ class Cliente
         $this->telefono = (string) $telefono;
     }
 
-    /** @return string */
-    public function getProvincia()
+    /** @return int */
+    public function getIdDistrito()
     {
-        return $this->provincia;
+        return $this->idDistrito;
     }
 
-    /** @param string $provincia */
-    public function setProvincia($provincia)
+    /** @param int $idDistrito */
+    public function setIdDistrito($idDistrito)
     {
-        $this->provincia = (string) $provincia;
-    }
-
-    /** @return string */
-    public function getCanton()
-    {
-        return $this->canton;
-    }
-
-    /** @param string $canton */
-    public function setCanton($canton)
-    {
-        $this->canton = (string) $canton;
-    }
-
-    /** @return string */
-    public function getDistrito()
-    {
-        return $this->distrito;
-    }
-
-    /** @param string $distrito */
-    public function setDistrito($distrito)
-    {
-        $this->distrito = (string) $distrito;
+        $this->idDistrito = (int) $idDistrito;
     }
 
     /** @return string */

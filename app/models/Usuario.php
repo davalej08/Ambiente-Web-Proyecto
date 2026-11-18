@@ -5,7 +5,8 @@
  * Universidad Fidélitas · Costa Rica
  *
  * Usuario
- * Persona registrada en Ventica (tabla usuario).
+ * Persona registrada en Ventica (FIDE_USUARIO_TB). El correo va en FIDE_CORREO_TB,
+ * el teléfono en FIDE_TELEFONO_TB y la dirección en FIDE_DIRECCION_TB.
  * Solo propiedades, getters y setters (las reglas van en los services).
  */
 
@@ -15,16 +16,22 @@ class Usuario
     private $idUsuario = 0;
     /** @var int Columna id_rol */
     private $idRol = 0;
-    /** @var string Columna nombre */
+    /** @var string Columna cedula */
+    private $cedula = '';
+    /** @var string Columna nombre_pila */
     private $nombre = '';
+    /** @var string Columna primer_apellido */
+    private $primerApellido = '';
+    /** @var string Columna segundo_apellido */
+    private $segundoApellido = '';
     /** @var string Columna correo */
     private $correo = '';
     /** @var string Columna contrasena */
     private $contrasena = '';
     /** @var string Columna telefono */
     private $telefono = '';
-    /** @var string Columna provincia */
-    private $provincia = '';
+    /** @var int Columna id_distrito */
+    private $idDistrito = 0;
     /** @var string Columna direccion */
     private $direccion = '';
     /** @var string Columna estado */
@@ -44,8 +51,17 @@ class Usuario
         if (isset($fila['id_rol'])) {
             $this->idRol = (int) $fila['id_rol'];
         }
-        if (isset($fila['nombre'])) {
-            $this->nombre = (string) $fila['nombre'];
+        if (isset($fila['cedula'])) {
+            $this->cedula = (string) $fila['cedula'];
+        }
+        if (isset($fila['nombre_pila'])) {
+            $this->nombre = (string) $fila['nombre_pila'];
+        }
+        if (isset($fila['primer_apellido'])) {
+            $this->primerApellido = (string) $fila['primer_apellido'];
+        }
+        if (isset($fila['segundo_apellido'])) {
+            $this->segundoApellido = (string) $fila['segundo_apellido'];
         }
         if (isset($fila['correo'])) {
             $this->correo = (string) $fila['correo'];
@@ -56,8 +72,8 @@ class Usuario
         if (isset($fila['telefono'])) {
             $this->telefono = (string) $fila['telefono'];
         }
-        if (isset($fila['provincia'])) {
-            $this->provincia = (string) $fila['provincia'];
+        if (isset($fila['id_distrito'])) {
+            $this->idDistrito = (int) $fila['id_distrito'];
         }
         if (isset($fila['direccion'])) {
             $this->direccion = (string) $fila['direccion'];
@@ -92,6 +108,18 @@ class Usuario
     }
 
     /** @return string */
+    public function getCedula()
+    {
+        return $this->cedula;
+    }
+
+    /** @param string $cedula */
+    public function setCedula($cedula)
+    {
+        $this->cedula = (string) $cedula;
+    }
+
+    /** @return string */
     public function getNombre()
     {
         return $this->nombre;
@@ -101,6 +129,30 @@ class Usuario
     public function setNombre($nombre)
     {
         $this->nombre = (string) $nombre;
+    }
+
+    /** @return string */
+    public function getPrimerApellido()
+    {
+        return $this->primerApellido;
+    }
+
+    /** @param string $primerApellido */
+    public function setPrimerApellido($primerApellido)
+    {
+        $this->primerApellido = (string) $primerApellido;
+    }
+
+    /** @return string */
+    public function getSegundoApellido()
+    {
+        return $this->segundoApellido;
+    }
+
+    /** @param string $segundoApellido */
+    public function setSegundoApellido($segundoApellido)
+    {
+        $this->segundoApellido = (string) $segundoApellido;
     }
 
     /** @return string */
@@ -139,16 +191,16 @@ class Usuario
         $this->telefono = (string) $telefono;
     }
 
-    /** @return string */
-    public function getProvincia()
+    /** @return int */
+    public function getIdDistrito()
     {
-        return $this->provincia;
+        return $this->idDistrito;
     }
 
-    /** @param string $provincia */
-    public function setProvincia($provincia)
+    /** @param int $idDistrito */
+    public function setIdDistrito($idDistrito)
     {
-        $this->provincia = (string) $provincia;
+        $this->idDistrito = (int) $idDistrito;
     }
 
     /** @return string */

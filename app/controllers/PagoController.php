@@ -69,14 +69,8 @@ class PagoController extends Controller
         // Si el cliente no tenía dirección guardada, se guarda esta para la próxima compra
         $usuarios = new UsuarioService();
         $usuario = $usuarios->obtener(Sesion::idUsuario());
-        if ($usuario['direccion'] === null || $usuario['direccion'] === '') {
-            $usuarios->actualizarPerfil(Sesion::idUsuario(), [
-                'nombre'    => $usuario['nombre'],
-                'correo'    => $usuario['correo'],
-                'telefono'  => $usuario['telefono'] !== null && $usuario['telefono'] !== '' ? $usuario['telefono'] : $datos['telefono'],
-                'provincia' => $datos['provincia'],
-                'direccion' => $datos['canton'] . ', ' . $datos['direccion'],
-            ]);
+        if ($usuario['id_direccion'] === null) {
+            $usuarios->guardarDireccion(Sesion::idUsuario(), (int) $datos['distrito'], $datos['direccion']);
         }
 
         $this->redirigir('carrito/confirmacion?id=' . $idPedido);

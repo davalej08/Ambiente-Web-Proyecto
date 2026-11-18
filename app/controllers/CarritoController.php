@@ -33,7 +33,9 @@ class CarritoController extends Controller
             $datosEntrega = [
                 'nombre'    => $usuario['nombre'],
                 'telefono'  => (string) $usuario['telefono'],
-                'provincia' => (string) $usuario['provincia'],
+                'provincia' => (string) $usuario['id_provincia'],
+                'canton'    => (string) $usuario['id_canton'],
+                'distrito'  => (string) $usuario['id_distrito'],
                 'direccion' => (string) $usuario['direccion'],
             ];
         }
@@ -44,7 +46,10 @@ class CarritoController extends Controller
             unset($_SESSION['errores_carrito']);
         }
 
+        $ubicacion = new UbicacionService();
         $this->vista('carrito/carrito', [
+            'ubicaciones'      => $ubicacion->opciones(),
+            'ubicacionElegida' => $ubicacion->elegidos($datosEntrega),
             'grupos'       => $contenido['grupos'],
             'costoEnvio'   => COSTO_ENVIO,
             'recomendados' => $this->carrito->recomendados(),
