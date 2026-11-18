@@ -27,11 +27,14 @@ if ($usuarioSesion && $usuarioSesion['rol'] === 'Emprendedor') {
 }
 
 $enlaces = [
-    'inicio'     => ['texto' => 'Inicio',                 'url' => ruta('')],
-    'catalogo'   => ['texto' => 'Explorar Directorio',    'url' => ruta('catalogo')],
-    'categorias' => ['texto' => 'Categorías',             'url' => ruta('') . '#categorias'],
-    'historias'  => ['texto' => 'Historias de Artesanos', 'url' => ruta('historias')],
+    'inicio'     => ['texto' => t('nav.inicio'),     'url' => ruta('')],
+    'catalogo'   => ['texto' => t('nav.catalogo'),   'url' => ruta('catalogo')],
+    'categorias' => ['texto' => t('nav.categorias'), 'url' => ruta('') . '#categorias'],
+    'historias'  => ['texto' => t('nav.historias'),  'url' => ruta('historias')],
 ];
+
+// Selector de idioma (HU-08)
+$idiomas = ['es' => 'ES', 'en' => 'EN'];
 ?>
 <header class="navbar">
     <div class="contenedor navbar__contenido">
@@ -39,7 +42,7 @@ $enlaces = [
             <img src="<?php echo e(recurso('img/logo-ventica.png')); ?>" alt="Ventica, mercado de emprendimientos costarricenses" width="138" height="48">
         </a>
 
-        <button class="navbar__toggle" type="button" id="navbarToggle" aria-expanded="false" aria-controls="navbarMenu" aria-label="Abrir menú">
+        <button class="navbar__toggle" type="button" id="navbarToggle" aria-expanded="false" aria-controls="navbarMenu" aria-label="<?php echo e(t('nav.menu')); ?>">
             <?php echo icono('menu'); ?>
         </button>
 
@@ -57,7 +60,14 @@ $enlaces = [
             </ul>
 
             <div class="navbar__acciones">
-                <a class="navbar__carrito" href="<?php echo e(ruta('carrito')); ?>" aria-label="Carrito de compras (<?php echo (int) $cantidadCarrito; ?> productos)">
+                <div class="navbar__idioma" role="group" aria-label="<?php echo e(t('nav.idioma')); ?>">
+                    <?php foreach ($idiomas as $codigo => $etiqueta): ?>
+                        <a class="<?php echo idioma() === $codigo ? 'es-activo' : ''; ?>" href="<?php echo e(ruta('idioma?l=' . $codigo)); ?>"
+                           lang="<?php echo $codigo; ?>" <?php echo idioma() === $codigo ? 'aria-current="true"' : ''; ?>><?php echo $etiqueta; ?></a>
+                    <?php endforeach; ?>
+                </div>
+
+                <a class="navbar__carrito" href="<?php echo e(ruta('carrito')); ?>" aria-label="<?php echo e(t('nav.carrito')); ?> (<?php echo (int) $cantidadCarrito; ?>)">
                     <?php echo icono('carrito'); ?>
                     <?php if ($cantidadCarrito > 0): ?>
                         <span class="navbar__contador"><?php echo (int) $cantidadCarrito; ?></span>
@@ -66,15 +76,15 @@ $enlaces = [
 
                 <?php if ($usuarioSesion): ?>
                     <a class="navbar__enlace" href="<?php echo e(ruta($rutaCuenta)); ?>">
-                        <?php echo icono('usuario'); ?> <?php echo e(valor($usuarioSesion, 'nombre', 'Mi cuenta')); ?>
+                        <?php echo icono('usuario'); ?> <?php echo e(valor($usuarioSesion, 'nombre', t('nav.cuenta'))); ?>
                     </a>
                     <a class="btn btn--borde btn--sm" href="<?php echo e(ruta('auth/logout')); ?>">
-                        <?php echo icono('salir'); ?> Salir
+                        <?php echo icono('salir'); ?> <?php echo e(t('nav.salir')); ?>
                     </a>
                 <?php else: ?>
-                    <a class="navbar__enlace" href="<?php echo e(ruta('auth/login')); ?>">Iniciar sesión</a>
+                    <a class="navbar__enlace" href="<?php echo e(ruta('auth/login')); ?>"><?php echo e(t('nav.entrar')); ?></a>
                     <a class="btn btn--borde btn--sm" href="<?php echo e(ruta('auth/registro-vendedor')); ?>">
-                        <?php echo icono('tienda'); ?> Vender en Ventica
+                        <?php echo icono('tienda'); ?> <?php echo e(t('nav.vender')); ?>
                     </a>
                 <?php endif; ?>
             </div>

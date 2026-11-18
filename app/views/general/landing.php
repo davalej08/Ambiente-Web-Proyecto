@@ -8,7 +8,7 @@
  *                Si no llega, se usan datos de muestra para el Avance 2.
  */
 
-$titulo       = 'Inicio';
+$titulo       = t('inicio.titulo');
 $descripcion  = 'Ventica: el mercado del talento costarricense. Crochet, stickers, velas, maquillaje, café y más.';
 $estilos      = ['inicio'];
 $paginaActiva = 'inicio';
@@ -27,11 +27,12 @@ if (!isset($categorias)) {
     ];
 }
 
+// Los textos vienen de config/idiomas (HU-08)
 $origenes = [
-    ['texto' => 'Crochet & Tejidos',   'detalle' => 'Hecho a mano'],
-    ['texto' => 'Stickers & Pines',    'detalle' => 'Ilustración'],
-    ['texto' => 'Velas & Aromas',      'detalle' => 'Cera de soya'],
-    ['texto' => 'Maquillaje & Cuidado', 'detalle' => 'Indie'],
+    ['texto' => t('origen.crochet'),  'detalle' => t('origen.crochetd')],
+    ['texto' => t('origen.stickers'), 'detalle' => t('origen.stickersd')],
+    ['texto' => t('origen.velas'),    'detalle' => t('origen.velasd')],
+    ['texto' => t('origen.belleza'),  'detalle' => t('origen.bellezad')],
 ];
 
 require __DIR__ . '/header.php';
@@ -43,49 +44,47 @@ require __DIR__ . '/header.php';
     <section class="hero">
         <div class="contenedor hero__contenido">
             <div class="hero__texto">
-                <span class="pill"><?php echo icono('corazon'); ?> Mercado Oficial del Emprendimiento Tico <span class="separador">•</span> <span class="pill__azul">Todo lo Hecho en CR</span></span>
+                <span class="pill"><?php echo icono('corazon'); ?> <?php echo e(t('hero.pill')); ?> <span class="separador">•</span> <span class="pill__azul"><?php echo e(t('hero.pill2')); ?></span></span>
 
                 <h1 class="hero__titulo">
-                    El talento y la <span class="subrayado">calidez</span> de Costa Rica en tus manos
+                    <?php echo e(t('hero.titulo1')); ?> <span class="subrayado"><?php echo e(t('hero.titulo2')); ?></span> <?php echo e(t('hero.titulo3')); ?>
                 </h1>
 
                 <p class="hero__descripcion">
-                    De stickers y pines hasta crochet, velas aromáticas, maquillaje, papelería y diseño local.
-                    Conectamos directamente a marcas emergentes y creadores ticos con quienes apoyan
-                    el talento hecho en Costa Rica.
+                    <?php echo e(t('hero.descripcion')); ?>
                 </p>
 
                 <div class="hero__acciones">
                     <a class="btn btn--primario btn--lg" href="<?php echo e(ruta('catalogo')); ?>">
-                        Explorar Emprendimientos <?php echo icono('flecha'); ?>
+                        <?php echo e(t('hero.explorar')); ?> <?php echo icono('flecha'); ?>
                     </a>
                     <a class="btn btn--texto" href="<?php echo e(ruta('historias')); ?>">
-                        Conocer a los productores <?php echo icono('flecha-diagonal'); ?>
+                        <?php echo e(t('hero.productores')); ?> <?php echo icono('flecha-diagonal'); ?>
                     </a>
                 </div>
 
                 <dl class="hero__datos">
                     <div>
                         <dt>+650</dt>
-                        <dd>Emprendimientos ticos</dd>
+                        <dd><?php echo e(t('hero.dato1')); ?></dd>
                     </div>
                     <div>
-                        <dt class="verde">Variedad</dt>
-                        <dd>Stickers, crochet, belleza y más</dd>
+                        <dt class="verde"><?php echo e(t('hero.dato2t')); ?></dt>
+                        <dd><?php echo e(t('hero.dato2')); ?></dd>
                     </div>
                     <div>
                         <dt>SINPE Móvil</dt>
-                        <dd>Pago directo y seguro</dd>
+                        <dd><?php echo e(t('hero.dato3')); ?></dd>
                     </div>
                 </dl>
             </div>
 
             <figure class="hero__visual">
                 <img src="<?php echo e(recurso('img/colibri.png')); ?>" alt="Sticker de colibrí, símbolo de Ventica" width="405" height="412">
-                <span class="etiqueta-flotante etiqueta-flotante--terracota">Hecho a Mano</span>
+                <span class="etiqueta-flotante etiqueta-flotante--terracota"><?php echo e(t('hero.mano')); ?></span>
                 <span class="etiqueta-flotante etiqueta-flotante--teal"><?php echo icono('corazon'); ?> PURA VIDA</span>
                 <span class="etiqueta-flotante etiqueta-flotante--azul">VENTICA <small>CR</small></span>
-                <span class="etiqueta-flotante etiqueta-flotante--lima">100% Tico</span>
+                <span class="etiqueta-flotante etiqueta-flotante--lima"><?php echo e(t('hero.tico')); ?></span>
             </figure>
         </div>
     </section>
@@ -93,7 +92,7 @@ require __DIR__ . '/header.php';
     <!-- ===== Franja de orígenes ===== -->
     <section class="origenes" aria-label="Lo que encontrás en Ventica">
         <div class="contenedor origenes__contenido">
-            <p class="origenes__titulo"><?php echo icono('verificado'); ?> Orígenes con orgullo nacional:</p>
+            <p class="origenes__titulo"><?php echo icono('verificado'); ?> <?php echo e(t('origen.titulo')); ?></p>
             <ul class="origenes__lista">
                 <?php foreach ($origenes as $origen): ?>
                     <li><span class="punto"></span> <?php echo e($origen['texto']); ?> <small>(<?php echo e($origen['detalle']); ?>)</small></li>
@@ -107,12 +106,11 @@ require __DIR__ . '/header.php';
         <div class="contenedor">
             <div class="cabecera-seccion">
                 <div>
-                    <p class="sobretitulo">¿Buscás algo único?</p>
-                    <h2 class="titulo-grande" id="tituloCategorias">Todo tipo de emprendimientos locales</h2>
+                    <p class="sobretitulo"><?php echo e(t('cat.sobretitulo')); ?></p>
+                    <h2 class="titulo-grande" id="tituloCategorias"><?php echo e(t('cat.titulo')); ?></h2>
                 </div>
                 <p class="texto-guia">
-                    Comprá directamente a creadores ticos: desde accesorios, stickers y crochet
-                    hasta velas, cosmética y decoración para el hogar.
+                    <?php echo e(t('cat.texto')); ?>
                 </p>
             </div>
 
@@ -135,38 +133,28 @@ require __DIR__ . '/header.php';
     <section class="seccion porque" aria-labelledby="tituloPorque">
         <div class="contenedor">
             <header class="porque__encabezado">
-                <p class="sobretitulo">Comercio justo y cercano</p>
-                <h2 class="titulo-grande" id="tituloPorque">¿Por qué elegir Ventica?</h2>
+                <p class="sobretitulo"><?php echo e(t('porque.sobretitulo')); ?></p>
+                <h2 class="titulo-grande" id="tituloPorque"><?php echo e(t('porque.titulo')); ?></h2>
                 <p class="texto-guia">
-                    Una plataforma pensada para impulsar a quien crea con pasión
-                    y permitirte comprar con absoluta confianza y cercanía.
+                    <?php echo e(t('porque.texto')); ?>
                 </p>
             </header>
 
             <div class="beneficios">
                 <article class="beneficio">
                     <span class="beneficio__icono beneficio__icono--verde"><?php echo icono('trato'); ?></span>
-                    <h3>Trato Directo con el Emprendedor</h3>
-                    <p>
-                        Sin intermediarios abusivos que encarezcan el producto artesanal.
-                        El 100% de tu apoyo impulsa directamente a familias y creadores del país.
-                    </p>
+                    <h3><?php echo e(t('porque.b1t')); ?></h3>
+                    <p><?php echo e(t('porque.b1')); ?></p>
                 </article>
                 <article class="beneficio">
                     <span class="beneficio__icono beneficio__icono--azul"><?php echo icono('celular'); ?></span>
-                    <h3>SINPE Móvil y Tarjeta</h3>
-                    <p>
-                        Comprá con la facilidad y rapidez del día a día costarricense.
-                        Validaciones automáticas y confirmación inmediata con el artesano.
-                    </p>
+                    <h3><?php echo e(t('porque.b2t')); ?></h3>
+                    <p><?php echo e(t('porque.b2')); ?></p>
                 </article>
                 <article class="beneficio">
                     <span class="beneficio__icono beneficio__icono--terracota"><?php echo icono('camion'); ?></span>
-                    <h3>Envíos a Todo el País</h3>
-                    <p>
-                        Alianzas seguras de distribución y Correos de Costa Rica que llegan
-                        hasta el último rincón de las siete provincias, garantizando empaque responsable.
-                    </p>
+                    <h3><?php echo e(t('porque.b3t')); ?></h3>
+                    <p><?php echo e(t('porque.b3')); ?></p>
                 </article>
             </div>
         </div>
@@ -176,15 +164,12 @@ require __DIR__ . '/header.php';
     <section class="cta-banda" id="comunidad" aria-labelledby="tituloCta">
         <div class="contenedor cta-banda__contenido">
             <div>
-                <p class="sobretitulo sobretitulo--lima">Comunidad creativa tica</p>
-                <h2 id="tituloCta">¿Tenés un emprendimiento en Costa Rica?</h2>
-                <p>
-                    Vendé tus stickers, velas, prendas de crochet, maquillaje, arte o productos con nosotros.
-                    Tu vitrina digital sin intermediarios ni costos ocultos.
-                </p>
+                <p class="sobretitulo sobretitulo--lima"><?php echo e(t('cta.sobretitulo')); ?></p>
+                <h2 id="tituloCta"><?php echo e(t('cta.titulo')); ?></h2>
+                <p><?php echo e(t('cta.texto')); ?></p>
             </div>
             <a class="btn btn--lima btn--lg" href="<?php echo e(ruta('auth/registro-vendedor')); ?>">
-                Sumar mi Emprendimiento <?php echo icono('flecha'); ?>
+                <?php echo e(t('cta.boton')); ?> <?php echo icono('flecha'); ?>
             </a>
         </div>
     </section>

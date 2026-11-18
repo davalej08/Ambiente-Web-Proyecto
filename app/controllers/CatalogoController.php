@@ -86,6 +86,19 @@ class CatalogoController extends Controller
         ]);
     }
 
+    /**
+     * GET idioma?l=es|en  (HU-08)
+     * Guarda el idioma en la sesión y vuelve a la página donde estaba la persona.
+     */
+    public function idioma()
+    {
+        $elegido = $this->parametro('l', 'es');
+        if ($elegido === 'en' || $elegido === 'es') {
+            $_SESSION['idioma'] = $elegido;
+        }
+        $this->volver('');
+    }
+
     /** GET plantilla  (guía de componentes del equipo) */
     public function plantilla()
     {
