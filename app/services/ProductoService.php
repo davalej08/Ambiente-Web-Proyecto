@@ -247,10 +247,14 @@ class ProductoService
     public function productosDelVendedor($idEmprendimiento)
     {
         $filas = $this->productos->listarPorEmprendimiento($idEmprendimiento, false);
+        $pedidos = $this->productos->pedidosPorProducto($idEmprendimiento);
         $lista = [];
         foreach ($filas as $fila) {
+            $idProducto = (int) $fila['id_producto'];
             $lista[] = [
-                'id'          => (int) $fila['id_producto'],
+                'id'          => $idProducto,
+                'pedidos'     => isset($pedidos[$idProducto]) ? $pedidos[$idProducto]['total'] : 0,
+                'en_curso'    => isset($pedidos[$idProducto]) ? $pedidos[$idProducto]['en_curso'] : 0,
                 'nombre'      => $fila['nombre'],
                 'descripcion' => $this->resumir($fila['descripcion'], 60),
                 'categoria'   => $fila['categoria'],
@@ -392,6 +396,22 @@ class ProductoService
             $estado = 'inactivo';
         }
         $this->productos->cambiarEstado($idProducto, $idEmprendimiento, $estado);
+    }
+
+    /**
+     * Elimina un producto del vendedor (HU-12). Si ya está en algún pedido NO se borra.
+     *
+     * @param int $idEmprendimiento
+     * @param int $idProducto
+     * @return string eliminado | con_pedidos | no_existe
+     */
+    public function eliminar($idEmprendimiento, $idProducto)
+    {
+        $fila = $this->productos->obtener($idProducto);
+        if ($fila === null || (int) $fila['id_emprendimiento'] !== $idEmprendimiento) {
+            return 'no_existe';
+        }
+        return $this->productos->eliminar($idProducto, $idEmprendimiento);
     }
 
     /**
