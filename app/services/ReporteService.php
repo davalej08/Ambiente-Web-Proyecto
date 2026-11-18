@@ -10,6 +10,9 @@
 
 class ReporteService
 {
+    /** Días máximos que se pueden pedir en un rango personalizado (HU-13) */
+    const RANGO_MAXIMO_DIAS = 366;
+
     /** @var ReporteRepository */
     private $reportes;
 
@@ -185,6 +188,148 @@ class ReporteService
             'unidades'   => $top !== null ? (int) $top['unidades'] : 0,
             'subtitulo'  => $subtitulo,
             'puntos'     => $puntos,
+        ];
+    }
+
+    /**
+     * Revisa el rango de fechas que escogió el vendedor (HU-13).
+     *
+     * @param string $desde Fecha inicial, formato AAAA-MM-DD
+     * @param string $hasta Fecha final, formato AAAA-MM-DD
+     * @return string Mensaje de error, o '' si el rango es válido
+     */
+    public function validarRango($desde, $hasta)
+    {
+        if ($desde === '' || $hasta === '') {
+            return 'Indicá la fecha inicial y la fecha final.';
+        }
+
+        $fechaDesde = DateTime::createFromFormat('Y-m-d', $desde);
+        $fechaHasta = DateTime::createFromFormat('Y-m-d', $hasta);
+
+        // createFromFormat acepta fechas como 2026-02-31: se compara de vuelta para rechazarlas
+        if ($fechaDesde === false || $fechaDesde->format('Y-m-d') !== $desde
+            || $fechaHasta === false || $fechaHasta->format('Y-m-d') !== $hasta
+            || $desde < '2000-01-01') {
+            return 'Las fechas no son válidas.';
+        }
+        if ($desde > $hasta) {
+            return 'La fecha inicial no puede ser posterior a la final.';
+        }
+        if ($hasta > date('Y-m-d')) {
+            return 'La fecha final no puede ser futura.';
+        }
+        if ($fechaDesde->diff($fechaHasta)->days + 1 > self::RANGO_MAXIMO_DIAS) {
+            return 'El rango máximo es de 1 año (' . self::RANGO_MAXIMO_DIAS . ' días).';
+        }
+        return '';
+    }
+
+    /**
+     * Reporte de ventas del vendedor para un rango de fechas escogido por él (HU-13).
+     * El rango ya debe venir validado con validarRango().
+     *
+     * La gráfica se agrupa según el largo del rango:
+     *   hasta 14 días  -> un punto por día
+     *   hasta 92 días  -> un punto por semana (7 días desde la fecha inicial)
+     *   más de 92 días -> un punto por mes
+     *
+     * @param int $idEmprendimiento
+     * @param string $desde AAAA-MM-DD
+     * @param string $hasta AAAA-MM-DD
+     * @return array Con la misma forma que reporteVendedor(), más 'rango'
+     */
+    public function reporteVendedorRango($idEmprendimiento, $desde, $hasta)
+    {
+        $totalDias = (new DateTime($desde))->diff(new DateTime($hasta))->days + 1;
+
+        // Período anterior: la misma cantidad de días justo antes del rango (para la variación)
+        $anteriorHasta = date('Y-m-d', strtotime($desde . ' -1 day'));
+        $anteriorDesde = date('Y-m-d', strtotime($desde . ' -' . $totalDias . ' days'));
+
+        // Ventas por día del rango: ['2026-10-01' => 15000, ...]
+        $ventasPorDia = [];
+        $filas = $this->reportes->ventasDiariasVendedor($idEmprendimiento, $desde, $hasta);
+        foreach ($filas as $fila) {
+            $ventasPorDia[$fila['fecha']] = (float) $fila['monto'];
+        }
+
+        $dias = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+        $diasLargos = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+        $meses = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+        $mesesLargos = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+        $puntos = [];
+
+        if ($totalDias <= 14) {
+            // Un punto por día
+            $agrupado = 'por día';
+            $fecha = $desde;
+            while ($fecha <= $hasta) {
+                $marca = strtotime($fecha);
+                $numeroDia = (int) date('w', $marca);
+                $puntos[] = [
+                    'etiqueta' => $dias[$numeroDia] . ' ' . date('j', $marca),
+                    'rango'    => $diasLargos[$numeroDia] . ' ' . date('j', $marca) . ' ' . mesCorto(date('n', $marca)),
+                    'monto'    => $this->sumarEntre($ventasPorDia, $fecha, $fecha),
+                ];
+                $fecha = date('Y-m-d', strtotime($fecha . ' +1 day'));
+            }
+        } elseif ($totalDias <= 92) {
+            // Semanas de 7 días desde la fecha inicial (la última puede quedar más corta).
+            // Con más de 8 semanas la etiqueta se acorta (S9) para que quepa en la gráfica.
+            $agrupado = 'por semana';
+            $inicio = $desde;
+            $numero = 1;
+            while ($inicio <= $hasta) {
+                $fin = date('Y-m-d', strtotime($inicio . ' +6 days'));
+                if ($fin > $hasta) {
+                    $fin = $hasta;
+                }
+                $puntos[] = [
+                    'etiqueta' => ($totalDias > 56 ? 'S' : 'Sem ') . $numero,
+                    'rango'    => 'Sem ' . $numero . ' (' . date('j', strtotime($inicio)) . ' ' . mesCorto(date('n', strtotime($inicio)))
+                                  . ' - ' . date('j', strtotime($fin)) . ' ' . mesCorto(date('n', strtotime($fin))) . ')',
+                    'monto'    => $this->sumarEntre($ventasPorDia, $inicio, $fin),
+                ];
+                $inicio = date('Y-m-d', strtotime($fin . ' +1 day'));
+                $numero++;
+            }
+        } else {
+            // Un punto por mes (el primero y el último pueden ser meses incompletos)
+            $agrupado = 'por mes';
+            $variosAnios = substr($desde, 0, 4) !== substr($hasta, 0, 4);
+            $inicio = $desde;
+            while ($inicio <= $hasta) {
+                $finMes = date('Y-m-t', strtotime($inicio));
+                $fin = $finMes > $hasta ? $hasta : $finMes;
+                $numeroMes = (int) date('n', strtotime($inicio));
+                $anio = date('Y', strtotime($inicio));
+                $ponerAnio = $variosAnios && ($inicio === $desde || $numeroMes === 1);
+                $puntos[] = [
+                    'etiqueta' => $meses[$numeroMes - 1] . ($ponerAnio ? ' ' . substr($anio, 2) : ''),
+                    'rango'    => $mesesLargos[$numeroMes - 1] . ' ' . $anio,
+                    'monto'    => $this->sumarEntre($ventasPorDia, $inicio, $fin),
+                ];
+                $inicio = date('Y-m-d', strtotime($finMes . ' +1 day'));
+            }
+        }
+
+        // Totales del rango
+        $resumen = $this->reportes->resumenVendedor($idEmprendimiento, $desde, $hasta);
+        $anterior = $this->reportes->resumenVendedor($idEmprendimiento, $anteriorDesde, $anteriorHasta);
+        $top = $this->reportes->productoTopVendedor($idEmprendimiento, $desde, $hasta);
+        $lineas = (int) $resumen['lineas'];
+
+        return [
+            'ventas'     => (float) $resumen['ventas'],
+            'variacion'  => $this->variacion((float) $resumen['ventas'], (float) $anterior['ventas']),
+            'pedidos'    => (int) $resumen['pedidos'],
+            'entregados' => $lineas > 0 ? (int) round((int) $resumen['entregadas'] * 100 / $lineas) : 0,
+            'producto'   => $top !== null ? $top['nombre'] : 'Sin ventas todavía',
+            'unidades'   => $top !== null ? (int) $top['unidades'] : 0,
+            'subtitulo'  => 'Evolución de ventas en colones (CRC) del ' . fechaCorta($desde) . ' al ' . fechaCorta($hasta) . ', ' . $agrupado,
+            'puntos'     => $puntos,
+            'rango'      => ['desde' => $desde, 'hasta' => $hasta, 'dias' => $totalDias],
         ];
     }
 
