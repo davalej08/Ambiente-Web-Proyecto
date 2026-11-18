@@ -24,19 +24,19 @@ if (!isset($scripts)) {
                 <a href="<?php echo e(ruta('')); ?>">
                     <img src="<?php echo e(recurso('img/logo-ventica.png')); ?>" alt="Ventica" width="92" height="32">
                 </a>
-                <p>Mercado y directorio de talento costarricense</p>
+                <p><?php echo e(t('pie.lema')); ?></p>
             </div>
 
             <nav class="footer__enlaces" aria-label="Enlaces del pie de página">
-                <a href="<?php echo e(ruta('catalogo')); ?>">Directorio de Provincias</a>
-                <a href="<?php echo e(ruta('ayuda')); ?>">Preguntas Frecuentes</a>
-                <a href="<?php echo e(ruta('terminos')); ?>">Términos de Comercio</a>
-                <a href="<?php echo e(ruta('contacto')); ?>">Contacto</a>
+                <a href="<?php echo e(ruta('catalogo')); ?>"><?php echo e(t('pie.directorio')); ?></a>
+                <a href="<?php echo e(ruta('ayuda')); ?>"><?php echo e(t('pie.ayuda')); ?></a>
+                <a href="<?php echo e(ruta('terminos')); ?>"><?php echo e(t('pie.terminos')); ?></a>
+                <a href="<?php echo e(ruta('contacto')); ?>"><?php echo e(t('pie.contacto')); ?></a>
             </nav>
 
             <div class="footer__legal">
                 <p>&copy; <?php echo date('Y'); ?> Ventica.</p>
-                <p>Hecho con orgullo en Costa Rica</p>
+                <p><?php echo e(t('pie.orgullo')); ?></p>
             </div>
         </div>
     </footer>
@@ -49,8 +49,8 @@ if (!isset($scripts)) {
                 <span class="carga__anillo"></span>
                 <img src="<?php echo e(recurso('img/colibri.png')); ?>" alt="" width="64" height="64">
             </span>
-            <p class="carga__texto">Cargando<span class="carga__puntos"><span>.</span><span>.</span><span>.</span></span></p>
-            <p class="carga__nota">Trayendo lo mejor hecho en Costa Rica</p>
+            <p class="carga__texto"><?php echo e(t('carga.texto')); ?><span class="carga__puntos"><span>.</span><span>.</span><span>.</span></span></p>
+            <p class="carga__nota"><?php echo e(t('carga.nota')); ?></p>
         </div>
     </div>
 

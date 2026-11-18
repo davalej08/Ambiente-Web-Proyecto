@@ -116,11 +116,14 @@ Los correos (bienvenida, recuperar contraseña, respuesta a solicitudes) están 
 | Carrito | /carrito | Público (para pagar hay que iniciar sesión) |
 | Confirmación del pedido | /carrito/confirmacion?id= | Cliente |
 | Mi perfil (datos, pedidos, favoritos) | /usuario/perfil | Cliente |
+| Calificar un pedido entregado (HU-04) | /usuario/resenas?pedido= | Cliente |
 | Portal del emprendedor | /vendedor/dashboard, /vendedor/productos, /vendedor/pedidos, /vendedor/reportes, /vendedor/perfil | Emprendedor |
 | Panel del administrador | /admin/dashboard, /admin/solicitudes, /admin/emprendimientos, /admin/usuarios, /admin/categorias, /admin/reportes | Administrador |
 | Guía de componentes | /plantilla | Equipo |
 
 Para agregar una pantalla: una línea en `config/rutas.php` y el método en el controlador.
+
+**Idioma (HU-08):** el selector ES | EN de la barra de navegación guarda el idioma en la sesión. Los textos están en `config/idiomas/es.php` y `en.php`, y las vistas los muestran con `t('clave')` (por ahora: barra, pie de página e inicio).
 
 ---
 

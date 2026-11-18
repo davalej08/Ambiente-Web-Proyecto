@@ -203,6 +203,9 @@ require __DIR__ . '/../general/header.php';
                             <span class="estado estado--<?php echo e($pedido['estado']); ?>"><?php echo e($textoEstado[$pedido['estado']]); ?></span>
                             <p class="pedido-cliente__total"><?php echo colones($pedido['total']); ?></p>
                             <p class="campo__nota"><?php echo e($pedido['metodo']); ?></p>
+                            <?php if (valor($pedido, 'entregados', 0) > 0): ?>
+                                <a class="btn btn--borde btn--sm" href="<?php echo e(ruta('usuario/resenas?pedido=' . $pedido['id'])); ?>"><?php echo icono('estrella'); ?> Calificar</a>
+                            <?php endif; ?>
                         </div>
                     </li>
                 <?php endforeach; ?>

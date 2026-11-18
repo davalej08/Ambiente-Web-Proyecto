@@ -802,6 +802,56 @@ BEGIN
     DELETE FROM FIDE_FAVORITO_TB WHERE ID_USUARIO = p_id_usuario AND ID_PRODUCTO = p_id_producto;
 END$$
 
+-- Productos ENTREGADOS de un pedido del cliente, con su reseña si ya la escribió (HU-04).
+-- Si el pedido no es de ese usuario no devuelve nada.
+DROP PROCEDURE IF EXISTS sp_resena_listar_por_pedido$$
+CREATE PROCEDURE sp_resena_listar_por_pedido(IN p_id_pedido INT, IN p_id_usuario INT)
+BEGIN
+    SELECT p.id_producto, p.nombre, p.imagen, e.nombre_negocio,
+           r.CALIFICACION AS calificacion, r.COMENTARIO AS comentario, r.FECHA_RESENA AS fecha_resena
+    FROM FIDE_PEDIDO_TB pe
+    INNER JOIN FIDE_DETALLE_PEDIDO_TB dp ON dp.ID_PEDIDO = pe.ID_PEDIDO
+    INNER JOIN FIDE_ESTADO_TB es ON es.ID_ESTADO = dp.ID_ESTADO
+    INNER JOIN FIDE_PRODUCTO_V p ON p.id_producto = dp.ID_PRODUCTO
+    INNER JOIN FIDE_EMPRENDIMIENTO_V e ON e.id_emprendimiento = p.id_emprendimiento
+    LEFT JOIN FIDE_RESENA_TB r ON r.ID_PRODUCTO = dp.ID_PRODUCTO AND r.ID_USUARIO = pe.ID_USUARIO
+    WHERE pe.ID_PEDIDO = p_id_pedido
+      AND pe.ID_USUARIO = p_id_usuario
+      AND es.NOMBRE_ESTADO = 'entregado'
+    ORDER BY dp.ID_DETALLE;
+END$$
+
+-- Guarda o cambia la reseña de un producto (HU-04).
+-- Solo si el cliente tiene ese producto en una línea ENTREGADA. Devuelve filas = 0 si no puede.
+DROP PROCEDURE IF EXISTS sp_resena_guardar$$
+CREATE PROCEDURE sp_resena_guardar(
+    IN p_id_usuario INT,
+    IN p_id_producto INT,
+    IN p_calificacion TINYINT,
+    IN p_comentario VARCHAR(500)
+)
+BEGIN
+    DECLARE v_compras INT DEFAULT 0;
+
+    SELECT COUNT(*) INTO v_compras
+    FROM FIDE_DETALLE_PEDIDO_TB dp
+    INNER JOIN FIDE_PEDIDO_TB pe ON pe.ID_PEDIDO = dp.ID_PEDIDO
+    INNER JOIN FIDE_ESTADO_TB es ON es.ID_ESTADO = dp.ID_ESTADO
+    WHERE pe.ID_USUARIO = p_id_usuario
+      AND dp.ID_PRODUCTO = p_id_producto
+      AND es.NOMBRE_ESTADO = 'entregado';
+
+    IF v_compras > 0 THEN
+        INSERT INTO FIDE_RESENA_TB (ID_USUARIO, ID_PRODUCTO, CALIFICACION, COMENTARIO)
+        VALUES (p_id_usuario, p_id_producto, p_calificacion, NULLIF(p_comentario, ''))
+        ON DUPLICATE KEY UPDATE CALIFICACION = p_calificacion,
+                                COMENTARIO   = NULLIF(p_comentario, ''),
+                                FECHA_RESENA = NOW();
+    END IF;
+
+    SELECT v_compras AS filas;
+END$$
+
 -- ============================================================
 -- 7. CARRITO (solo para usuarios con sesión; sin sesión vive en $_SESSION)
 -- ============================================================

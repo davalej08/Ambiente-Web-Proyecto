@@ -1026,6 +1026,29 @@ select.campo__entrada {
     gap: 1rem;
 }
 
+/* Selector de idioma ES | EN (HU-08) */
+.navbar__idioma {
+    display: inline-flex;
+    padding: 2px;
+    border: 1px solid var(--borde);
+    border-radius: var(--radio-pill);
+    background: var(--blanco);
+}
+
+.navbar__idioma a {
+    padding: 0.2rem 0.55rem;
+    border-radius: var(--radio-pill);
+    color: var(--texto-suave);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.navbar__idioma a.es-activo {
+    background: var(--azul);
+    color: var(--blanco);
+}
+
 .navbar__carrito {
     position: relative;
     display: grid;

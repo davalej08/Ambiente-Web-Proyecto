@@ -162,3 +162,45 @@ function urlCompleta($ruta)
     $servidor = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'localhost:8000';
     return $esquema . '://' . $servidor . ruta($ruta);
 }
+
+/**
+ * Idioma elegido por la persona (HU-08): 'es' o 'en'. Por defecto español.
+ * Lo cambia CatalogoController::idioma() y queda guardado en la sesión.
+ *
+ * @return string
+ */
+function idioma()
+{
+    if (isset($_SESSION['idioma']) && $_SESSION['idioma'] === 'en') {
+        return 'en';
+    }
+    return 'es';
+}
+
+/**
+ * Texto traducido (HU-08). Busca la clave en config/idiomas/<idioma>.php;
+ * si no está, usa el español; si tampoco está, devuelve la clave.
+ *   <?php echo e(t('nav.inicio')); ?>   ->  "Inicio" o "Home"
+ *
+ * @param string $clave
+ * @return string
+ */
+function t($clave)
+{
+    // Se cargan una sola vez por página
+    static $textos = null;
+    static $espanol = null;
+
+    if ($espanol === null) {
+        $espanol = require __DIR__ . '/../../config/idiomas/es.php';
+        $textos = idioma() === 'en' ? require __DIR__ . '/../../config/idiomas/en.php' : $espanol;
+    }
+
+    if (isset($textos[$clave])) {
+        return $textos[$clave];
+    }
+    if (isset($espanol[$clave])) {
+        return $espanol[$clave];
+    }
+    return $clave;
+}

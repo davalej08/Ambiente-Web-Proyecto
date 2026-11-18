@@ -100,6 +100,7 @@ class UsuarioService
                 'total'          => (float) $fila['total'],
                 'metodo'         => $pago->nombreMetodo($fila['metodo_pago']),
                 'estado'         => $estado,
+                'entregados'     => (int) $fila['entregados'],   // > 0: se puede calificar (HU-04)
                 'imagen'         => imagenO($fila['imagen']),
             ];
         }

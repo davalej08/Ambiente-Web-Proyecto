@@ -112,4 +112,42 @@ class ClienteController extends Controller
         Sesion::mensaje('info', 'Quitamos el producto de tus favoritos.');
         $this->redirigir('usuario/perfil#favoritos');
     }
+
+    /** GET usuario/resenas?pedido=  (HU-04: calificar los productos entregados de un pedido) */
+    public function resenas()
+    {
+        $this->requiereRol(ROL_CLIENTE);
+
+        $idPedido = (int) $this->parametro('pedido', '0');
+        $productos = (new ResenaService())->productosDelPedido($idPedido, Sesion::idUsuario());
+
+        // Pedido ajeno, inexistente o sin productos entregados
+        if (count($productos) === 0) {
+            $this->noEncontrada();
+            return;
+        }
+
+        $this->vista('usuario/resenas', ['idPedido' => $idPedido, 'productos' => $productos]);
+    }
+
+    /** POST usuario/resenas/guardar */
+    public function guardarResena()
+    {
+        $this->requiereRol(ROL_CLIENTE);
+        $idPedido = (int) $this->entrada('id_pedido', '0');
+        $this->validarCsrf('usuario/resenas?pedido=' . $idPedido);
+
+        $error = (new ResenaService())->guardar(Sesion::idUsuario(), [
+            'id_producto'  => $this->entrada('id_producto'),
+            'calificacion' => $this->entrada('calificacion'),
+            'comentario'   => $this->entrada('comentario'),
+        ]);
+
+        if ($error !== '') {
+            Sesion::mensaje('error', $error);
+        } else {
+            Sesion::mensaje('exito', '¡Gracias! Tu reseña ayuda a otros a comprar local.');
+        }
+        $this->redirigir('usuario/resenas?pedido=' . $idPedido);
+    }
 }
