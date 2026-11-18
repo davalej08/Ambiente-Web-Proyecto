@@ -156,6 +156,35 @@ class VendedorController extends Controller
         $this->redirigir('vendedor/productos');
     }
 
+    /**
+     * POST vendedor/productos/eliminar  (HU-12)
+     * accion=eliminar: borra el producto si no tiene pedidos.
+     * accion=ocultar:  lo pausa (inactivo); se usa cuando ya tiene pedidos.
+     */
+    public function eliminarProducto()
+    {
+        $this->entrarAlPortal();
+        $this->validarCsrf('vendedor/productos');
+
+        $idProducto = (int) $this->entrada('id_producto', '0');
+
+        if ($this->entrada('accion') === 'ocultar') {
+            $this->productos->cambiarDisponibilidad($this->idEmprendimiento, $idProducto, false);
+            Sesion::mensaje('exito', 'Producto oculto: ya no aparece en tu tienda. Sus pedidos anteriores no cambian.');
+            $this->redirigir('vendedor/productos');
+        }
+
+        $resultado = $this->productos->eliminar($this->idEmprendimiento, $idProducto);
+        if ($resultado === 'eliminado') {
+            Sesion::mensaje('exito', 'Producto eliminado.');
+        } elseif ($resultado === 'con_pedidos') {
+            Sesion::mensaje('aviso', 'Este producto ya tiene pedidos, por eso no se puede eliminar. Ocultalo para sacarlo de tu tienda.');
+        } else {
+            Sesion::mensaje('error', 'No se encontró el producto.');
+        }
+        $this->redirigir('vendedor/productos');
+    }
+
     /** GET vendedor/pedidos */
     public function pedidos()
     {
