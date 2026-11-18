@@ -8,7 +8,8 @@
  * Ruta sugerida: vendedor/productos
  *
  * Variables que puede enviar VendedorController:
- *   $productos      arreglo de productos del vendedor (ver datos de muestra abajo)
+ *   $productos      arreglo de productos del vendedor (ver datos de muestra abajo);
+ *                   cada uno puede traer 'pedidos' y 'en_curso' (para eliminar u ocultar)
  *   $totalProductos total de productos publicados
  *   $paginaActual   número de página
  *   $totalPaginas   cantidad de páginas
@@ -137,9 +138,22 @@ require __DIR__ . '/../general/header.php';
                                             </form>
                                         </td>
                                         <td>
-                                            <a class="panel__boton-icono" href="<?php echo e($urlEditar); ?>" aria-label="Editar <?php echo e($producto['nombre']); ?>">
-                                                <?php echo icono('lapiz'); ?>
-                                            </a>
+                                            <div class="acciones-fila">
+                                                <a class="panel__boton-icono" href="<?php echo e($urlEditar); ?>" aria-label="Editar <?php echo e($producto['nombre']); ?>">
+                                                    <?php echo icono('lapiz'); ?>
+                                                </a>
+                                                <form class="form-eliminar" method="post" action="<?php echo e(ruta('vendedor/productos/eliminar')); ?>"
+                                                    data-nombre="<?php echo e($producto['nombre']); ?>"
+                                                    data-pedidos="<?php echo (int) valor($producto, 'pedidos', 0); ?>"
+                                                    data-en-curso="<?php echo (int) valor($producto, 'en_curso', 0); ?>">
+                                                    <input type="hidden" name="csrf_token" value="<?php echo e(valor($_SESSION, 'csrf_token', '')); ?>">
+                                                    <input type="hidden" name="id_producto" value="<?php echo (int) $producto['id']; ?>">
+                                                    <input type="hidden" name="accion" value="eliminar">
+                                                    <button class="panel__boton-icono panel__boton-icono--peligro" type="submit" aria-label="Eliminar <?php echo e($producto['nombre']); ?>">
+                                                        <?php echo icono('basura'); ?>
+                                                    </button>
+                                                </form>
+                                            </div>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
