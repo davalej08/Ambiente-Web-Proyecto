@@ -775,7 +775,7 @@ BEGIN
     INNER JOIN FIDE_ESTADO_TB e ON e.ID_ESTADO = d.ID_ESTADO
     WHERE p.ID_EMPRENDIMIENTO = p_id_emprendimiento
     GROUP BY d.ID_PRODUCTO;
-END
+END$$
 
 -- Elimina un producto solo si es del emprendimiento y NO está en ningún pedido (HU-12).
 -- Devuelve una fila con 'resultado': eliminado | con_pedidos | no_existe.
