@@ -874,6 +874,41 @@
     gap: 0.6rem;
 }
 
+/* Redes sociales del emprendimiento (debajo de la descripción) */
+.redes-vitrina {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0.85rem 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.redes-vitrina a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.35rem 0.8rem;
+    border: 1px solid var(--borde);
+    border-radius: var(--radio-pill);
+    background: var(--blanco);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--azul-oscuro);
+    text-decoration: none;
+}
+
+.redes-vitrina a:hover {
+    border-color: var(--teal);
+    background: var(--papel);
+}
+
+.redes-vitrina .icono {
+    width: 0.85rem;
+    height: 0.85rem;
+    color: var(--teal-oscuro);
+}
+
 .datos-vitrina {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));

@@ -35,7 +35,14 @@ if (!isset($emprendimiento)) {
         'total_resenas' => 128,
         'telefono'    => '8842-9011',
         'imagen'      => 'productos/cafe-geisha.jpg',
+        'redes'       => [
+            ['plataforma' => 'Instagram', 'url' => 'https://instagram.com/beneficiolapastora'],
+            ['plataforma' => 'Facebook',  'url' => 'https://facebook.com/beneficiolapastora'],
+        ],
     ];
+}
+if (!isset($emprendimiento['redes'])) {
+    $emprendimiento['redes'] = [];
 }
 
 if (!isset($productos)) {
@@ -112,6 +119,18 @@ require __DIR__ . '/../general/header.php';
                 <h1><?php echo e($emprendimiento['nombre']); ?></h1>
                 <span class="pill"><?php echo icono('ubicacion'); ?> <?php echo e($emprendimiento['ubicacion']); ?></span>
                 <p><?php echo e($emprendimiento['descripcion']); ?></p>
+
+                <?php if (count($emprendimiento['redes']) > 0): ?>
+                    <ul class="redes-vitrina" aria-label="Redes sociales de <?php echo e($emprendimiento['nombre']); ?>">
+                        <?php foreach ($emprendimiento['redes'] as $red): ?>
+                            <li>
+                                <a href="<?php echo e($red['url']); ?>" target="_blank" rel="noopener noreferrer">
+                                    <?php echo icono('flecha-diagonal'); ?> <?php echo e($red['plataforma']); ?>
+                                </a>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
             </div>
 
             <div class="portada__acciones">
