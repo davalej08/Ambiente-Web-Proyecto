@@ -10,7 +10,7 @@
 
 $titulo       = 'Reportes · Portal del emprendedor';
 $estilos      = ['vendedor', 'reportes'];
-$scripts      = [];
+$scripts      = ['validaciones', 'reportes_vendedor'];
 
 // vendedor/reportes/pdf abre la ventana de imprimir apenas carga (imprimir.js)
 if (isset($imprimir) && $imprimir) {
@@ -33,9 +33,19 @@ $periodos = [
 if (!isset($periodo)) {
     $periodo = isset($_GET['periodo']) ? $_GET['periodo'] : '30dias';
 }
-if (!isset($periodos[$periodo])) {
+// 'personalizado' lo manda ReporteController cuando el rango de fechas es válido (HU-13)
+if ($periodo !== 'personalizado' && !isset($periodos[$periodo])) {
     $periodo = '30dias';
 }
+
+// Fechas del rango personalizado (para rellenar los campos) y límite para escoger
+if (!isset($desde)) {
+    $desde = '';
+}
+if (!isset($hasta)) {
+    $hasta = '';
+}
+$hoy = date('Y-m-d');
 
 // Datos de muestra: uno por período
 $muestras = [
@@ -91,9 +101,22 @@ $muestras = [
 ];
 
 if (!isset($reporte)) {
+    // Sin controlador no hay datos de un rango: se usan los de muestra de 30 días
+    if ($periodo === 'personalizado') {
+        $periodo = '30dias';
+    }
     $reporte = $muestras[$periodo];
 }
 $puntos = $reporte['puntos'];
+
+// Nombre del período para la gráfica y enlace del PDF con el mismo período o rango
+if ($periodo === 'personalizado') {
+    $nombrePeriodo = fechaCorta($desde) . ' al ' . fechaCorta($hasta);
+    $consultaPdf = 'desde=' . urlencode($desde) . '&hasta=' . urlencode($hasta);
+} else {
+    $nombrePeriodo = $periodos[$periodo];
+    $consultaPdf = 'periodo=' . $periodo;
+}
 
 // ---------- Datos para dibujar la gráfica (SVG) ----------
 // Área de dibujo dentro del SVG: ancho 640, alto 280
@@ -175,6 +198,13 @@ require __DIR__ . '/../general/header.php';
 
         <main id="contenido" class="panel__contenido">
 
+            <!-- Encabezado que solo aparece al imprimir o guardar el PDF -->
+            <header class="solo-impresion">
+                <p class="solo-impresion__marca">Ventica · Portal del emprendedor</p>
+                <h1 class="solo-impresion__titulo">Reporte de ventas · <?php echo e($tienda['nombre']); ?></h1>
+                <p class="solo-impresion__detalle">Período: <?php echo e($nombrePeriodo); ?> · Generado el <?php echo e(fechaCorta($hoy)); ?></p>
+            </header>
+
             <!-- ===== Título y selector de período ===== -->
             <section class="reportes-cabecera">
                 <div class="encabezado-pagina">
@@ -194,10 +224,43 @@ require __DIR__ . '/../general/header.php';
                         <?php endforeach; ?>
                     </nav>
 
-                    <a class="btn btn--borde btn--sm" href="<?php echo e(ruta('vendedor/reportes/pdf') . '?periodo=' . $periodo); ?>">
+                    <a class="btn btn--borde btn--sm" href="<?php echo e(ruta('vendedor/reportes/pdf') . '?' . $consultaPdf); ?>">
                         <?php echo icono('recibo'); ?> Descargar PDF
                     </a>
                 </div>
+            </section>
+
+            <!-- ===== Rango de fechas personalizado (HU-13) ===== -->
+            <section class="rango tarjeta" aria-labelledby="tituloRango">
+                <form class="rango__formulario" id="formRango" method="get" action="<?php echo e(ruta('vendedor/reportes')); ?>" novalidate>
+                    <h2 class="rango__titulo" id="tituloRango"><?php echo icono('reloj'); ?> Rango personalizado</h2>
+
+                    <div class="campo" id="campo-desde">
+                        <div class="campo__cabecera">
+                            <label class="campo__etiqueta" for="desde">Desde</label>
+                        </div>
+                        <input class="campo__entrada" type="date" id="desde" name="desde"
+                            value="<?php echo e($desde); ?>" min="2000-01-01" max="<?php echo e($hoy); ?>" required>
+                        <p class="campo__error" id="errorDesde" role="alert"></p>
+                    </div>
+
+                    <div class="campo" id="campo-hasta">
+                        <div class="campo__cabecera">
+                            <label class="campo__etiqueta" for="hasta">Hasta</label>
+                        </div>
+                        <input class="campo__entrada" type="date" id="hasta" name="hasta"
+                            value="<?php echo e($hasta); ?>" min="2000-01-01" max="<?php echo e($hoy); ?>" required>
+                        <p class="campo__error" id="errorHasta" role="alert"></p>
+                    </div>
+
+                    <div class="rango__botones">
+                        <button class="btn btn--primario btn--sm" type="submit">Aplicar rango</button>
+                        <?php if ($periodo === 'personalizado'): ?>
+                            <a class="btn btn--borde btn--sm" href="<?php echo e(ruta('vendedor/reportes')); ?>">Quitar rango</a>
+                        <?php endif; ?>
+                    </div>
+                </form>
+                <p class="rango__nota">Escogé hasta 1 año de fechas. El reporte se compara con el mismo número de días justo antes.</p>
             </section>
 
             <!-- ===== Indicadores ===== -->
@@ -252,7 +315,7 @@ require __DIR__ . '/../general/header.php';
                 </div>
 
                 <svg class="grafica__svg" viewBox="0 0 640 280" role="img" aria-labelledby="tituloSvg descSvg">
-                    <title id="tituloSvg">Ingresos del período: <?php echo e($periodos[$periodo]); ?></title>
+                    <title id="tituloSvg">Ingresos del período: <?php echo e($nombrePeriodo); ?></title>
                     <desc id="descSvg">
                         <?php foreach ($puntos as $punto): ?>
                             <?php echo e($punto['rango'] . ': ' . colones($punto['monto']) . '. '); ?>

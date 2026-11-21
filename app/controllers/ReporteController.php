@@ -32,12 +32,34 @@ class ReporteController extends Controller
         $periodo = in_array($this->parametro('periodo'), $periodos, true) ? $this->parametro('periodo') : '30dias';
         $inicio = $this->reportes->inicioVendedor($idEmprendimiento);
 
-        return [
-            'periodo'        => $periodo,
-            'reporte'        => $this->reportes->reporteVendedor($idEmprendimiento, $periodo),
-            'tienda'         => (new VendedorService())->tienda($idEmprendimiento),
-            'notificaciones' => $inicio['por_confirmar'],
-        ];
+        // Rango personalizado (HU-13): ?desde=AAAA-MM-DD&hasta=AAAA-MM-DD
+        $desde = $this->parametro('desde');
+        $hasta = $this->parametro('hasta');
+        $reporte = null;
+        $datos = [];
+
+        if ($desde !== '' || $hasta !== '') {
+            $error = $this->reportes->validarRango($desde, $hasta);
+            if ($error === '') {
+                $periodo = 'personalizado';
+                $reporte = $this->reportes->reporteVendedorRango($idEmprendimiento, $desde, $hasta);
+            } else {
+                // Rango inválido: se avisa y se muestra el período normal
+                $datos['mensaje'] = ['tipo' => 'error', 'texto' => $error];
+            }
+        }
+
+        if ($reporte === null) {
+            $reporte = $this->reportes->reporteVendedor($idEmprendimiento, $periodo);
+        }
+
+        $datos['periodo']        = $periodo;
+        $datos['desde']          = $desde;
+        $datos['hasta']          = $hasta;
+        $datos['reporte']        = $reporte;
+        $datos['tienda']         = (new VendedorService())->tienda($idEmprendimiento);
+        $datos['notificaciones'] = $inicio['por_confirmar'];
+        return $datos;
     }
 
     /** GET vendedor/reportes?periodo= */

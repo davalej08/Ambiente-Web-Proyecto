@@ -760,6 +760,62 @@ BEGIN
     INSERT INTO FIDE_IMAGEN_PRODUCTO_TB (ID_PRODUCTO, URL_IMAGEN, ORDEN) VALUES (p_id_producto, p_url, 1);
 END$$
 
+-- Cuántos pedidos tiene cada producto de un emprendimiento (HU-12).
+-- Solo salen los productos que aparecen en algún pedido.
+-- "En curso" = línea pendiente, confirmada o enviada (todavía no entregada ni rechazada).
+DROP PROCEDURE IF EXISTS sp_producto_pedidos_por_emprendimiento$$
+CREATE PROCEDURE sp_producto_pedidos_por_emprendimiento(IN p_id_emprendimiento INT)
+BEGIN
+    SELECT d.ID_PRODUCTO AS id_producto,
+           COUNT(DISTINCT d.ID_PEDIDO) AS total_pedidos,
+           COUNT(DISTINCT CASE WHEN e.NOMBRE_ESTADO IN ('pendiente', 'confirmado', 'enviado')
+                               THEN d.ID_PEDIDO END) AS pedidos_en_curso
+    FROM FIDE_DETALLE_PEDIDO_TB d
+    INNER JOIN FIDE_PRODUCTO_TB p ON p.ID_PRODUCTO = d.ID_PRODUCTO
+    INNER JOIN FIDE_ESTADO_TB e ON e.ID_ESTADO = d.ID_ESTADO
+    WHERE p.ID_EMPRENDIMIENTO = p_id_emprendimiento
+    GROUP BY d.ID_PRODUCTO;
+END$$
+
+-- Elimina un producto solo si es del emprendimiento y NO está en ningún pedido (HU-12).
+-- Devuelve una fila con 'resultado': eliminado | con_pedidos | no_existe.
+-- Si un pedido nuevo se cuela justo antes del DELETE, la llave foránea (RESTRICT)
+-- lo detiene (error 1451) y también se responde con_pedidos.
+-- Las imágenes, reseñas, favoritos y líneas de carrito del producto se borran en cascada.
+DROP PROCEDURE IF EXISTS sp_producto_eliminar$$
+CREATE PROCEDURE sp_producto_eliminar(
+    IN p_id_producto INT,
+    IN p_id_emprendimiento INT
+)
+BEGIN
+    DECLARE v_existe INT DEFAULT 0;
+    DECLARE v_pedidos INT DEFAULT 0;
+    DECLARE EXIT HANDLER FOR 1451
+    BEGIN
+        SELECT 'con_pedidos' AS resultado;
+    END;
+
+    SELECT COUNT(*) INTO v_existe
+    FROM FIDE_PRODUCTO_TB
+    WHERE ID_PRODUCTO = p_id_producto AND ID_EMPRENDIMIENTO = p_id_emprendimiento;
+
+    IF v_existe = 0 THEN
+        SELECT 'no_existe' AS resultado;
+    ELSE
+        SELECT COUNT(*) INTO v_pedidos
+        FROM FIDE_DETALLE_PEDIDO_TB
+        WHERE ID_PRODUCTO = p_id_producto;
+
+        IF v_pedidos > 0 THEN
+            SELECT 'con_pedidos' AS resultado;
+        ELSE
+            DELETE FROM FIDE_PRODUCTO_TB
+            WHERE ID_PRODUCTO = p_id_producto AND ID_EMPRENDIMIENTO = p_id_emprendimiento;
+            SELECT 'eliminado' AS resultado;
+        END IF;
+    END IF;
+END$$
+
 -- ============================================================
 -- 6. RESEÑAS Y FAVORITOS
 -- ============================================================

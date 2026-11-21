@@ -136,6 +136,38 @@ class ProductoRepository extends Repository
     }
 
     /**
+     * Pedidos de cada producto del emprendimiento (solo los que aparecen en algún pedido).
+     *
+     * @param int $idEmprendimiento
+     * @return array ['id_producto' => ['total' => 3, 'en_curso' => 1]]
+     */
+    public function pedidosPorProducto($idEmprendimiento)
+    {
+        $filas = $this->consultar('CALL sp_producto_pedidos_por_emprendimiento(?)', [$idEmprendimiento]);
+        $pedidos = [];
+        foreach ($filas as $fila) {
+            $pedidos[(int) $fila['id_producto']] = [
+                'total'    => (int) $fila['total_pedidos'],
+                'en_curso' => (int) $fila['pedidos_en_curso'],
+            ];
+        }
+        return $pedidos;
+    }
+
+    /**
+     * Elimina el producto solo si es del emprendimiento y no tiene pedidos.
+     *
+     * @param int $idProducto
+     * @param int $idEmprendimiento
+     * @return string eliminado | con_pedidos | no_existe
+     */
+    public function eliminar($idProducto, $idEmprendimiento)
+    {
+        $fila = $this->consultarUno('CALL sp_producto_eliminar(?, ?)', [$idProducto, $idEmprendimiento]);
+        return $fila['resultado'];
+    }
+
+    /**
      * @param int $idProducto
      * @param string $url Ruta dentro de img/uploads. Ej: productos/p12_ab12.jpg
      */
