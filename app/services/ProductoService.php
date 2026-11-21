@@ -49,6 +49,17 @@ class ProductoService
 
         $provincia = isset($get['provincia']) && Validador::provincia($get['provincia']) ? $get['provincia'] : '';
 
+        // Métodos de entrega marcados (HU-11). Solo se aceptan los tres que existen.
+        $entregasValidas = ['correos', 'taller', 'mensajeria'];
+        $entregas = [];
+        if (isset($get['entrega']) && is_array($get['entrega'])) {
+            for ($i = 0; $i < count($get['entrega']); $i++) {
+                if (in_array($get['entrega'][$i], $entregasValidas, true)) {
+                    $entregas[] = $get['entrega'][$i];
+                }
+            }
+        }
+
         return [
             'texto'      => isset($get['q']) && is_string($get['q']) ? mb_substr(trim($get['q']), 0, 100) : '',
             'provincia'  => $provincia,
@@ -56,6 +67,7 @@ class ProductoService
             'minimo'     => isset($get['min']) && is_numeric($get['min']) ? max(0, (float) $get['min']) : 0,
             'maximo'     => isset($get['max']) && is_numeric($get['max']) ? max(0, (float) $get['max']) : 0,
             'pago'       => $pago,
+            'entrega'    => implode(',', $entregas),
             'orden'      => $orden,
         ];
     }
@@ -185,6 +197,7 @@ class ProductoService
             'total_resenas'   => (int) $emprendimiento['total_resenas'],
             'telefono'        => (string) $emprendimiento['telefono'],
             'imagen'          => imagenO($imagen),
+            'redes'           => $this->redesSociales($idEmprendimiento),
         ];
 
         // Productos y los botones para filtrarlos por categoría
@@ -236,6 +249,29 @@ class ProductoService
             'resenas'         => $resenas,
             'filtrosCatalogo' => $filtros,
         ];
+    }
+
+    /**
+     * Redes sociales del emprendimiento para mostrarlas en la vitrina.
+     * Solo se muestran enlaces que empiezan con http:// o https://
+     *
+     * @param int $idEmprendimiento
+     * @return array [['plataforma' => 'Instagram', 'url' => 'https://...']]
+     */
+    private function redesSociales($idEmprendimiento)
+    {
+        $filas = (new VendedorRepository())->listarRedes($idEmprendimiento);
+        $redes = [];
+        foreach ($filas as $fila) {
+            $url = trim($fila['url_perfil']);
+            if (strpos($url, 'https://') === 0 || strpos($url, 'http://') === 0) {
+                $redes[] = [
+                    'plataforma' => $fila['plataforma'],
+                    'url'        => $url,
+                ];
+            }
+        }
+        return $redes;
     }
 
     /**

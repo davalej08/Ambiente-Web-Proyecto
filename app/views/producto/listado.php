@@ -81,10 +81,26 @@ if (!is_array($categoriasMarcadas)) {
     // Desde el inicio llega una sola categoría (?categoria=3)
     $categoriasMarcadas = [$categoriasMarcadas];
 }
-$precioMinimo       = isset($_GET['min']) ? $_GET['min'] : '';
-$precioMaximo       = isset($_GET['max']) ? $_GET['max'] : '';
+// Solo números (evita errores si alguien escribe otra cosa en la URL)
+$categoriasLimpias = [];
+foreach ($categoriasMarcadas as $categoriaMarcada) {
+    if (is_string($categoriaMarcada) && ctype_digit($categoriaMarcada)) {
+        $categoriasLimpias[] = $categoriaMarcada;
+    }
+}
+$categoriasMarcadas = $categoriasLimpias;
+$precioMinimo       = isset($_GET['min']) && is_numeric($_GET['min']) ? $_GET['min'] : '';
+$precioMaximo       = isset($_GET['max']) && is_numeric($_GET['max']) ? $_GET['max'] : '';
 $pagoActual         = isset($_GET['pago']) ? $_GET['pago'] : '';
-$entregasMarcadas   = isset($_GET['entrega']) && is_array($_GET['entrega']) ? $_GET['entrega'] : [];
+// Solo se aceptan los métodos de entrega que existen (correos, taller, mensajeria)
+$entregasMarcadas = [];
+if (isset($_GET['entrega']) && is_array($_GET['entrega'])) {
+    foreach ($_GET['entrega'] as $entrega) {
+        if (is_string($entrega) && isset($metodosEntrega[$entrega])) {
+            $entregasMarcadas[] = $entrega;
+        }
+    }
+}
 
 // Productos que el cliente tiene en favoritos (corazón lleno)
 if (!isset($favoritosIds)) {
@@ -92,8 +108,18 @@ if (!isset($favoritosIds)) {
 }
 $ordenActual        = isset($_GET['orden']) ? $_GET['orden'] : 'recomendados';
 
-// Parte de la URL que se repite en la paginación (búsqueda + provincia + orden)
-$filtrosUrl = 'q=' . urlencode($busqueda) . '&provincia=' . urlencode($provinciaActual) . '&orden=' . urlencode($ordenActual);
+// Parte de la URL que se repite en la paginación: todos los filtros activos,
+// para que al pasar de página no se pierdan (categorías, precio, pago, entrega)
+$filtrosUrl = http_build_query([
+    'q'         => $busqueda,
+    'provincia' => $provinciaActual,
+    'categoria' => $categoriasMarcadas,
+    'min'       => $precioMinimo,
+    'max'       => $precioMaximo,
+    'pago'      => $pagoActual,
+    'entrega'   => $entregasMarcadas,
+    'orden'     => $ordenActual,
+]);
 
 require __DIR__ . '/../general/header.php';
 ?>
@@ -206,7 +232,12 @@ require __DIR__ . '/../general/header.php';
                         <label class="casilla filtros__opcion">
                             <input type="checkbox" name="entrega[]" value="<?php echo e($clave); ?>"
                                 <?php echo in_array($clave, $entregasMarcadas) ? 'checked' : ''; ?>>
-                            <span><?php echo e($texto); ?></span>
+                            <span>
+                                <?php echo e($texto); ?>
+                                <?php if ($clave === 'mensajeria'): ?>
+                                    <small class="filtros__nota">San José, Alajuela, Cartago y Heredia</small>
+                                <?php endif; ?>
+                            </span>
                         </label>
                     <?php endforeach; ?>
                 </fieldset>
@@ -232,6 +263,16 @@ require __DIR__ . '/../general/header.php';
                 <form class="ordenar" id="formOrden" method="get" action="<?php echo e(ruta('catalogo')); ?>">
                     <input type="hidden" name="q" value="<?php echo e($busqueda); ?>">
                     <input type="hidden" name="provincia" value="<?php echo e($provinciaActual); ?>">
+                    <!-- Al cambiar el orden se mantienen los filtros que ya estaban marcados -->
+                    <?php foreach ($categoriasMarcadas as $categoriaMarcada): ?>
+                        <input type="hidden" name="categoria[]" value="<?php echo e($categoriaMarcada); ?>">
+                    <?php endforeach; ?>
+                    <input type="hidden" name="min" value="<?php echo e($precioMinimo); ?>">
+                    <input type="hidden" name="max" value="<?php echo e($precioMaximo); ?>">
+                    <input type="hidden" name="pago" value="<?php echo e($pagoActual); ?>">
+                    <?php foreach ($entregasMarcadas as $entregaMarcada): ?>
+                        <input type="hidden" name="entrega[]" value="<?php echo e($entregaMarcada); ?>">
+                    <?php endforeach; ?>
                     <label for="orden">Ordenar por:</label>
                     <select id="orden" name="orden">
                         <?php foreach ($opcionesOrden as $clave => $texto): ?>

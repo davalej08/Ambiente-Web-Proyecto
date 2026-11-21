@@ -568,6 +568,9 @@ END$$
 -- Catálogo público con filtros. Los parámetros vacíos ('' o 0) no filtran.
 --   p_categorias: ids separados por coma. Ej: '1,3'
 --   p_pago: sinpe | tarjeta | efectivo
+--   p_entrega: métodos de entrega separados por coma. Ej: 'correos,mensajeria' (HU-11)
+--     · correos y taller: todos los emprendimientos los ofrecen
+--     · mensajeria (GAM, mismo día): solo emprendimientos de San José (1), Alajuela (2), Cartago (3) o Heredia (4)
 --   p_orden: recomendados | recientes | precio_asc | precio_desc
 DROP PROCEDURE IF EXISTS sp_producto_buscar$$
 CREATE PROCEDURE sp_producto_buscar(
@@ -577,6 +580,7 @@ CREATE PROCEDURE sp_producto_buscar(
     IN p_minimo DECIMAL(10, 2),
     IN p_maximo DECIMAL(10, 2),
     IN p_pago VARCHAR(10),
+    IN p_entrega VARCHAR(40),
     IN p_orden VARCHAR(20),
     IN p_limite INT,
     IN p_desde INT
@@ -600,6 +604,8 @@ BEGIN
       AND (p_minimo = 0 OR p.precio >= p_minimo)
       AND (p_maximo = 0 OR p.precio <= p_maximo)
       AND (p_pago = '' OR FIND_IN_SET(p_pago, e.metodos_pago) > 0)
+      AND (FIND_IN_SET('mensajeria', p_entrega) = 0
+           OR e.id_provincia IN (1, 2, 3, 4))
     ORDER BY
         CASE WHEN p_orden = 'precio_asc' THEN p.precio END ASC,
         CASE WHEN p_orden = 'precio_desc' THEN p.precio END DESC,
@@ -617,7 +623,8 @@ CREATE PROCEDURE sp_producto_contar_busqueda(
     IN p_categorias VARCHAR(100),
     IN p_minimo DECIMAL(10, 2),
     IN p_maximo DECIMAL(10, 2),
-    IN p_pago VARCHAR(10)
+    IN p_pago VARCHAR(10),
+    IN p_entrega VARCHAR(40)
 )
 BEGIN
     SELECT COUNT(*) AS total
@@ -635,7 +642,9 @@ BEGIN
       AND (p_categorias = '' OR FIND_IN_SET(p.id_categoria, p_categorias) > 0)
       AND (p_minimo = 0 OR p.precio >= p_minimo)
       AND (p_maximo = 0 OR p.precio <= p_maximo)
-      AND (p_pago = '' OR FIND_IN_SET(p_pago, e.metodos_pago) > 0);
+      AND (p_pago = '' OR FIND_IN_SET(p_pago, e.metodos_pago) > 0)
+      AND (FIND_IN_SET('mensajeria', p_entrega) = 0
+           OR e.id_provincia IN (1, 2, 3, 4));
 END$$
 
 -- Productos de un emprendimiento. p_solo_activos = 1 para la vitrina pública.

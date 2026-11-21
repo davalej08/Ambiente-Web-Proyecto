@@ -20,13 +20,14 @@ class ProductoRepository extends Repository
      */
     public function buscar($filtros, $limite, $desde)
     {
-        return $this->consultar('CALL sp_producto_buscar(?, ?, ?, ?, ?, ?, ?, ?, ?)', [
+        return $this->consultar('CALL sp_producto_buscar(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [
             $filtros['texto'],
             $filtros['provincia'],
             $filtros['categorias'],
             $filtros['minimo'],
             $filtros['maximo'],
             $filtros['pago'],
+            $filtros['entrega'],
             $filtros['orden'],
             $limite,
             $desde,
@@ -41,13 +42,14 @@ class ProductoRepository extends Repository
      */
     public function contarBusqueda($filtros)
     {
-        $fila = $this->consultarUno('CALL sp_producto_contar_busqueda(?, ?, ?, ?, ?, ?)', [
+        $fila = $this->consultarUno('CALL sp_producto_contar_busqueda(?, ?, ?, ?, ?, ?, ?)', [
             $filtros['texto'],
             $filtros['provincia'],
             $filtros['categorias'],
             $filtros['minimo'],
             $filtros['maximo'],
             $filtros['pago'],
+            $filtros['entrega'],
         ]);
         return (int) $fila['total'];
     }
